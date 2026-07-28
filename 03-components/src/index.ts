@@ -221,6 +221,11 @@ export {
 /* ── Navigation ───────────────────────────────────────────────────────────── */
 export { TopNav, type TopNavProps } from './navigation/TopNav';
 export {
+  BottomNav,
+  type BottomNavProps,
+  type BottomNavItem,
+} from './navigation/BottomNav';
+export {
   Pagination,
   pageSlots,
   type PaginationProps,

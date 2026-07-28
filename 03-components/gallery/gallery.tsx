@@ -21,7 +21,7 @@ import {
   Collapsible, AccordionItem, ImageGallery, DescriptionList,
   Banner, ProgressBar, Skeleton, SkeletonText, Spinner, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
-  TopNav, Pagination, TabList, Tab, TabPanel,
+  TopNav, BottomNav, Pagination, TabList, Tab, TabPanel,
   SegmentedControl, SegmentedControlItem,
   EntityCard, EntityAmount, EntityMeta, DeadlineBadge, DeadlineText,
   ProductCard, ServiceCard, ProgramCard, GrantCard, FundingCard,
@@ -806,6 +806,27 @@ function Navigation() {
             signInHref="#"
             search={<SearchField label="ค้นหาสินค้าและบริการ" labelHidden placeholder="ค้นหาสินค้าและบริการ" />}
             className="!static"
+          />
+        </div>
+      </Specimen>
+
+      <Specimen
+        name="BottomNav"
+        note="มือถือเท่านั้น (md:hidden) — ที่นี่ปลด fixed เพื่อให้เห็น · reserveSpace ปิดไว้เพราะไม่ได้ยึดจอจริง"
+        wide
+      >
+        <div className="relative max-w-sm overflow-hidden rounded-(--radius-container) border border-edge">
+          <BottomNav
+            reserveSpace={false}
+            label="เมนูหลัก ตัวอย่าง"
+            className="!static !block"
+            items={[
+              { label: 'หน้าแรก', icon: 'layout-grid', href: '#', isCurrent: true },
+              { label: 'ค้นหา', icon: 'search', href: '#s' },
+              { label: 'ตะกร้า', icon: 'shopping-cart', href: '#c', count: 3 },
+              { label: 'รายการโปรด', icon: 'heart', href: '#w' },
+              { label: 'บัญชี', icon: 'building', href: '#a' },
+            ]}
           />
         </div>
       </Specimen>
