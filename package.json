@@ -1,0 +1,8 @@
+{
+  "name": "smego-design-system",
+  "private": true,
+  "description": "workspace root — มีอยู่เพื่อให้ 02-tokens/theme.css resolve `@import \"tailwindcss\"` ได้ ไม่ได้เป็นแพ็กเกจที่เผยแพร่",
+  "devDependencies": {
+    "tailwindcss": "4.3.3"
+  }
+}
