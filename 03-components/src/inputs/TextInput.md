@@ -3,7 +3,7 @@
 **`@smego/ui`** · ชั้น 03 · [TextInput.tsx](./TextInput.tsx) · แบบหลายบรรทัดอยู่ที่ [TextArea.md](./TextArea.md)
 
 > **เปลี่ยนชื่อจาก `TextField` ใน 0.1.0** — ตรงกับ Astryx (ASTRYX-PARITY.md §1.2)
-> `TextField` ยัง import ได้ถึง 0.2.0 แต่เป็น `@deprecated` และ **API เปลี่ยนแล้ว**:
+> `TextInput` ยัง import ได้ถึง 0.2.0 แต่เป็น `@deprecated` และ **API เปลี่ยนแล้ว**:
 > `errorMessage` → `status` · `showOptional` → `isOptional` · `prefix` → `startIcon`
 
 ---
@@ -73,7 +73,7 @@ import { TextInput } from '@smego/ui';
 ### ทางหนีเมื่อ wrapper ไม่พอ
 
 ```tsx
-import { TextField as RACTextField, Input, Label } from '@smego/ui/primitives';
+import { TextInput as RACTextField, Input, Label } from '@smego/ui/primitives';
 import { fieldStyles } from '@smego/ui';
 
 <RACTextField validationBehavior="aria" className={fieldStyles.root}>

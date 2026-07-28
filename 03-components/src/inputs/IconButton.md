@@ -210,7 +210,7 @@ Component set **`IconButton`**
 ```tsx
 // แถบค้นหา
 <HStack gap="0">
-  <TextField label="ค้นหา" placeholder="ค้นหาสินค้า บริการ หรือโครงการ" />
+  <TextInput label="ค้นหา" placeholder="ค้นหาสินค้า บริการ หรือโครงการ" />
   <IconButton name="search" label="ค้นหา" variant="solid" size="lg" />
 </HStack>
 ```

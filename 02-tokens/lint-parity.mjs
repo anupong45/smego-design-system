@@ -263,6 +263,22 @@ if (ts && axDist) {
       return out;
     };
 
+    /* ★★ ตรวจคีย์ของ `propsOursOnly` **ทุกตัว** ก่อนเข้า loop
+
+       ครั้งแรกที่ทำ ghost-check (2026-07-28) วางไว้ข้างใน loop ที่วนเฉพาะ
+       component ที่จับคู่ `XProps` ได้ทั้งสองฝั่ง — คีย์ที่ไม่มี `XProps`
+       ในโค้ดเราจึง **ไม่ถูกตรวจเลย** และผี `Lightbox` (component ที่ §8.6
+       ตัดออกไปแล้ว) รอดมาได้ทั้งตัว ทั้งที่คำตัดสินข้อ 3 สั่งให้ยืนยันจริง
+
+       บทเรียน: guard ที่วางไว้ในทางเดินที่ไม่ครบ ก็ครบไม่ได้
+    */
+    for (const name of Object.keys(cfg.propsOursOnly || {})) {
+      if (!findIface(ourFiles, `${name}Props`)) {
+        fail(`propsOursOnly.${name}: ไม่มี \`${name}Props\` ในโค้ดเลย — component ผี\n` +
+             `    ถ้าถูกตัดออกแล้ว ให้ลบคีย์นี้ทิ้ง`);
+      }
+    }
+
     const skipAll = new Set(cfg.propsSkipAll || []);
     const wontAll = cfg.wontAdopt?._all || {};
 

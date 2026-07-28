@@ -3,7 +3,7 @@
 **`@smego/ui`** · ชั้น 03 · [TextArea.tsx](./TextArea.tsx) · แบบบรรทัดเดียวอยู่ที่ [TextInput.md](./TextInput.md)
 
 > **เปลี่ยนชื่อจาก `Textarea` ใน 0.1.0** — ตรงกับ Astryx (ASTRYX-PARITY.md §1.2)
-> ต่างกันแค่ **ตัว A ใหญ่** · `Textarea` ยัง import ได้ถึง 0.2.0 แต่เป็น `@deprecated`
+> ต่างกันแค่ **ตัว A ใหญ่** · `TextArea` ยัง import ได้ถึง 0.2.0 แต่เป็น `@deprecated`
 > API เปลี่ยนเหมือน `TextInput`: `errorMessage` → `status` · `showOptional` → `isOptional`
 
 ---

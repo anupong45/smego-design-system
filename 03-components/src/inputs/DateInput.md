@@ -59,7 +59,7 @@ import { CalendarDate } from '@internationalized/date';
 
 | ส่วน | ค่า |
 |---|---|
-| กล่อง | `fieldStyles.control({ size: 'md' })` = **46px** ตรงกับ TextField |
+| กล่อง | `fieldStyles.control({ size: 'md' })` = **46px** ตรงกับ TextInput |
 | segment ที่ focus | `bg-primary-600` · `text-on-brand` |
 | segment ที่ยังไม่กรอก | `text-fg-muted` (6.05:1) |
 | ช่องในปฏิทิน | **36×36** |

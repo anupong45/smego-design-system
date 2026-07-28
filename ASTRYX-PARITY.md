@@ -162,7 +162,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | Badge | 2 | — | `children` `showIcon` | `label` |
 | Chip→Token | 3 | — | `children` | `label` `size` `color` `onRemove` `href` `endContent` `description` `isLabelHidden` |
 | Accordion→Collapsible | 2 | — | — | `trigger` `isOpen` `defaultIsOpen` `onOpenChange` `value` |
-| ImageGallery→Lightbox | 0 | `images`→`media` | `itemName` | `isOpen` `index` `defaultIndex` `onIndexChange` `onOpenChange` `hasZoom` `hasAutoPlay` |
+| ~~ImageGallery→Lightbox~~ | ❌ | — | — | **ตัดออกแล้ว** (§8.6) — `Lightbox` เป็น overlay ส่วน `ImageGallery` ของเราเป็น gallery ฝังในหน้า · แถวนี้เคยค้างไว้เป็นเป้า rename ทั้งที่ §1.2 ขีดฆ่าไปแล้ว และ `propsOursOnly` ยังประกาศ `Lightbox` ไว้ทั้งที่ไม่มี component จริง |
 | Alert→Banner | 3 | `action`→`endContent` | `isLive` `titleAs` `tone`→`status` | `description` `icon` `isDismissable` `container` `defaultIsExpanded` |
 | Dialog | 2 | `hideClose`→`purpose` | `footer` `size` `title` | `isOpen` `onOpenChange` `position` `padding` `width` `maxHeight` `isInline` |
 | ProgressBar | 2 | `maxValue`→`max` · `tone`→`variant` · `format`→`formatValueLabel` | `note` `size` `unit` `unknownLabel` | `isIndeterminate` `hasValueLabel` `isLabelHidden` `isDisabled` |
@@ -342,7 +342,6 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Grid": ["gutter", "preset"],
     "Typeahead": ["options"],
     "NumberInput": ["hideStepper", "suffix"],
-    "Lightbox": ["itemName"],
     "TopNav": [
       "account", "cartCount", "homeHref", "logo", "mainId",
       "onOpenCart", "search", "signInHref"

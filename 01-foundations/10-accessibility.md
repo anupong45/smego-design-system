@@ -38,9 +38,9 @@ Widget ที่มีลูกหลายตัวต้องกิน **ห�
 | Radio group | ตัวที่เลือกไว้ (หรือตัวแรกถ้ายังไม่เลือก) | เลื่อนและ**เลือกทันที** |
 | Listbox / Combobox | ตัวที่เลือกไว้ | เลื่อน · `Enter` ยืนยัน |
 | Toolbar ปุ่มไอคอน | ปุ่มแรก | เลื่อนระหว่างปุ่ม |
-| Chip ตัวกรอง | chip แรก | เลื่อนระหว่าง chip |
+| Token ตัวกรอง | chip แรก | เลื่อนระหว่าง chip |
 
-**Checkbox group ไม่ใช้ roving tabindex** — checkbox แต่ละตัวเป็น tab stop ของตัวเอง เพราะเลือกได้หลายตัวพร้อมกัน
+**`CheckboxGroup` ไม่ใช้ roving tabindex** — checkbox แต่ละตัวเป็น tab stop ของตัวเอง เพราะเลือกได้หลายตัวพร้อมกัน
 
 ### 1.3 ⚠️ ห้าม single-character shortcut — เหตุผลเฉพาะภาษาไทย
 

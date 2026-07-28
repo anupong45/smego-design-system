@@ -147,7 +147,7 @@ component เหล่านี้ทำหน้าที่ **UI เท่า�
 
 และเหตุผลที่ต้องซ่อนเลย: UI ของ `<input type="file">` **style ไม่ได้ และขึ้นภาษาตาม OS** — ผู้ใช้ที่ตั้งเครื่องเป็นอังกฤษจะเห็น "Choose File" กลางฟอร์มไทย
 
-(เหตุผลเดียวกับที่ห้าม `validationBehavior="native"` — ดู [TextField.md §5](../inputs/TextField.md))
+(เหตุผลเดียวกับที่ห้าม `validationBehavior="native"` — ดู [TextInput.md §5](../inputs/TextInput.md))
 
 ### ★ ห้าม countdown ที่หมดอายุแล้วหน้าเปลี่ยนเอง (SC 2.2.1)
 
@@ -238,9 +238,9 @@ Component set **`SlipUpload`** — property `State` = `Empty` · **`Uploaded`** 
 </PaymentFields>
 
 // ถ้าจำเป็นต้องกรอกเอง — autocomplete ครบ และห้ามบล็อกการวาง
-<TextField label="เลขบัตร" autoComplete="cc-number" inputMode="numeric" />
-<TextField label="วันหมดอายุ" autoComplete="cc-exp" inputMode="numeric" />
-<TextField label="รหัสหลังบัตร" autoComplete="cc-csc" inputMode="numeric" />
+<TextInput label="เลขบัตร" autoComplete="cc-number" inputMode="numeric" />
+<TextInput label="วันหมดอายุ" autoComplete="cc-exp" inputMode="numeric" />
+<TextInput label="รหัสหลังบัตร" autoComplete="cc-csc" inputMode="numeric" />
 ```
 
 ---

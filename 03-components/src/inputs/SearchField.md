@@ -6,14 +6,14 @@
 
 ## 1 · ภาพรวม
 
-ช่องค้นหา — ต่างจาก `<TextField>` ที่ **role · Escape · ปุ่มล้าง**
+ช่องค้นหา — ต่างจาก `<TextInput>` ที่ **role · Escape · ปุ่มล้าง**
 
 ### ❌ เมื่อไรที่ไม่ควรใช้
 
 | สถานการณ์ | ใช้อะไรแทน | เหตุผล |
 |---|---|---|
 | ค้นหาพร้อมคำแนะนำ | `<Typeahead>` | ต้องมี listbox + `aria-autocomplete` |
-| กรอกข้อความทั่วไป | `<TextField>` | `role="searchbox"` สื่อผิด |
+| กรอกข้อความทั่วไป | `<TextInput>` | `role="searchbox"` สื่อผิด |
 | กรองรายการที่เห็นอยู่ | `<SearchField>` ก็ได้ | แต่ต้องประกาศจำนวนผลผ่าน `<SearchResult>` |
 
 ---
@@ -44,7 +44,7 @@
 
 ไม่มี variant · `labelHidden` เป็น boolean
 
-### ★ RAC `SearchField` ให้สิ่งที่ `<TextField>` ให้ไม่ได้
+### ★ RAC `SearchField` ให้สิ่งที่ `<TextInput>` ให้ไม่ได้
 
 | สิ่งที่ได้ | ทำไมสำคัญ |
 |---|---|
@@ -68,7 +68,7 @@
 | focus-within | `border-edge-brand` |
 | invalid | `border-edge-danger` |
 
-### ★★ Thai IME — ปัญหาเดียวกับ TextField แต่ **หนักกว่า**
+### ★★ Thai IME — ปัญหาเดียวกับ TextInput แต่ **หนักกว่า**
 
 ช่องค้นหามักผูกกับการยิง API ทุก keystroke · ถ้าไม่กันช่วง composition ผู้ใช้ที่พิมพ์ **"ที่"** จะยิง API **3 ครั้ง** ด้วยคำที่ยังประกอบไม่เสร็จ:
 
@@ -200,7 +200,7 @@ const debounced = useDebounce(query, 300);   /* debounce ที่ผู้เ�
 
 | ❌ | ✅ | ทำไม |
 |---|---|---|
-| `<TextField>` สำหรับช่องค้นหา | `<SearchField>` | ไม่มี role searchbox · Escape ไม่ล้าง |
+| `<TextInput>` สำหรับช่องค้นหา | `<SearchField>` | ไม่มี role searchbox · Escape ไม่ล้าง |
 | มีแต่ `placeholder` ไม่มี `label` | `labelHidden` | screen reader อ่านว่า "searchbox" เฉย ๆ |
 | ยิง API ทุก keystroke | debounce + กัน IME | "ที่" ยิง 3 ครั้งด้วยคำที่ยังไม่เสร็จ |
 | ปล่อยปุ่ม × ของ browser | `appearance-none` | style ไม่ได้ ไม่มีชื่อไทย |

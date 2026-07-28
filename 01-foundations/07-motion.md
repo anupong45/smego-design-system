@@ -61,11 +61,11 @@
 | Hover สี/พื้น | `fast` | `standard` | `background-color` `color` `border-color` |
 | Hover เงา (card) | `fast` | `standard` | `box-shadow` |
 | กดปุ่ม (active) | `instant` | — | ไม่ animate |
-| Checkbox / Radio / Toggle | `fast` | `standard` | `opacity` `transform` |
+| CheckboxInput / Radio / Toggle | `fast` | `standard` | `opacity` `transform` |
 | Tooltip เข้า | `fast` | `entering` | `opacity` + `transform: translateY(2px→0)` |
 | Tooltip ออก | `fast` | `exiting` | `opacity` |
-| Dropdown / Select เปิด | `medium` | `entering` | `opacity` + `scale(.98→1)` |
-| Dropdown / Select ปิด | `fast` | `exiting` | `opacity` |
+| Dropdown / Selector เปิด | `medium` | `entering` | `opacity` + `scale(.98→1)` |
+| Dropdown / Selector ปิด | `fast` | `exiting` | `opacity` |
 | Popover / Combobox เปิด | `medium` | `entering` | `opacity` + `scale(.98→1)` |
 | Modal เปิด | `medium` | `emphasized` | `opacity` + `scale(.96→1)` |
 | Modal ปิด | `fast` | `exiting` | `opacity` |
@@ -75,7 +75,7 @@
 | Drawer ด้านข้าง | `medium` | `emphasized` | `transform: translateX` |
 | Toast เข้า | `medium` | `entering` | `opacity` + `translateY` |
 | Toast ออก | `fast` | `exiting` | `opacity` |
-| Accordion เปิด/ปิด | `medium` | `standard` | `grid-template-rows` (ดูข้อ 5.2) |
+| Collapsible เปิด/ปิด | `medium` | `standard` | `grid-template-rows` (ดูข้อ 5.2) |
 | Tab indicator ย้าย | `medium` | `emphasized` | `transform` |
 | เปลี่ยนหน้า | `slow` | `emphasized` | `opacity` |
 | Skeleton | `slower` ลูป | `linear` | ดูข้อ 6 |
@@ -171,7 +171,7 @@ Framer Motion เป็น **dependency ที่ใหญ่ที่สุด�
 
 ¹ สีและเงาต้อง paint ใหม่แต่ไม่ต้อง layout — ยอมรับได้ที่ `duration-fast` บน element เดี่ยว **ห้ามทำพร้อมกันหลายสิบตัว**
 
-### 5.2 Accordion — ข้อยกเว้นที่ต้องระวัง
+### 5.2 Collapsible — ข้อยกเว้นที่ต้องระวัง
 
 การขยาย accordion ต้องเปลี่ยนความสูง ซึ่งไม่มีวิธีทำด้วย `transform` อย่างเดียว
 
@@ -338,7 +338,7 @@ const reduce = useReducedMotion();
 - **spring มีแค่ `snappy` และ `gentle`** ค่าอื่นไม่ผ่าน review
 - **ต้องใช้ทั้ง media query และ `useReducedMotion()`** — inline style ที่ Framer เขียนไม่ถูก CSS ครอบได้ทั้งหมด
 - **`!important` ใน block `prefers-reduced-motion` เป็นข้อยกเว้นเดียวของระบบ** ต้องชนะ inline style ของ Framer — บันทึกไว้ในเอกสารแล้ว
-- **Accordion ใช้ `grid-template-rows: 0fr → 1fr`** ห้าม `max-height` แบบเดาค่า และต้องคืน `overflow: visible` ตอน `transitionend` เพื่อไม่ให้ตัด focus ring
+- **Collapsible ใช้ `grid-template-rows: 0fr → 1fr`** ห้าม `max-height` แบบเดาค่า และต้องคืน `overflow: visible` ตอน `transitionend` เพื่อไม่ให้ตัด focus ring
 - **Focus ต้องย้ายทันทีที่ mount** ห้ามรอ animation จบ · ห้าม `pointer-events: none` ระหว่าง animation เข้า
 - **Skeleton ปรากฏทันที ไม่ fade** เพราะการ fade เข้าคือการหน่วงสัญญาณว่ากำลังโหลด
 - **ใช้ `@starting-style`** สำหรับ enter animation ของ `<dialog>` และ popover เพื่อไม่ต้องใช้ JS

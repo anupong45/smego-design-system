@@ -125,7 +125,7 @@ import { SegmentedControl, SegmentedControlItem } from '@smego/ui';
 
 เพราะ **ไม่มี panel ให้ควบคุม** — มันคือการเลือกหนึ่งจากหลายตัวที่มีผลทันที
 
-ใช้ RAC `RadioGroup` ซึ่งให้ roving tabindex + ลูกศรเลื่อนแล้วเลือกทันที (pattern เดียวกับ [`RadioList`](../inputs/RadioList.md) ในระดับ ARIA)
+ใช้ RAC `RadioList` ซึ่งให้ roving tabindex + ลูกศรเลื่อนแล้วเลือกทันที (pattern เดียวกับ [`RadioList`](../inputs/RadioList.md) ในระดับ ARIA)
 
 ### ⚠️ สถานะอยู่ที่ `checked` ไม่ใช่ `aria-checked`
 

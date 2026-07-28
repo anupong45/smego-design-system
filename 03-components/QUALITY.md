@@ -40,11 +40,11 @@
 | ทำไมยังไม่แก้ | เป็นเรื่องพฤติกรรม ไม่ใช่การสลับ class · ต้องวัดก่อนว่าข้อความยาวสุดที่ยอมรับได้กว้างเท่าไร แล้วจึงตัดสินใจว่าจะจำกัดความกว้างหรือจำกัดความยาวข้อความ |
 | ปิดหนี้ด้วย | เทส Playwright ที่เปิด tooltip ที่ viewport 320px แล้วยืนยันว่า `scrollWidth` ของหน้ายังเป็น 320 (`SC 1.4.10`) — แบบเดียวกับ `e2e/pass3.spec.ts:126` |
 
-### 2.2 · `FileUpload` — ไม่มีสถานะ "กำลังอัปโหลด"
+### 2.2 · `FileInput` — ไม่มีสถานะ "กำลังอัปโหลด"
 
 | | |
 |---|---|
-| ไฟล์ | [`src/inputs/FileUpload.md`](./src/inputs/FileUpload.md) · ข้อ **กำลังโหลด** |
+| ไฟล์ | [`src/inputs/FileInput.md`](./src/inputs/FileInput.md) · ข้อ **กำลังโหลด** |
 | อาการ | §4 มี `default` · "กำลังลากเหนือ" · "มีไฟล์แล้ว" · `error` · `disabled` แต่**ไม่มีช่วงระหว่างที่ไฟล์กำลังขึ้น** |
 | ผลกับผู้ใช้ | ผู้ใช้ที่อัปโหลดสลิปด้วยเน็ตมือถือช้าจะไม่เห็นอะไรเลยระหว่างรอ และมีโอกาสกดซ้ำ |
 | ปิดหนี้ด้วย | เพิ่ม state ใน §4 + prop ความคืบหน้า แล้วต่อกับ [`<ProgressBar>`](./src/feedback/ProgressBar.md) ซึ่งมี `unknown` สำหรับงานที่ยังไม่รู้ระยะอยู่แล้ว |
@@ -54,9 +54,9 @@
 | | |
 |---|---|
 | ไฟล์ | [`src/marketplace/Payment.md`](./src/marketplace/Payment.md) · ข้อ **กำลังโหลด** |
-| อาการ | `SlipUpload` สร้างบน `FileUpload` จึงรับหนี้ข้อ 2.2 มาเต็ม ๆ |
+| อาการ | `SlipUpload` สร้างบน `FileInput` จึงรับหนี้ข้อ 2.2 มาเต็ม ๆ |
 | ผลกับผู้ใช้ | **หนักกว่า 2.2** เพราะอยู่ในขั้นตอนชำระเงิน — การกดอัปโหลดซ้ำที่นี่ทำให้ผู้ใช้ไม่แน่ใจว่าจ่ายไปกี่ครั้ง |
-| ปิดหนี้ด้วย | แก้ 2.2 แล้วข้อนี้ปิดตาม · **แก้ที่ `FileUpload` ที่เดียว ไม่ใช่แก้สองที่** |
+| ปิดหนี้ด้วย | แก้ 2.2 แล้วข้อนี้ปิดตาม · **แก้ที่ `FileInput` ที่เดียว ไม่ใช่แก้สองที่** |
 
 ### 2.4 · `Deadline` — ไม่มีเทสของตัวเอง
 
@@ -102,14 +102,14 @@ npm run verify        # ทั้งหมด: typecheck → lint → vitest →
 
 ทั้งคู่เป็น false positive ที่เจอตอนรันจริง และถูกยกเว้น**พร้อมเหตุผล** ไม่ใช่ปิดกฎทิ้ง:
 
-1. **`left-1/2` + `-translate-x-1/2`** ([`RangeSlider.tsx:140`](./src/inputs/RangeSlider.tsx)) — เป็นสำนวนจัดกึ่งกลาง ไม่ได้เลือกข้าง · Tailwind ไม่มี `translate` เชิงตรรกะ การเปลี่ยนเป็น `start-1/2` จะทำให้เยื้องออกนอกกึ่งกลางใน RTL คู่ physical ที่เข้าคู่กันถูกกว่าคู่ที่ปนกันครึ่ง ๆ
-2. **`max-h-`/`min-h-`** ([`Select.tsx:133`](./src/inputs/Select.tsx) · [`ComboBox.tsx:158`](./src/inputs/ComboBox.tsx)) — เพดานและพื้น ไม่ใช่ความสูงตายตัว · `max-h-64` บน listbox ยังยืดตามเนื้อหาได้เต็มที่ก่อนถึงเพดาน
+1. **`left-1/2` + `-translate-x-1/2`** ([`Slider.tsx:140`](./src/inputs/Slider.tsx)) — เป็นสำนวนจัดกึ่งกลาง ไม่ได้เลือกข้าง · Tailwind ไม่มี `translate` เชิงตรรกะ การเปลี่ยนเป็น `start-1/2` จะทำให้เยื้องออกนอกกึ่งกลางใน RTL คู่ physical ที่เข้าคู่กันถูกกว่าคู่ที่ปนกันครึ่ง ๆ
+2. **`max-h-`/`min-h-`** ([`Selector.tsx:133`](./src/inputs/Selector.tsx) · [`Typeahead.tsx:158`](./src/inputs/Typeahead.tsx)) — เพดานและพื้น ไม่ใช่ความสูงตายตัว · `max-h-64` บน listbox ยังยืดตามเนื้อหาได้เต็มที่ก่อนถึงเพดาน
 
 ### ⚠️ บันทึกจากการรันครั้งแรก — กฎการเคลื่อนไหวฉบับแรกผิด
 
-ฉบับแรกฟ้อง `animate-*` ทุกตัวและได้ **12 จุด** (`Dialog` · `Toast` · `Tooltip` · `ComboBox` · `DatePicker` · `Select` · `Skeleton`) — **false positive ทั้งหมด**
+ฉบับแรกฟ้อง `animate-*` ทุกตัวและได้ **12 จุด** (`Dialog` · `Toast` · `Tooltip` · `Typeahead` · `DateInput` · `Selector` · `Skeleton`) — **false positive ทั้งหมด**
 
-[`base.css §10`](../02-tokens/src/base.css) ครอบด้วย `*, *::before, *::after` + `!important` อยู่แล้ว: `animation-duration: 1ms` ตัด keyframe ทุกตัว · `.animate-pulse`/`.animate-bounce`/`.animate-ping` และ `.skeleton` อยู่ในรายการ DENY เจาะจง · และการตั้ง `transition-property` ใหม่ทำให้ `transition-transform` ของ [`Switch`](./src/inputs/Switch.md) กับ [`Accordion`](./src/data-display/Accordion.md) หยุดเป็น transition ให้เอง (หัวสวิตช์และลูกศรยัง**ย้ายตำแหน่งทันที** เพราะเป็นตัวบอกสถานะ ไม่ใช่การตกแต่ง)
+[`base.css §10`](../02-tokens/src/base.css) ครอบด้วย `*, *::before, *::after` + `!important` อยู่แล้ว: `animation-duration: 1ms` ตัด keyframe ทุกตัว · `.animate-pulse`/`.animate-bounce`/`.animate-ping` และ `.skeleton` อยู่ในรายการ DENY เจาะจง · และการตั้ง `transition-property` ใหม่ทำให้ `transition-transform` ของ [`Switch`](./src/inputs/Switch.md) กับ [`Collapsible`](./src/data-display/Collapsible.md) หยุดเป็น transition ให้เอง (หัวสวิตช์และลูกศรยัง**ย้ายตำแหน่งทันที** เพราะเป็นตัวบอกสถานะ ไม่ใช่การตกแต่ง)
 
 ช่องโหว่จริงมีข้อเดียว: block `DENY` ที่ตัด transform เป็นแบบ **opt-in** ผูกกับ `[data-motion="transform"]` · `.motion-slide` · `.motion-scale` — การเคลื่อนไหวขาเข้า/ขาออกที่**เลื่อนหรือซูมจริง**จะยังเคลื่อนที่ถ้าไม่ติดป้าย กฎถูกเขียนใหม่ให้จับเฉพาะกรณีนั้น ซึ่งตอนนี้ได้ **0 จุด**
 
