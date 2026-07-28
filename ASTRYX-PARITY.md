@@ -212,6 +212,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | D19 | ไม่รับ `tooltip` บน `Button` `IconButton` `Link` | `IconButton.md` §5 และ `Tooltip.md` §5 เขียนตรงกันว่า `aria-describedby` **ไม่ใช่** accessible name — prop ชื่อ `tooltip` บนปุ่มเชิญให้ทำ anti-pattern ที่สองไฟล์นั้นกันไว้เอง (ใช้ `label` ตั้งชื่อ แล้วครอบด้วย `TooltipTrigger` ถ้าต้องการคำอธิบายเสริม) |
 | D20 | เส้นแบ่ง link/button — ไม่รับ `Button.href/target/rel` (และ `IconButton.href/target/rel` ด้วยเหตุผลเดียวกัน) และไม่รับ `Link.label/color/weight/display/type/maxLines/hasUnderline` | `Link.md` §1 ตั้งกฎไว้ว่า "เปลี่ยน URL = ลิงก์ · เปลี่ยนข้อมูล = ปุ่ม" · `Button.href` ลบเส้นนั้นทิ้ง ส่วน `Link.color/weight/display/type/maxLines` เปิดทางให้ลิงก์แต่งตัวเป็นปุ่ม · `hasUnderline` คือปุ่มปิด SC 1.4.1 (สีอย่างเดียวไม่พอ) ที่ `base.css` บังคับขีดเส้นใต้ด้วย `:where(a[href])` อยู่แล้ว |
 | D21 | props ที่ขัด SC หรือขัดคำตัดสินเดิม — `IconButton.isLoading/clickAction/isInterruptible` · `Tooltip.focusTrigger/alignment/anchorRef/hasHoverIndication` · `ProgressBar.isIndeterminate` · `Dialog.isInline` | `IconButton` เป็นไอคอนล้วน ไม่มีที่ให้ spinner โดยไม่บังไอคอน — `IconButton.md` §10 สั่งให้ใช้ `Button isLoading` แทนอยู่แล้ว · `clickAction`/`isInterruptible` เป็น event model ของ Astryx (เหตุผลเดียวกับ D8) · `focusTrigger` เปิดช่องปิดการแสดงตอน focus = ตก SC 1.4.13 · `alignment`/`anchorRef`/`hasHoverIndication` ขัด offset 8px ที่ตรึงไว้โดยเจตนา · `isIndeterminate` ทับเขต `Spinner` ตามกฎ §8.5 · `Dialog.isInline` คือ dialog ที่ไม่ใช่ overlay ซึ่งเป็นงานของ `Card`/`Section` |
+| D24 | `Spinner` มี `isLabelHidden` เกินจาก Astryx (เขาใช้ `aria-label` แทน) | `isLabelHidden` เป็นคำศัพท์ที่ระบบนี้ตั้งไว้แล้วใน `TextInput` `TextArea` `CheckboxInput` `RadioList` (§8.1) — การให้ `Spinner` ใช้ `aria-label` ตามเขาคือการมีสองวิธีทำสิ่งเดียวกันในระบบเดียว · และ `aria-label` ดิบเลี่ยงการตัดสินใจว่าข้อความควรเห็นด้วยตาหรือไม่ ซึ่งเป็นคำถามที่ `Spinner` ต้องบังคับให้ผู้เรียกตอบ (ดู `Spinner.md` §5) |
 | D22 | layout layer แยกทาง — ไม่รับ props ที่ขาดทั้งหมดของ `Grid` (11) `Section` (7) `Divider` (3) และคง `gutter`/`preset` ของเราไว้ | เหตุผลเดียวกับที่ปฏิเสธ control height ใน §2.4: ชั้น layout คือภาษารูปทรงของเรา ไม่ใช่ของ Meta · Astryx ให้ `columns`/`gap` ดิบให้ call site ตัดสินเอง เราให้ `preset` ที่ตัดสินใจแทนไปแล้ว การรับทั้งสองแบบพร้อมกันคือการมีสองวิธีทำสิ่งเดียวกัน |
 
 #### รับเข้ามา — ยังไม่ลงมือ (ไม่เข้า allowlist)
@@ -268,7 +269,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 29,
+  "maxProblems": 28,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea"
@@ -305,6 +306,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "TextInput": ["prefix"],
     "FileInput": ["onRemove"],
     "Slider": ["minLabel", "maxLabel", "unit"],
+    "Spinner": ["isLabelHidden"],
     "Switch": ["align"],
     "CheckboxInput": ["labelContent"],
     "RadioList": ["labelContent"],

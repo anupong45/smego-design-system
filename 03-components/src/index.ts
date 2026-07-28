@@ -189,6 +189,12 @@ export {
   type SkeletonTextProps,
 } from './feedback/Skeleton';
 export {
+  Spinner,
+  type SpinnerProps,
+  type SpinnerSize,
+  type SpinnerShade,
+} from './feedback/Spinner';
+export {
   Dialog,
   DialogOverlay,
   DialogTrigger,

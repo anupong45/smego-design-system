@@ -11,6 +11,7 @@ import { useState, type ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { useStrings } from '../provider/SmeGoProvider';
 import { Icon } from '../icon/Icon';
+import { Spinner } from '../feedback/Spinner';
 import {
   fieldStyles,
   statusTextClass,
@@ -160,11 +161,13 @@ export function TextInput({
           {input}
 
           {isLoading && (
-            /* ข้อความให้ screen reader เพราะการหมุนอย่างเดียวไม่สื่ออะไร */
-            <span className="text-fg-muted">
-              <Icon name="loader" size={16} aria-hidden="true" className="animate-spin" />
-              <span className="sr-only">{s.common.loading}</span>
-            </span>
+            /* ★ เดิมเป็น `animate-spin` ซึ่ง **ไม่อยู่ในรายการ ALLOW** ของ
+               `base.css §10` — ตัวหมุนจึงค้างนิ่งเมื่อผู้ใช้เปิด reduced motion
+               `<Spinner>` ใช้ `.spinner` ที่ได้รับการยกเว้นไว้ (ดู `Spinner.tsx`)
+
+               `isLabelHidden` เพราะไม่มีที่ว่างในช่อง — แต่ยังต้องประกาศ
+               เพราะการหมุนอย่างเดียวไม่สื่ออะไรกับผู้ใช้ screen reader */
+            <Spinner size="sm" shade="subtle" label={s.common.loading} isLabelHidden />
           )}
 
           {showClear && (
