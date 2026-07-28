@@ -20,5 +20,10 @@
 
     "noEmit": true
   },
-  "include": ["src/**/*", "tests/**/*"]
+  /* ★ gallery ต้องอยู่ใน include ด้วย — เดิมไม่มี ทำให้ gallery.tsx
+     เรียก prop ที่ถูกลบไปแล้ว (`errorMessage` · `showOptional` · `prefix`)
+     ได้โดยไม่มีอะไรฟ้อง · esbuild ตัด type ทิ้งเฉย ๆ จึง build ผ่าน
+     ทั้งที่ type ผิด — พบตอนรอบ rename 2026-07-28
+     (`.js` ที่ generate ไว้ไม่ถูกดึงเข้ามาเพราะไม่ได้เปิด allowJs) */
+  "include": ["src/**/*", "tests/**/*", "gallery/**/*"]
 }
