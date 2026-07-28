@@ -6,7 +6,15 @@ import { Button } from '../inputs/Button';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · AppHeader — แถบบนสุดของทุกหน้า
+   SME.GO · TopNav — แถบบนสุดของทุกหน้า   (เดิมชื่อ AppHeader — ดู ASTRYX-PARITY.md §1.2/§8.3)
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    slot props ของ Astryx TopNav — `heading` `startContent`
+          `centerContent` `endContent` `label` — เป็น**ส่วนเสริม** ไม่ใช่
+          การแทนที่ (§8.3 · D12): ของ Astryx เป็น shell เปล่า ส่วนของเรา
+          รู้เรื่อง marketplace (ตะกร้า/เข้าสู่ระบบ) อยู่แล้ว
+   คงไว้  9 props เดิมทั้งหมด (`cartCount` `search` `signInHref` `account`
+          `homeHref` `logo` `onOpenCart` `mainId` `className`) เป็น extension
    ───────────────────────────────────────────────────────────────────────────
    ★★★ **ความสูงมาจาก `--header-height` เท่านั้น**
 
@@ -43,7 +51,27 @@ import { useStrings } from '../provider/SmeGoProvider';
    ทุกหน้าจะมีหัวข้อระดับ 1 สองอัน และโครงหัวข้อของหน้าจะอ่านไม่ได้
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export interface AppHeaderProps {
+export interface TopNavProps {
+  /**
+   * หัวข้อ/ชื่อส่วนที่แสดงข้างแบรนด์ — slot ของ Astryx
+   *
+   * ไม่ใช่ `<h1>` — เหตุผลเดียวกับชื่อแบรนด์ (ดูหัวไฟล์) ใช้เมื่อ TopNav
+   * ต้องบอกบริบทเพิ่มจากชื่อเว็บอย่างเดียว เช่น "ศูนย์ผู้ขาย"
+   */
+  heading?: ReactNode;
+
+  /** เนื้อหาเสริมก่อนชื่อแบรนด์ — slot ของ Astryx เช่นปุ่มเปิดเมนูบนมือถือ */
+  startContent?: ReactNode;
+
+  /** เนื้อหาเสริมตรงกลางแถบ ข้าง `search` — slot ของ Astryx */
+  centerContent?: ReactNode;
+
+  /** เนื้อหาเสริมท้ายแถบ หลังตะกร้า/บัญชี — slot ของ Astryx */
+  endContent?: ReactNode;
+
+  /** ชื่อ accessible ของแถบทั้งแถบ — slot ของ Astryx, ตั้งที่ `<header aria-label>` */
+  label?: string;
+
   /** ปลายทางของชื่อแบรนด์ · ค่าเริ่มต้น `/` */
   homeHref?: string;
 
@@ -83,7 +111,12 @@ export interface AppHeaderProps {
   className?: string;
 }
 
-export function AppHeader({
+export function TopNav({
+  heading,
+  startContent,
+  centerContent,
+  endContent,
+  label,
   homeHref = '/',
   logo,
   search,
@@ -93,11 +126,12 @@ export function AppHeader({
   signInHref = '/signin',
   mainId = 'main',
   className,
-}: AppHeaderProps) {
+}: TopNavProps) {
   const s = useStrings();
 
   return (
     <header
+      aria-label={label}
       className={cn(
         'sticky top-0 z-(--z-sticky)',
         'border-b border-edge bg-surface',
@@ -119,13 +153,19 @@ export function AppHeader({
       </a>
 
       <div className="mx-auto flex h-(--header-height) w-full min-w-0 max-w-(--container-content) items-center gap-3 px-4 md:gap-4 md:px-6 lg:px-8">
+        {startContent}
+
         <Link href={homeHref} quiet aria-label={s.header.homeLabel} className="shrink-0">
           {logo ?? <span className="text-subtitle text-fg">SME.GO</span>}
         </Link>
 
+        {heading && <span className="text-subtitle text-fg-secondary">{heading}</span>}
+
         {/* ★ ช่องค้นหาซ่อนที่จอแคบ — หน้าที่มีการค้นหาเป็นหลักวางช่องไว้
            ในเนื้อหาแทน · ยัดทุกอย่างลงแถบ 56px ทำให้ทุกอันเล็กเกินกด */}
         {search && <div className="hidden min-w-0 flex-1 md:block">{search}</div>}
+
+        {centerContent}
 
         <div className="ms-auto flex min-w-0 shrink-0 items-center gap-2">
           {onOpenCart && (
@@ -166,6 +206,8 @@ export function AppHeader({
               {s.header.signIn}
             </Link>
           )}
+
+          {endContent}
         </div>
       </div>
     </header>

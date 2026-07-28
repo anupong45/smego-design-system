@@ -21,7 +21,7 @@ import {
   Collapsible, AccordionItem, ImageGallery, DescriptionList,
   Banner, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
-  AppHeader,
+  TopNav,
   EntityCard, EntityAmount, EntityMeta, DeadlineBadge, DeadlineText,
   ProductCard, ServiceCard, ProgramCard, GrantCard, FundingCard,
   BusinessCard, TrainingCard, SearchResult,
@@ -702,9 +702,9 @@ function Marketplace() {
 function Navigation() {
   return (
     <Group id="navigation" title="6 · Navigation">
-      <Specimen name="AppHeader" note="sticky จริงอยู่บนสุดของหน้านี้แล้ว — นี่คือสำเนาแบบอยู่กับที่" wide>
+      <Specimen name="TopNav" note="sticky จริงอยู่บนสุดของหน้านี้แล้ว — นี่คือสำเนาแบบอยู่กับที่" wide>
         <div className="relative">
-          <AppHeader
+          <TopNav
             homeHref="#"
             cartCount={3}
             onOpenCart={() => {}}

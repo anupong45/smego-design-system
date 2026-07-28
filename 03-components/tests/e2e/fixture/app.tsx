@@ -4,7 +4,7 @@ import {
   SmeGoProvider, Container, Section, Button, TextInput, Slider,
   Dialog, DialogOverlay, DialogTrigger, CompareBar, Link, Grid, ProductCard,
   ProgressBar, DescriptionList, FundingCard, BusinessCard, Banner,
-  AppHeader, SearchField, BuyBox, ImageGallery, CheckoutSummary,
+  TopNav, SearchField, BuyBox, ImageGallery, CheckoutSummary,
   CartDrawer, CartList, CartSellerGroup, CartLineItem,
   ToastRegion, showToast, useStrings,
 } from '../../../src/index';
@@ -97,14 +97,14 @@ function App() {
     <>
       {/* sticky header — ตัวที่ทำให้ SC 2.4.11 พังได้ */}
       <div data-testid="header">
-        <AppHeader
+        <TopNav
           cartCount={3}
           onOpenCart={() => {}}
           search={<SearchField labelHidden placeholder="ค้นหาสินค้า บริการ หรือโครงการ" />}
         />
       </div>
 
-      {/* ปลายทางของลิงก์ข้ามเนื้อหาใน AppHeader (SC 2.4.1) */}
+      {/* ปลายทางของลิงก์ข้ามเนื้อหาใน TopNav (SC 2.4.1) */}
       <main id="main">
       <Container size="content">
         <Section>

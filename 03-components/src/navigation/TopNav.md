@@ -1,6 +1,8 @@
-# AppHeader
+# TopNav
 
-**`@smego/ui`** · ชั้น 03 · [AppHeader.tsx](./AppHeader.tsx)
+**`@smego/ui`** · ชั้น 03 · [TopNav.tsx](./TopNav.tsx)
+
+> เดิมชื่อ `AppHeader` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2/§8.3 · รับ slot props ของ Astryx (`heading` `startContent` `centerContent` `endContent` `label`) เป็นส่วนเสริม (§8.3 · D12) — ของ Astryx เป็น shell เปล่า ของเรารู้เรื่อง marketplace อยู่แล้วและคง 9 props เดิมไว้ทั้งหมด
 
 ---
 
@@ -23,7 +25,7 @@
 ## 2 · React API
 
 ```tsx
-<AppHeader
+<TopNav
   search={<SearchField labelHidden placeholder={s.search.placeholder} />}
   cartCount={cart.items.length}
   onOpenCart={() => setCartOpen(true)}
@@ -33,6 +35,11 @@
 
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
+| `heading` | `ReactNode` | — | slot ของ Astryx — ไม่ใช่ `<h1>` |
+| `startContent` | `ReactNode` | — | slot ของ Astryx — ก่อนชื่อแบรนด์ |
+| `centerContent` | `ReactNode` | — | slot ของ Astryx — ข้าง `search` |
+| `endContent` | `ReactNode` | — | slot ของ Astryx — หลังตะกร้า/บัญชี |
+| `label` | `string` | — | slot ของ Astryx — `aria-label` ของแถบทั้งแถบ |
 | `homeHref` | `string` | `'/'` | |
 | `logo` | `ReactNode` | ข้อความ "SME.GO" | `<img>` ต้องมี `alt` เป็นชื่อเว็บ |
 | `search` | `ReactNode` | — | ซ่อนต่ำกว่า `md` |
@@ -127,7 +134,7 @@ element ที่ถูกซ่อนจริง **Tab ไม่ถึง** ·
 
 ## 7 · Figma Variant
 
-Component set **`AppHeader`**
+Component set **`TopNav`**
 
 | Property | Values |
 |---|---|
@@ -147,7 +154,7 @@ export function Layout({ children }) {
 
   return (
     <>
-      <AppHeader
+      <TopNav
         search={<SearchField labelHidden placeholder={s.search.placeholder} />}
         cartCount={cart.count}
         onOpenCart={() => setCartOpen(true)}

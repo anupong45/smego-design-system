@@ -268,12 +268,11 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 34,
+  "maxProblems": 31,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea",
-    "ImageGallery": "Lightbox",
-    "AppHeader": "TopNav"
+    "ImageGallery": "Lightbox"
   },
   "same": [
     "Button", "IconButton", "Link", "Switch", "Card", "Badge", "Dialog",
@@ -281,7 +280,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Section", "Divider", "EmptyState", "Pagination", "Avatar", "Spinner",
     "SegmentedControl", "CheckboxInput", "RadioList", "Selector", "Typeahead",
     "NumberInput", "DateInput", "FileInput", "Slider", "Token", "Collapsible",
-    "Banner"
+    "Banner", "TopNav"
   ],
   "renameNewBuild": { "Tabs": "TabList" },
   "extension": [
@@ -311,7 +310,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "RadioList": ["labelContent"],
     "Card": ["selected", "elevation", "interactive"],
     "Badge": ["showIcon"],
-    "Banner": ["isLive", "titleAs"],
+    "Banner": ["isLive", "titleAs", "action", "tone"],
     "Dialog": ["footer", "size", "title", "hideClose"],
     "ProgressBar": ["note", "size", "unit", "unknownLabel", "format", "maxValue", "tone"],
     "Skeleton": ["lines", "shape"],
@@ -441,7 +440,8 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 | 11 | `Chip` → `Token` | ✅ | `children`→`label: string` บังคับ (§8.1) — ไม่ใช่ component ใหม่ข้าง Chip (§1.4 D9) · `RemovableChip`/`ChipRow` คงเดิม |
 | 12 | `Accordion` → `Collapsible` | ✅ | เฉพาะกลุ่ม — ไม่มี prop rename · `AccordionItem` คงชื่อเดิม |
 | 13 | `Alert` → `Banner` | ✅ | เปลี่ยนชื่ออย่างเดียว (§8.4/D13) — ไม่รับ `defaultIsExpanded`/`container` · `alert.test.tsx`→`banner.test.tsx`, `alert.spec.ts`→`banner.spec.ts` |
-| 14–15 | ที่เหลือ | ⬜ | `ImageGallery` `AppHeader` |
+| 14 | `AppHeader` → `TopNav` | ✅ | เพิ่ม slot props ของ Astryx (`heading` `startContent` `centerContent` `endContent` `label`) เป็นส่วนเสริม (§8.3 · D12) — คง 9 props เดิมไว้ทั้งหมด |
+| 15 | `ImageGallery` → `Lightbox` | ⬜ | ต้องตัดสิน §5.7 ก่อน — ImageGallery คือ inline gallery ไม่ใช่ overlay |
 
 **งานข้างเคียงที่เกิดขึ้นจริงในสองตัวแรก** (คาดว่าจะซ้ำกับตัวที่เหลือ):
 `fieldStyles` ย้ายออกจาก `TextField.tsx` มาเป็น `inputs/fieldStyles.ts` — เดิม Select · ComboBox · NumberField · DatePicker · SearchField ทั้งห้าตัว `import { fieldStyles } from './TextField'` ซึ่งผูกกับไฟล์ของ component อื่นโดยไม่มีเหตุผล

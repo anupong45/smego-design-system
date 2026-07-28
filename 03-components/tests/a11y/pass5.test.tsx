@@ -3,7 +3,7 @@ import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render, expectNoViolations } from './render';
 import {
-  AppHeader,
+  TopNav,
   BuyBox,
   CartDrawer,
   CartLineItem,
@@ -17,43 +17,43 @@ import {
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Pass 5 · เส้นทางซื้อ
-   AppHeader · BuyBox · Cart* · ImageGallery · Toast · Checkout CTA states
+   TopNav · BuyBox · Cart* · ImageGallery · Toast · Checkout CTA states
    ═══════════════════════════════════════════════════════════════════════════ */
 
-describe('AppHeader', () => {
+describe('TopNav', () => {
   it('ไม่มี axe violation', async () => {
     const { container } = render(
-      <AppHeader cartCount={3} onOpenCart={() => {}} />,
+      <TopNav cartCount={3} onOpenCart={() => {}} />,
     );
     const results = await expectNoViolations(container);
     expect(results.violations).toEqual([]);
   });
 
   it('★★★ ลิงก์ข้ามไปเนื้อหาเป็นลิงก์แรกใน DOM (SC 2.4.1)', () => {
-    render(<AppHeader />);
+    render(<TopNav />);
     const links = screen.getAllByRole('link');
     expect(links[0]?.textContent).toBe('ข้ามไปยังเนื้อหาหลัก');
     expect(links[0]?.getAttribute('href')).toBe('#main');
   });
 
   it('★★★ จำนวนในตะกร้าอยู่ในชื่อปุ่ม ไม่ใช่แค่ตัวเลขในวงกลม', () => {
-    render(<AppHeader cartCount={3} onOpenCart={() => {}} />);
+    render(<TopNav cartCount={3} onOpenCart={() => {}} />);
     expect(screen.getByRole('button', { name: 'เปิดตะกร้าสินค้า มี 3 รายการ' })).toBeTruthy();
   });
 
   it('★ ตะกร้าว่างยังมีปุ่มอยู่ที่เดิม ไม่ถูกซ่อน', () => {
-    render(<AppHeader cartCount={0} onOpenCart={() => {}} />);
+    render(<TopNav cartCount={0} onOpenCart={() => {}} />);
     expect(screen.getByRole('button', { name: 'เปิดตะกร้าสินค้า' })).toBeTruthy();
   });
 
   it('★★ แขกเห็นลิงก์เข้าสู่ระบบ · ตะกร้ายังใช้ได้', () => {
-    render(<AppHeader cartCount={1} onOpenCart={() => {}} />);
+    render(<TopNav cartCount={1} onOpenCart={() => {}} />);
     expect(screen.getByRole('link', { name: 'เข้าสู่ระบบ' })).toBeTruthy();
     expect(screen.getByRole('button', { name: /เปิดตะกร้าสินค้า/ })).toBeTruthy();
   });
 
   it('★ ชื่อแบรนด์เป็นลิงก์ ไม่ใช่ h1 — ทุกหน้าต้องมี h1 ของตัวเอง', () => {
-    render(<AppHeader />);
+    render(<TopNav />);
     expect(screen.getByRole('link', { name: 'SME.GO หน้าแรก' })).toBeTruthy();
     expect(screen.queryByRole('heading', { level: 1 })).toBeNull();
   });

@@ -206,7 +206,7 @@ export {
 } from './feedback/Toast';
 
 /* ── Navigation ───────────────────────────────────────────────────────────── */
-export { AppHeader, type AppHeaderProps } from './navigation/AppHeader';
+export { TopNav, type TopNavProps } from './navigation/TopNav';
 
 /* ── Marketplace ──────────────────────────────────────────────────────────── */
 export {
