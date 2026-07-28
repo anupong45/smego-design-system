@@ -21,7 +21,7 @@ import {
   Collapsible, AccordionItem, ImageGallery, DescriptionList,
   Banner, ProgressBar, Skeleton, SkeletonText, Spinner, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
-  TopNav, BottomNav, Pagination, TabList, Tab, TabPanel, Table,
+  TopNav, BottomNav, Pagination, TabList, Tab, TabPanel, Table, Main,
   DropdownMenu, DropdownMenuItem, DropdownMenuSection,
   DropdownMenuSeparator, DropdownMenuTrigger,
   SegmentedControl, SegmentedControlItem,
@@ -971,7 +971,7 @@ function App() {
         </Container>
       </header>
 
-      <main id="main" className="py-8">
+      <Main className="py-8">
         <Container size="wide">
           <Stack gap="10">
             <Foundations />
@@ -982,7 +982,7 @@ function App() {
             <Navigation />
           </Stack>
         </Container>
-      </main>
+      </Main>
 
       <ToastRegion />
     </SmeGoProvider>

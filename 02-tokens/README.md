@@ -286,8 +286,20 @@ node 02-tokens/validate-tokens.js
 |---|---|---|
 | **03 React UI Library** | Inputs · Navigation · Feedback · Data Display · Marketplace · Layout | ✅ ชั้น 01 และ 02 เสร็จ |
 | 04 Marketplace Pattern | ค้นหา · กรอง · เปรียบเทียบ · ติดต่อ | ชั้น 03 |
-| 05 Templates | หน้าตั้งต้นต่อ domain | ชั้น 03–04 |
+| ~~05 Templates~~ | ❌ **ไม่ทำ** — แอปประกอบหน้าเอง (คำตัดสิน 2026-07-29) ดูหมายเหตุใต้ตาราง | — |
 | 06 Documentation | คู่มือและ governance | ทั้งหมด |
 | 07 Tailwind Theme | preset พร้อมใช้ | ✅ `theme.css` เป็นตัวมันเองอยู่แล้ว |
+
+**ชั้น 05 Templates — ไม่ทำ** (คำตัดสิน 2026-07-29)
+
+`04-patterns/05-cart-and-checkout.md` เขียนไว้แต่แรกว่า "ไม่ทำ — แอปประกอบหน้าเอง" ขณะที่ตารางนี้เคยลิสต์ไว้ว่าจะทำ · **ตารางผิด** และความขัดแย้งนี้ทำให้ภาระ SC 2.4.1 (skip link) ถูกฝากไว้กับชั้นที่ไม่เกิดใน `Grid.md` และ `FilterPanel.md`
+
+เหตุผลที่ไม่ทำ:
+
+- ชั้น 04 เป็น **เอกสารรูปแบบ** ที่บอกวิธีประกอบอยู่แล้ว การเพิ่มโค้ดหน้าตั้งต้นทับลงไปคือแหล่งความจริงที่สอง
+- `@astryxdesign/cli` มี page template ~20 แบบ แต่**ไม่มีหน้า marketplace เลย** (`ide` · `kanban-board` · `incident-console` · `dashboard`) — ชั้นนี้ของ Astryx เล็งผลิตภัณฑ์คนละประเภท ไม่มีอะไรให้รับมา
+- สิ่งที่ template ควรเป็นเจ้าของจริง ๆ ถูกย้ายมาเป็น component ในชั้น 03 แล้ว: [`<Main>`](../03-components/src/layout/Main.md) เป็นเป้าของ skip link
+
+⚠️ หนี้ที่ยังผูกกับชั้นนี้: `QUALITY.md` ข้อ 2.6 (lazy-load หน้า form 142 KB) เคยเขียนว่า "รอ layer 05" — ต้องหาเจ้าของใหม่ เพราะ 05 ไม่มา
 
 **ชั้น 07 เสร็จไปพร้อมชั้น 02 แล้วโดยปริยาย** เพราะ Tailwind v4 เป็น CSS-first — `theme.css` **คือ** Tailwind theme ไม่มี config แยกให้สร้าง สิ่งที่เหลือของชั้น 07 คือการ package เป็น npm module ถ้าต้องแชร์ข้ามหลาย repo

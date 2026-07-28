@@ -7,7 +7,13 @@
   "exports": {
     ".": "./src/index.ts",
     "./primitives": "./src/primitives.ts",
-    "./strings": "./src/lib/strings.th.ts"
+    "./strings": "./src/lib/strings.th.ts",
+    "./inputs/*": "./src/inputs/*.tsx",
+    "./navigation/*": "./src/navigation/*.tsx",
+    "./feedback/*": "./src/feedback/*.tsx",
+    "./data-display/*": "./src/data-display/*.tsx",
+    "./layout/*": "./src/layout/*.tsx",
+    "./marketplace/*": "./src/marketplace/*.tsx"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -40,7 +46,9 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@astryxdesign/cli": "0.1.8",
     "@astryxdesign/core": "0.1.8",
+    "@astryxdesign/theme-neutral": "0.1.8",
     "@playwright/test": "^1.62.0",
     "@tailwindcss/cli": "^4.3.3",
     "@testing-library/react": "^16.3.2",

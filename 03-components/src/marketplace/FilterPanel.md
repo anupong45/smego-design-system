@@ -65,7 +65,7 @@
 // เดสก์ท็อป — คอลัมน์ในกริด
 <Grid preset="sidebar"><FilterPanel …/><SearchResult …/></Grid>
 
-// มือถือ — ห่อด้วย drawer (หน้าที่ของ Template ชั้น 05)
+// มือถือ — ห่อด้วย drawer (หน้าที่ของ **แอป** — ชั้น 05 ไม่ทำ)
 <DialogOverlay variant="drawer">
   <Dialog variant="drawer" title="ตัวกรอง"><FilterPanel …/></Dialog>
 </DialogOverlay>
@@ -135,7 +135,7 @@
 
 สำคัญเพราะแผงอยู่ **ก่อน** ผลลัพธ์ใน DOM — ผู้ใช้ screen reader ที่ไม่ต้องการกรองจะต้องฟังตัวกรอง 6 กลุ่มก่อนถึงสินค้า ถ้าไม่มี landmark
 
-⚠️ Landmark **ไม่แทน skip link** — ผู้ใช้คีย์บอร์ดที่มองเห็น (ไม่ใช้ screen reader) ยังต้อง Tab ผ่านทุก checkbox หน้าที่ใช้ FilterPanel จึงต้องมี skip link ซึ่งจัดการที่ชั้น 05
+⚠️ Landmark **ไม่แทน skip link** — ผู้ใช้คีย์บอร์ดที่มองเห็น (ไม่ใช้ screen reader) ยังต้อง Tab ผ่านทุก checkbox · หน้าที่ใช้ FilterPanel จึงต้องมี [`<TopNav>`](../navigation/TopNav.md) + [`<Main>`](../layout/Main.md) ซึ่งให้ลิงก์ข้ามและเป้าของมันครบคู่ (เดิมบรรทัดนี้ฝากไว้กับชั้น 05 ที่ไม่ทำ)
 
 ---
 

@@ -26,7 +26,20 @@
 
    สามตัวนั้นควรโหลดแบบ lazy เมื่ออยู่ในหน้าที่ไม่ได้ใช้ทันที:
 
-       const DateInput = lazy(() => import('@smego/ui/inputs/DateInput'));
+       const DateInput = lazy(() =>
+         import('@smego/ui/inputs/DateInput').then((m) => ({ default: m.DateInput })),
+       );
+
+   ⚠️ **สองอย่างที่ฉบับก่อนของคอมเมนต์นี้เขียนผิด** (แก้ 2026-07-29)
+
+   1 · subpath `@smego/ui/inputs/*` **ไม่มีอยู่จริง** — `exports` มีแค่ `.`
+       `./primitives` `./strings` · คำแนะนำนี้จึงพัง import ทันที
+       เพิ่ม subpath ต่อโฟลเดอร์ใน `package.json` แล้ว
+   2 · `React.lazy` ต้องได้ module ที่มี **default export** แต่ทุก component
+       ในไลบรารีนี้เป็น named export — ต้อง `.then()` แปลงก่อน
+
+   ทั้งสองข้อทำให้ "ทางแก้" ที่เขียนไว้ตั้งแต่รอบ 2026-07-26 ใช้ไม่ได้เลย
+   ซึ่งเป็นเหตุผลที่ไม่มีใครเคยทำ lazy-load สำเร็จ
 
    ทางหนีเมื่อ wrapper ไม่พอ: `@smego/ui/primitives` เปิด RAC ทั้งชุด
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -68,6 +81,7 @@ export {
   type SectionProps,
   type DividerProps,
 } from './layout/Grid';
+export { Main, type MainProps } from './layout/Main';
 
 /* ── Inputs ───────────────────────────────────────────────────────────────── */
 export { Button, buttonStyles, type ButtonProps } from './inputs/Button';
