@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority';
 /* ═══════════════════════════════════════════════════════════════════════════
    SME.GO · สไตล์และชนิดที่ใช้ร่วมกันทุก field
    ───────────────────────────────────────────────────────────────────────────
-   เดิมของพวกนี้อยู่ใน `TextField.tsx` แล้ว Selector · Typeahead · NumberField ·
+   เดิมของพวกนี้อยู่ใน `TextField.tsx` แล้ว Selector · Typeahead · NumberInput ·
    DatePicker · SearchField `import { fieldStyles } from './TextField'`
    ซึ่งทำให้ทุกตัวผูกกับไฟล์ของ component อื่นโดยไม่มีเหตุผล
    ตอน rename เป็น `TextInput` จึงย้ายออกมาไว้ตรงกลางเสียเลย

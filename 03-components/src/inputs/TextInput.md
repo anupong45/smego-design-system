@@ -18,7 +18,7 @@
 
 | สถานการณ์ | ใช้อะไรแทน | เหตุผล |
 |---|---|---|
-| ตัวเลขที่ต้องคำนวณ | `<NumberField>` (Pass 2) | ต้องมี stepper และ `inputMode="numeric"` |
+| ตัวเลขที่ต้องคำนวณ | `<NumberInput>` (Pass 2) | ต้องมี stepper และ `inputMode="numeric"` |
 | ค้นหาพร้อม suggestion | `<Typeahead>` (Pass 2) | ต้องมี `aria-autocomplete` + listbox |
 | วันที่ | `<DatePicker>` (Pass 2) | ต้องเป็น พ.ศ. ผ่าน `BuddhistCalendar` |
 | OTP | `<OTPField>` (Pass 2) | ต้องวางเลข 6 หลักได้ (SC 3.3.8) |

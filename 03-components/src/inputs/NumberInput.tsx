@@ -10,11 +10,22 @@ import {
 } from 'react-aria-components';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
-import { fieldStyles } from './fieldStyles';
+import {
+  fieldStyles,
+  statusTextClass,
+  isErrorStatus,
+  type InputStatus,
+} from './fieldStyles';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · NumberField
+   SME.GO · NumberInput   (เดิมชื่อ NumberField — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    `status` (เดิมชื่อ `errorMessage`) · `isOptional` (เดิมชื่อ `showOptional`)
+   คงไว้  `hideStepper` `suffix` (ours-only)
+   ไม่รับ `min` `max` `units` `isIntegerOnly` `hasClear` `startIcon` ของ
+          Astryx — RAC ให้ minValue/maxValue อยู่แล้ว ไม่มี use case อื่น
    ───────────────────────────────────────────────────────────────────────────
    ★★ ตัวเลขที่ต้องคำนวณต้องใช้ตัวนี้ **ไม่ใช่ `<TextField inputMode="numeric">`**
 
@@ -46,15 +57,15 @@ import { useStrings } from '../provider/SmeGoProvider';
    ซึ่งแปลไทยแล้วใน `strings-rac.th.ts` ("เพิ่มค่า" / "ลดค่า")
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export interface NumberFieldProps
+export interface NumberInputProps
   extends Omit<
     RACNumberFieldProps,
     'children' | 'className' | 'style' | 'validationBehavior'
   > {
   label: string;
   description?: string;
-  errorMessage?: string;
-  showOptional?: boolean;
+  status?: InputStatus;
+  isOptional?: boolean;
   /** หน่วยต่อท้ายในช่อง เช่น "บาท" "ชิ้น" */
   suffix?: string;
   /** ซ่อนปุ่มเพิ่ม/ลด — ใช้กับช่องที่ค่ากว้างมาก เช่นจำนวนเงิน */
@@ -63,29 +74,29 @@ export interface NumberFieldProps
   className?: string;
 }
 
-export function NumberField({
+export function NumberInput({
   label,
   description,
-  errorMessage,
-  showOptional,
+  status,
+  isOptional,
   suffix,
   hideStepper,
   size,
   className,
   ...rest
-}: NumberFieldProps) {
+}: NumberInputProps) {
   const s = useStrings();
 
   return (
     <RACNumberField
       validationBehavior="aria"
-      isInvalid={Boolean(errorMessage)}
+      isInvalid={isErrorStatus(status)}
       className={cn(fieldStyles.root, className)}
       {...rest}
     >
       <Label className={fieldStyles.label}>
         {label}
-        {showOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
+        {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>
 
       <Group
@@ -153,7 +164,16 @@ export function NumberField({
           {description}
         </Text>
       )}
-      <FieldError className={fieldStyles.error}>{errorMessage}</FieldError>
+
+      {isErrorStatus(status) ? (
+        <FieldError className={fieldStyles.error}>{status?.message}</FieldError>
+      ) : (
+        status?.message && (
+          <Text slot="description" className={statusTextClass[status.type]}>
+            {status.message}
+          </Text>
+        )
+      )}
     </RACNumberField>
   );
 }

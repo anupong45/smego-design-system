@@ -119,7 +119,7 @@ export {
   type DatePickerProps,
 } from './inputs/DatePicker';
 export { OTPField, type OTPFieldProps } from './inputs/OTPField';
-export { NumberField, type NumberFieldProps } from './inputs/NumberField';
+export { NumberInput, type NumberInputProps } from './inputs/NumberInput';
 export { SearchField, type SearchFieldProps } from './inputs/SearchField';
 export { Switch, type SwitchProps } from './inputs/Switch';
 export {

@@ -5,7 +5,7 @@ import { CalendarDate } from '@internationalized/date';
 import { render, expectNoViolations } from './render';
 import {
   DatePicker, OTPField, createBuddhistCalendar,
-  NumberField, SearchField, Switch, Selector, Typeahead, FileUpload,
+  NumberInput, SearchField, Switch, Selector, Typeahead, FileUpload,
 } from '../../src/index';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -212,11 +212,11 @@ const OPTIONS = [
 ];
 
 const pass2Cases: [string, React.ReactElement][] = [
-  ['NumberField', <NumberField label="จำนวนที่สั่ง" defaultValue={100} minValue={1} suffix="ชิ้น" />],
-  ['NumberField · เงิน', <NumberField label="วงเงินที่ขอ" defaultValue={500000} suffix="บาท" hideStepper
+  ['NumberInput', <NumberInput label="จำนวนที่สั่ง" defaultValue={100} minValue={1} suffix="ชิ้น" />],
+  ['NumberInput · เงิน', <NumberInput label="วงเงินที่ขอ" defaultValue={500000} suffix="บาท" hideStepper
     formatOptions={{ useGrouping: true }} />],
-  ['NumberField · invalid', <NumberField label="จำนวนที่สั่ง" defaultValue={0}
-    errorMessage="จำนวนต้องไม่น้อยกว่า 1 ชิ้น — ตรวจสอบจำนวนสั่งขั้นต่ำของสินค้า" />],
+  ['NumberInput · invalid', <NumberInput label="จำนวนที่สั่ง" defaultValue={0}
+    status={{ type: 'error', message: 'จำนวนต้องไม่น้อยกว่า 1 ชิ้น — ตรวจสอบจำนวนสั่งขั้นต่ำของสินค้า' }} />],
   ['SearchField', <SearchField label="ค้นหา" defaultValue="เครื่องคั่วกาแฟ" />],
   ['SearchField · label ซ่อน', <SearchField label="ค้นหาสินค้า" labelHidden />],
   ['Switch', <Switch defaultSelected description="ระบบจะแจ้งเตือนเมื่อมีคำสั่งซื้อใหม่">
@@ -243,15 +243,15 @@ describe('Pass 2 · axe', () => {
 });
 
 describe('Pass 2 · กฎเฉพาะ', () => {
-  it('NumberField ใช้ tabular-nums', () => {
-    const { container } = render(<NumberField label="ราคา" defaultValue={1250000} />);
+  it('NumberInput ใช้ tabular-nums', () => {
+    const { container } = render(<NumberInput label="ราคา" defaultValue={1250000} />);
     const input = container.querySelector('input')!;
     expect(input.className).toContain('tabular-nums');
   });
 
-  it('NumberField ไม่ใช้ role="spinbutton" — เป็น textbox ที่พิมพ์ทับได้', () => {
+  it('NumberInput ไม่ใช้ role="spinbutton" — เป็น textbox ที่พิมพ์ทับได้', () => {
     const { container } = render(
-      <NumberField label="จำนวน" defaultValue={5} minValue={1} maxValue={99} />,
+      <NumberInput label="จำนวน" defaultValue={5} minValue={1} maxValue={99} />,
     );
     const input = container.querySelector('input')!;
     /* ★ RAC เลือกไม่ใช้ spinbutton เพราะ screen reader หลายตัวจะเข้า

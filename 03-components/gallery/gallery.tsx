@@ -15,7 +15,7 @@ import {
   Stack, HStack, Grid, Container, Divider,
   Icon, iconRegistry, type IconName,
   Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
-  Radio, RadioList, RangeSlider, DatePicker, OTPField, NumberField,
+  Radio, RadioList, RangeSlider, DatePicker, OTPField, NumberInput,
   SearchField, Switch, Selector, Typeahead, FileUpload,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Accordion, AccordionItem, ImageGallery, DescriptionList,
@@ -256,10 +256,10 @@ function Inputs() {
         <OTPField label="รหัสยืนยัน" value={otp} onChange={setOtp} description="ส่งไปที่เบอร์ลงท้าย 4567" />
       </Specimen>
 
-      <Specimen name="NumberField / SearchField / Switch">
+      <Specimen name="NumberInput / SearchField / Switch">
         <Stack gap="4">
-          <NumberField label="จำนวน" value={num} onChange={setNum} minValue={1} suffix="ชิ้น" />
-          <NumberField label="ไม่มีปุ่มเพิ่ม-ลด" defaultValue={12} hideStepper suffix="กก." />
+          <NumberInput label="จำนวน" value={num} onChange={setNum} minValue={1} suffix="ชิ้น" />
+          <NumberInput label="ไม่มีปุ่มเพิ่ม-ลด" defaultValue={12} hideStepper suffix="กก." />
           <SearchField label="ค้นหาสินค้า" value={q} onChange={setQ} placeholder="เครื่องคั่วกาแฟ" />
           <Switch isSelected={on} onChange={setOn} description="แจ้งเตือนเมื่อมีคำสั่งซื้อใหม่">รับการแจ้งเตือน</Switch>
         </Stack>

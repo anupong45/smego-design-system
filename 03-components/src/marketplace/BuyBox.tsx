@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Button } from '../inputs/Button';
-import { NumberField } from '../inputs/NumberField';
+import { NumberInput } from '../inputs/NumberInput';
 import { Alert } from '../feedback/Alert';
 import { Badge } from '../data-display/Badge';
 import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
@@ -146,7 +146,7 @@ export function BuyBox({
       {isProduct && !isOutOfStock && (
         <>
           <div className="w-40 min-w-0">
-            <NumberField
+            <NumberInput
               label={s.cart.quantity}
               value={quantity}
               onChange={setQuantity}

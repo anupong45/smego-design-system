@@ -1,6 +1,8 @@
-# NumberField
+# NumberInput
 
-**`@smego/ui`** · ชั้น 03 · [NumberField.tsx](./NumberField.tsx)
+**`@smego/ui`** · ชั้น 03 · [NumberInput.tsx](./NumberInput.tsx)
+
+> เดิมชื่อ `NumberField` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `errorMessage`→`status` · `showOptional`→`isOptional` ตาม §8
 
 ---
 
@@ -17,14 +19,14 @@
 | รหัส OTP | `<OTPField>` | ต้องวางได้และกระจายลงช่อง |
 | เลือกจากค่าที่กำหนดไว้ | `<Selector>` | |
 
-**เส้นแบ่งสำคัญ:** เลขนิติบุคคล 13 หลักต้อง **ไม่** คั่นหลักพัน — ถ้าใช้ NumberField จะได้ `0,105,561,234,567`
+**เส้นแบ่งสำคัญ:** เลขนิติบุคคล 13 หลักต้อง **ไม่** คั่นหลักพัน — ถ้าใช้ NumberInput จะได้ `0,105,561,234,567`
 
 ---
 
 ## 2 · React API
 
 ```tsx
-<NumberField
+<NumberInput
   label="จำนวนที่สั่ง"
   description="สั่งขั้นต่ำ 1 ชิ้น สูงสุด 9,999 ชิ้น"
   value={qty}
@@ -39,7 +41,7 @@
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
 | `description` | `string` | — | **ควรระบุช่วงที่รับได้** — ดู §5 |
-| `errorMessage` | `string` | — | |
+| `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` |
 | `suffix` | `string` | — | หน่วยในช่อง · ได้ `aria-hidden` |
 | `hideStepper` | `boolean` | `false` | ใช้กับจำนวนเงินที่ค่ากว้าง |
 | `size` | `'md' \| 'lg'` | `'md'` | 46 / 54px |
@@ -80,7 +82,7 @@
 | ปุ่มเล็กเกินเกณฑ์ | **20×16** — ไม่ผ่าน SC 2.5.8 (ต้อง 24×24) |
 | ดันความสูงช่อง | คอลัมน์สูง 32px → ช่องเป็น **50px** แทน 46px (ข้อ 30) |
 
-ข้อสองสำคัญกว่าที่คิด — ฟอร์มที่มี `<TextField>` กับ `<NumberField>` เรียงกันจะ **ไม่ตรงแนว** และมองเห็นทันที
+ข้อสองสำคัญกว่าที่คิด — ฟอร์มที่มี `<TextInput>` กับ `<NumberInput>` เรียงกันจะ **ไม่ตรงแนว** และมองเห็นทันที
 
 **แก้เป็นแนวนอน `minus` / `plus` ขนาด 24×24** · เตี้ยกว่า line box 28px จึงไม่ดันความสูง
 
@@ -165,7 +167,7 @@ description="สั่งขั้นต่ำ 1 ชิ้น สูงสุด
 
 ## 7 · Figma Variant
 
-Component set **`NumberField`**
+Component set **`NumberInput`**
 
 | Property | Values |
 |---|---|
@@ -183,7 +185,7 @@ Component set **`NumberField`**
 
 ```tsx
 // จำนวนสั่งซื้อ — มีปุ่ม ± เพราะปรับทีละน้อย
-<NumberField
+<NumberInput
   label="จำนวนที่สั่ง"
   description="สั่งขั้นต่ำ 1 ชิ้น สูงสุด 9,999 ชิ้น"
   value={qty} onChange={setQty}
@@ -193,7 +195,7 @@ Component set **`NumberField`**
 
 ```tsx
 // จำนวนเงิน — ซ่อนปุ่ม เพราะ ±1 บาทไม่มีความหมายกับหลักล้าน
-<NumberField
+<NumberInput
   label="วงเงินที่ขอ"
   description="ไม่เกินวงเงินสูงสุดของโครงการ"
   hideStepper
@@ -204,7 +206,7 @@ Component set **`NumberField`**
 
 ```tsx
 // ❌ ห้ามใช้กับเลขนิติบุคคล
-// <NumberField label="เลขทะเบียนนิติบุคคล" />  → 0,105,561,234,567
+// <NumberInput label="เลขทะเบียนนิติบุคคล" />  → 0,105,561,234,567
 // ✅
 <TextField label="เลขทะเบียนนิติบุคคล" inputMode="numeric" />
 ```
@@ -238,8 +240,8 @@ Component set **`NumberField`**
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | ✅ | §4 `focus-within` · ลูกศรขึ้น/ลงเปลี่ยนค่า · พิมพ์ทับได้โดยตรง |
 | กำลังโหลด (Loading) | — | ค่าคำนวณในเครื่อง |
-| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `errorMessage` (SC 3.3.1) · ค่านอกช่วงบอกเกณฑ์จริง |
+| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `status` (SC 3.3.1) · ค่านอกช่วงบอกเกณฑ์จริง |
 | ว่างเปล่า (Empty) | — | ช่องว่าง = ยังไม่กรอก ซึ่งต่างจาก 0 และถูกจัดการที่ระดับฟอร์ม |
 | Skeleton | — | ช่องกรอกไม่ใช่เนื้อหาที่ต้องมีตัวแทนระหว่างโหลด |
 | การเคลื่อนไหว (Animation) | ✅ | `base.css §10` ครอบ `*` ด้วย `!important` — ไม่มีการเคลื่อนไหวที่หลุดตัวกัน (`lint-quality.mjs` 0 จุด) |
-| ประสิทธิภาพ (Performance) | ✅ | เทส "NumberField ใช้ `tabular-nums`" — ตัวเลขไม่ขยับตอนพิมพ์จึงไม่เกิด reflow ทุกคีย์ |
+| ประสิทธิภาพ (Performance) | ✅ | เทส "NumberInput ใช้ `tabular-nums`" — ตัวเลขไม่ขยับตอนพิมพ์จึงไม่เกิด reflow ทุกคีย์ |

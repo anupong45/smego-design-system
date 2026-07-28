@@ -4,7 +4,7 @@ import { Icon } from '../icon/Icon';
 import { Button, buttonStyles } from '../inputs/Button';
 import { IconButton } from '../inputs/IconButton';
 import { Link } from '../inputs/Link';
-import { NumberField } from '../inputs/NumberField';
+import { NumberInput } from '../inputs/NumberInput';
 import { Alert } from '../feedback/Alert';
 import { Dialog, DialogOverlay } from '../feedback/Dialog';
 import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
@@ -161,7 +161,7 @@ export function CartLineItem({
 
       <div className="flex min-w-0 flex-wrap items-end justify-between gap-3">
         <div className="w-32 min-w-0">
-          <NumberField
+          <NumberInput
             /* ★ ป้ายที่เห็นคือ "จำนวน" ส่วนชื่อเต็มไปที่ a11y tree
                ชื่อที่เห็นเป็นส่วนหนึ่งของชื่อที่ประกาศ จึงยังผ่าน SC 2.5.3
                (ป้ายยาวเต็มชื่อสินค้าในทุกแถวอ่านไม่ไหวด้วยสายตา) */
