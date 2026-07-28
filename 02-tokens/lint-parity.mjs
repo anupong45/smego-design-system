@@ -311,17 +311,49 @@ if (ts && axDist) {
         }
       }
 
-      const missing = [...theirs].filter(
+      /* ── ขอบเขตของ parity (คำตัดสิน 2026-07-28 ข้อ 1) ───────────────────
+         เดิม gate ฟ้อง prop ของ Astryx **ทุกตัว**ที่เราไม่มี ซึ่งบังคับให้
+         ต้องเขียน D-code ต่อ prop · วัดผลแล้วได้ **ปฏิเสธ 92 : รับ ~20**
+         พร้อม D-code 34 ข้อ — ปลายทางคือเอกสารรับรองว่าเราต่างจาก Astryx
+         อย่างมีเหตุผล 34 แบบ ไม่ใช่ระบบที่เข้ากันได้
+
+         ขอบเขตจึงหุบมาที่ **ชื่อ + ชุด prop ของ §8.1/§3.1** (`parityScope`)
+         ที่เหลือประกาศว่าอยู่นอกขอบเขต **รวมครั้งเดียว** รายงานเป็น note
+         ไม่ใช่ fail — ต่างจาก `wontAdopt` ("มีแล้วไม่เอา มีเหตุผลเฉพาะตัว")
+         และ `layerDiff` ("มีแล้ว แต่อยู่คนละชั้น")
+
+         ⚠️ D1–D35 ที่เขียนไว้แล้วยังอยู่ในเอกสารเป็นประวัติการตัดสิน
+         แค่ไม่ใช่สิ่งที่ gate บังคับอีก */
+      const scope = new Set(cfg.parityScope || []);
+      const notOurs = [...theirs].filter(
         (p) =>
           !oursFull.has(p) && !skipAll.has(p) && !(p in wont) && !onCompanion.has(p),
       );
+      const missing = notOurs.filter((p) => scope.has(p));
+      const beyond = notOurs.filter((p) => !scope.has(p));
       const extra = [...ours].filter(
         (p) => !theirs.has(p) && !skipAll.has(p) && !allowedExtra.has(p),
       );
 
+      /* ★★ `propsOursOnly` ต้อง **ยืนยัน** ไม่ใช่แค่ยกเว้น (คำตัดสินข้อ 3)
+         เดิมมันแค่ปิดเสียงเตือน จึงรับผีได้เงียบ ๆ — `labelContent` ถูก
+         ประกาศไว้ทั้ง `CheckboxInput`/`RadioList` ตาม D18 โดยที่โค้ดไม่มีเลย
+         ทั้งสองที่ และไม่มีอะไรจับได้ เพราะการยกเว้นย่อมไม่ตรวจว่ามีจริง */
+      const ghosts = [...allowedExtra].filter((p) => !ours.has(p));
+      if (ghosts.length) {
+        fail(`${name}: propsOursOnly ประกาศ prop ที่โค้ดไม่มี — ${ghosts.sort().join(' ')}\n` +
+             `    สร้างขึ้นจริง หรือลบออกจาก propsOursOnly.${name}`);
+      }
+
+      if (beyond.length) {
+        notes.push(
+          `${name}: ${beyond.length} prop ของ Astryx อยู่นอกขอบเขต parity ` +
+            `(${beyond.sort().join(' ')})`,
+        );
+      }
       if (missing.length) {
-        fail(`${name}: ขาด prop ที่ Astryx มี — ${missing.sort().join(' ')}\n` +
-             `    รับเข้ามา หรือใส่ใน wontAdopt.${name} พร้อมรหัส D`);
+        fail(`${name}: ขาด prop ที่อยู่**ในขอบเขต** parity — ${missing.sort().join(' ')}\n` +
+             `    §8.1/§3.1 ตัดสินว่ารับแล้ว จึงต้องมี — ดู parityScope`);
       }
       if (extra.length) {
         fail(`${name}: มี prop เกินที่ Astryx ไม่มี — ${extra.sort().join(' ')}\n` +

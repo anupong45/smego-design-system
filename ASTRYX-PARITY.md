@@ -145,7 +145,8 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | Button | 11 | — | `fullWidth` `iconPosition` | `label` `href` `as` `isIconOnly` `endContent` `tooltip` `width` `clickAction` `isInterruptible` `target` `rel` |
 | IconButton | 0 | `name`→`icon` | `label` `size` `variant` | — |
 | Link | 9 | — | `external` `quiet` | `label` `hasUnderline` `isExternalLink` `isStandalone` `maxLines` `weight` `color` `display` `tooltip` |
-| TextField→TextInput | 10 | `errorMessage`→`status` · `showOptional`→`isOptional` | `prefix` | `isLabelHidden` `isLoading` `hasClear` `startIcon` `width` `labelTooltip` `onEnter` `htmlName` `changeAction` `disabledMessage` `hasAutoFocus` |
+| TextField→TextInput | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` · `prefix`→`startIcon` | — | `size` (D1) `width` (D6) `changeAction` (D8) `htmlName` (D15) `labelTooltip` `onEnter` `hasAutoFocus` `disabledMessage` (D16) |
+| ⚠️ | | **แถวเดิมผิด 5 ช่อง** — เขียนว่าไม่รับ `isLabelHidden` `isLoading` `hasClear` `startIcon` แต่โค้ดรับทั้งสี่ (`TextInput.tsx` §54–56) และวาง `prefix` ไว้ในช่อง "ของเราเกิน" ทั้งที่ rename เป็น `startIcon` ไปแล้ว · จับได้จาก `propsOursOnly` ที่ทำให้ยืนยันจริง (คำตัดสิน 2026-07-28 ข้อ 3) | | |
 | Textarea→TextArea | 13 | เหมือนบน | — | `hasSpellCheck` + ชุดเดียวกับบน |
 | Checkbox→CheckboxInput | ✅ | `children`→`label` · +`isLabelHidden` `status` `isOptional` | — | `size` (D1) `isLoading` (D8) `labelIcon` (D35) `width` (D6) `htmlName` (D15) `changeAction` (D8) `disabledMessage` (D16) |
 | RadioGroup→RadioList | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` · +`isLabelHidden` | — | `size` (D1) `width` (D6) `labelTooltip` `disabledMessage` (D16) `htmlName` (D15) |
@@ -280,7 +281,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 14,
+  "maxProblems": 11,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea"
@@ -304,6 +305,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "FilterPanel", "Cart", "Wishlist", "Container", "SmeGoProvider"
   ],
   "propsSkipAll": ["className", "as", "children"],
+  "parityScope": ["label", "isLabelHidden", "status", "isOptional"],
   "layerDiff": {
     "Tooltip": {
       "companion": "TooltipTrigger",
@@ -322,15 +324,12 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Button": ["fullWidth", "iconPosition"],
     "IconButton": ["label", "size", "variant"],
     "Link": ["external", "quiet"],
-    "TextInput": ["prefix"],
     "FileInput": ["onRemove"],
     "Slider": ["minLabel", "maxLabel", "unit"],
     "Spinner": ["isLabelHidden"],
     "EmptyState": ["isLive"],
     "TabList": ["label", "isDisabled"],
     "Switch": ["align"],
-    "CheckboxInput": ["labelContent"],
-    "RadioList": ["labelContent"],
     "Card": ["selected", "elevation", "interactive"],
     "Badge": ["showIcon"],
     "Banner": ["isLive", "titleAs", "action", "tone"],
