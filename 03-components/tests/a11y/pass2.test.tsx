@@ -5,7 +5,7 @@ import { CalendarDate } from '@internationalized/date';
 import { render, expectNoViolations } from './render';
 import {
   DatePicker, OTPField, createBuddhistCalendar,
-  NumberField, SearchField, Switch, Selector, ComboBox, FileUpload,
+  NumberField, SearchField, Switch, Selector, Typeahead, FileUpload,
 } from '../../src/index';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -226,7 +226,7 @@ const pass2Cases: [string, React.ReactElement][] = [
     description="เลือกจังหวัดที่โรงงานตั้งอยู่" />],
   ['Selector · invalid', <Selector label="จังหวัดที่ตั้ง" options={OPTIONS}
     status={{ type: 'error', message: 'ยังไม่ได้เลือกจังหวัด — จำเป็นสำหรับการคำนวณค่าขนส่ง' }} />],
-  ['ComboBox', <ComboBox label="จังหวัดที่ตั้ง" options={OPTIONS}
+  ['Typeahead', <Typeahead label="จังหวัดที่ตั้ง" options={OPTIONS}
     placeholder="พิมพ์เพื่อค้นหาจังหวัด" />],
   ['FileUpload', <FileUpload label="เอกสารประกอบการสมัคร"
     description="หนังสือรับรองนิติบุคคล และงบการเงินย้อนหลัง 2 ปี" multiple onSelect={() => {}} />],

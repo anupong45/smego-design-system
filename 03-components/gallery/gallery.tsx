@@ -16,7 +16,7 @@ import {
   Icon, iconRegistry, type IconName,
   Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
   Radio, RadioList, RangeSlider, DatePicker, OTPField, NumberField,
-  SearchField, Switch, Selector, ComboBox, FileUpload,
+  SearchField, Switch, Selector, Typeahead, FileUpload,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Accordion, AccordionItem, ImageGallery, DescriptionList,
   Alert, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
@@ -265,11 +265,11 @@ function Inputs() {
         </Stack>
       </Specimen>
 
-      <Specimen name="Selector / ComboBox" note="Selector = เลือกจากรายการ · ComboBox = พิมพ์กรองได้">
+      <Specimen name="Selector / Typeahead" note="Selector = เลือกจากรายการ · Typeahead = พิมพ์กรองได้">
         <Stack gap="4">
           <Selector label="จังหวัด" options={provinces} selectedKey={sel} onSelectionChange={(k) => setSel(k as string)} />
           <Selector label="หมวดหมู่" options={provinces} placeholder="เลือกหมวดหมู่" status={{ type: 'error', message: 'กรุณาเลือกหมวดหมู่' }} />
-          <ComboBox label="ค้นหาจังหวัด" options={provinces} description="พิมพ์เพื่อกรอง" />
+          <Typeahead label="ค้นหาจังหวัด" options={provinces} description="พิมพ์เพื่อกรอง" />
         </Stack>
       </Specimen>
 

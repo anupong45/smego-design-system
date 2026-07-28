@@ -13,12 +13,24 @@ import {
 import { useState } from 'react';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
-import { fieldStyles } from './fieldStyles';
+import {
+  fieldStyles,
+  statusTextClass,
+  isErrorStatus,
+  type InputStatus,
+} from './fieldStyles';
 import { SelectItem, type SelectOption } from './Selector';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · ComboBox — เลือกจากรายการโดยพิมพ์กรองได้
+   SME.GO · Typeahead — เลือกจากรายการโดยพิมพ์กรองได้ (เดิมชื่อ ComboBox — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    `status` (เดิมชื่อ `errorMessage`) · `isOptional` (เดิมชื่อ `showOptional`)
+   คงไว้  `options` (ours-only — ใช้ type เดียวกับ Selector แทน `searchSource` ของ Astryx)
+   ไม่รับ `searchSource` `debounceMs` `renderItem` `maxMenuItems`
+          `emptySearchResultsText` `onChangeQuery` ของ Astryx — เราไม่ทำ
+          async search ในตัวนี้ (ถ้าต้องการค่อยแยก component)
    ───────────────────────────────────────────────────────────────────────────
    ★★★ Thai IME — **จุดที่ ComboBox ต่างจาก TextField อย่างมีนัยสำคัญ**
 
@@ -42,7 +54,7 @@ import { useStrings } from '../provider/SmeGoProvider';
    ผู้ใช้ที่ไม่รู้ว่ามีตัวเลือกอะไรจะได้เห็นก่อนพิมพ์
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export interface ComboBoxProps
+export interface TypeaheadProps
   extends Omit<
     RACComboBoxProps<SelectOption>,
     'children' | 'className' | 'style' | 'validationBehavior' | 'items'
@@ -50,32 +62,32 @@ export interface ComboBoxProps
   label: string;
   options: SelectOption[];
   description?: string;
-  errorMessage?: string;
-  showOptional?: boolean;
+  status?: InputStatus;
+  isOptional?: boolean;
   placeholder?: string;
   size?: 'md' | 'lg';
   className?: string;
 }
 
-export function ComboBox({
+export function Typeahead({
   label,
   options,
   description,
-  errorMessage,
-  showOptional,
+  status,
+  isOptional,
   placeholder,
   size,
   className,
   onInputChange,
   ...rest
-}: ComboBoxProps) {
+}: TypeaheadProps) {
   const s = useStrings();
   const [isComposing, setComposing] = useState(false);
 
   return (
     <RACComboBox
       validationBehavior="aria"
-      isInvalid={Boolean(errorMessage)}
+      isInvalid={isErrorStatus(status)}
       /* ★ ต้องเปิด ไม่งั้น popover ปิดเงียบเมื่อไม่มีผลลัพธ์ */
       allowsEmptyCollection
       menuTrigger="focus"
@@ -84,7 +96,7 @@ export function ComboBox({
     >
       <Label className={fieldStyles.label}>
         {label}
-        {showOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
+        {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>
 
       <Group
@@ -133,7 +145,16 @@ export function ComboBox({
           {description}
         </Text>
       )}
-      <FieldError className={fieldStyles.error}>{errorMessage}</FieldError>
+
+      {isErrorStatus(status) ? (
+        <FieldError className={fieldStyles.error}>{status?.message}</FieldError>
+      ) : (
+        status?.message && (
+          <Text slot="description" className={statusTextClass[status.type]}>
+            {status.message}
+          </Text>
+        )
+      )}
 
       <Popover
         offset={4}

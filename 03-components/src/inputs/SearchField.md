@@ -12,7 +12,7 @@
 
 | สถานการณ์ | ใช้อะไรแทน | เหตุผล |
 |---|---|---|
-| ค้นหาพร้อมคำแนะนำ | `<ComboBox>` | ต้องมี listbox + `aria-autocomplete` |
+| ค้นหาพร้อมคำแนะนำ | `<Typeahead>` | ต้องมี listbox + `aria-autocomplete` |
 | กรอกข้อความทั่วไป | `<TextField>` | `role="searchbox"` สื่อผิด |
 | กรองรายการที่เห็นอยู่ | `<SearchField>` ก็ได้ | แต่ต้องประกาศจำนวนผลผ่าน `<SearchResult>` |
 

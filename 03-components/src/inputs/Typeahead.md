@@ -1,6 +1,8 @@
-# ComboBox
+# Typeahead
 
-**`@smego/ui`** · ชั้น 03 · [ComboBox.tsx](./ComboBox.tsx)
+**`@smego/ui`** · ชั้น 03 · [Typeahead.tsx](./Typeahead.tsx)
+
+> เดิมชื่อ `ComboBox` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `errorMessage`→`status` · `showOptional`→`isOptional` ตาม §8
 
 ---
 
@@ -13,16 +15,16 @@
 | สถานการณ์ | ใช้อะไรแทน | เหตุผล |
 |---|---|---|
 | รายการสั้น (≤ ~10) | `<Selector>` | การพิมพ์ไม่ช่วยอะไร |
-| ค้นหาอิสระ ไม่ใช่ชุดปิด | `<SearchField>` | ComboBox บังคับเลือกจากรายการ |
+| ค้นหาอิสระ ไม่ใช่ชุดปิด | `<SearchField>` | Typeahead บังคับเลือกจากรายการ |
 | เลือกหลายค่า | `<CheckboxGroup>` หรือ `<Chip>` | |
-| รายการมาจาก API แบบ async | ComboBox + จัดการ loading เอง | component นี้รับ `options` ที่พร้อมแล้ว |
+| รายการมาจาก API แบบ async | Typeahead + จัดการ loading เอง | component นี้รับ `options` ที่พร้อมแล้ว |
 
 ---
 
 ## 2 · React API
 
 ```tsx
-<ComboBox
+<Typeahead
   label="จังหวัดที่จัดส่ง"
   options={provinces}
   placeholder="พิมพ์เพื่อค้นหาจังหวัด"
@@ -35,7 +37,7 @@
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
 | `options` | `SelectOption[]` | — | ใช้ type เดียวกับ `<Selector>` |
-| `placeholder` · `description` · `errorMessage` · `showOptional` | | | |
+| `placeholder` · `description` · `status` · `isOptional` | | | |
 | `size` | `'md' \| 'lg'` | `'md'` | |
 | `selectedKey` / `onSelectionChange` / `inputValue` / `onInputChange` | | | จาก RAC |
 
@@ -77,9 +79,9 @@ renderEmptyState={() => (
 | ไม่พบผลลัพธ์ | "ไม่พบตัวเลือกที่ตรงกัน" |
 | invalid | `border-edge-danger` |
 
-### ★★★ Thai IME — จุดที่ ComboBox ต่างจาก `TextField` อย่างมีนัยสำคัญ
+### ★★★ Thai IME — จุดที่ Typeahead ต่างจาก `TextInput` อย่างมีนัยสำคัญ
 
-ComboBox กรองรายการ **ทุก keystroke** · ระหว่างประกอบตัวอักษรไทย รายการจะกรองด้วยคำที่ยังไม่สมบูรณ์:
+Typeahead กรองรายการ **ทุก keystroke** · ระหว่างประกอบตัวอักษรไทย รายการจะกรองด้วยคำที่ยังไม่สมบูรณ์:
 
 ```
 ก → กร → กรุ → กรุง → กรุงเ → … → กรุงเทพ
@@ -158,7 +160,7 @@ onChange={(e) => { if (!isComposing) onInputChange?.(e.target.value); }}
 
 ## 7 · Figma Variant
 
-Component set **`ComboBox`**
+Component set **`Typeahead`**
 
 | Property | Values |
 |---|---|
@@ -174,7 +176,7 @@ Component set **`ComboBox`**
 ## 8 · Usage
 
 ```tsx
-<ComboBox
+<Typeahead
   label="จังหวัดที่จัดส่ง"
   placeholder="พิมพ์เพื่อค้นหาจังหวัด"
   options={provinces}
@@ -191,7 +193,7 @@ const filtered = useMemo(
   [all, query],
 );
 
-<ComboBox
+<Typeahead
   label="ชื่อผู้ขาย"
   options={filtered}
   inputValue={query}
@@ -209,8 +211,8 @@ const filtered = useMemo(
 | กัน `onChange` ทั้งหมดแบบ TextField | กันเฉพาะการกรอง | ผู้ใช้ไม่เห็นสิ่งที่ตัวเองพิมพ์ |
 | ไม่ตั้ง `allowsEmptyCollection` | ตั้ง (ตายตัวแล้ว) | popover ปิดเงียบเมื่อไม่พบ |
 | ไม่มีข้อความ "ไม่พบ" | `renderEmptyState` | ผู้ใช้ไม่รู้ว่าพิมพ์ผิดหรือไม่มีข้อมูล |
-| ComboBox กับ 5 ตัวเลือก | `<Selector>` | การพิมพ์ไม่ช่วยอะไร |
-| ใช้แทน `<SearchField>` | `<SearchField>` | ComboBox บังคับเลือกจากรายการ |
+| Typeahead กับ 5 ตัวเลือก | `<Selector>` | การพิมพ์ไม่ช่วยอะไร |
+| ใช้แทน `<SearchField>` | `<SearchField>` | Typeahead บังคับเลือกจากรายการ |
 | รายการหน้าตาต่างจาก Selector | ใช้ `SelectItem` ร่วมกัน | ผู้ใช้คิดว่าเป็นคนละอย่าง |
 | ลืม `textValue` | ใส่เสมอ | การกรองด้วยการพิมพ์และการประกาศพัง |
 
@@ -228,7 +230,7 @@ const filtered = useMemo(
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | ✅ | §4 `focus-within` · ลูกศรขึ้น/ลงเลื่อนตัวเลือก · `Esc` ปิด · `Enter` เลือก (RAC จัดการครบ) |
 | กำลังโหลด (Loading) | ✅ | §4 "กำลังพิมพ์" — ผลลัพธ์ที่ยังไม่มาไม่ถูกแสดงเป็นรายการว่าง |
-| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `errorMessage` (SC 3.3.1) |
+| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `status` (SC 3.3.1) |
 | ว่างเปล่า (Empty) | ✅ | §4 **"ไม่พบผลลัพธ์"** เป็นสถานะที่ออกแบบไว้ ไม่ใช่ listbox เปล่า |
 | Skeleton | — | รายการตัวเลือกสั้นและมาพร้อมกันทั้งชุด · แถบสีเทาแทนที่จะทำให้เมนูกระพริบ |
 | การเคลื่อนไหว (Animation) | ✅ | `base.css §10` ครอบ `*` ด้วย `!important` — ไม่มีการเคลื่อนไหวที่หลุดตัวกัน (`lint-quality.mjs` 0 จุด) · เข้า/ออกด้วย `fade` opacity ล้วน |

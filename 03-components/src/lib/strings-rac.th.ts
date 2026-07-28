@@ -8,7 +8,7 @@
 
    ผลถ้าไม่แก้: ผู้ใช้ TalkBack ภาษาไทย — ซึ่งเป็นกลุ่มผู้ใช้หลักตามข้อ 01 —
    จะได้ยิน **ภาษาอังกฤษ** เมื่อ React Aria ประกาศเอง เช่น
-   จำนวนตัวเลือกใน ComboBox · ทิศทางการเรียงในตาราง · ปุ่มปิด Toast
+   จำนวนตัวเลือกใน Typeahead · ทิศทางการเรียงในตาราง · ปุ่มปิด Toast
    ซึ่งเป็นข้อความที่ผู้ใช้ไม่เห็นบนจอ แต่ screen reader อ่านออกเสียง
 
    วิธีแก้: ตั้ง global ที่ `@internationalized/string` อ่าน —
@@ -110,7 +110,7 @@ export const racStringsTh: Record<string, Record<string, RacString>> = {
     collectionLabel: 'คำแนะนำ',
   },
 
-  /* ComboBox — ช่องค้นหาแบบมีคำแนะนำ */
+  /* Typeahead — ช่องค้นหาแบบมีคำแนะนำ */
   '@react-aria/combobox': {
     focusAnnouncement: (a) =>
       a['isGroupChange']

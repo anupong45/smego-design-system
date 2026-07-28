@@ -14,7 +14,7 @@
 
 | สถานการณ์ | ใช้อะไรแทน | เหตุผล |
 |---|---|---|
-| รายการยาวที่ต้องค้นหา | `<ComboBox>` | พิมพ์กรองได้ |
+| รายการยาวที่ต้องค้นหา | `<Typeahead>` | พิมพ์กรองได้ |
 | ไม่เกิน ~7 ตัวและต้องเห็นพร้อมกัน | `<RadioList>` | เปรียบเทียบได้โดยไม่ต้องเปิด |
 | เลือกหลายค่า | `<CheckboxGroup>` | |
 | เปิด/ปิด | `<Switch>` | |
@@ -146,7 +146,7 @@
   <ListBox items={options} className="max-h-64 overflow-auto p-1 outline-none">
 ```
 
-`SelectItem` ถูก export เพื่อให้ `ComboBox` ใช้ซ้ำ — รายการในสองตัวนี้ต้องหน้าตาเหมือนกัน
+`SelectItem` ถูก export เพื่อให้ `Typeahead` ใช้ซ้ำ — รายการในสองตัวนี้ต้องหน้าตาเหมือนกัน
 
 ---
 
@@ -214,7 +214,7 @@ const PROVINCES = [
 | popover กว้างตามข้อความ | `w-(--trigger-width)` | ดูไม่เกี่ยวกับช่อง |
 | `description` เป็น `title` | บรรทัดที่สองในรายการ | tooltip ผู้ใช้ touch เข้าไม่ถึง |
 | Selector กับ 3 ตัวเลือกในฟอร์มสั้น | `<RadioList>` | ต้องเปิดถึงจะเห็น |
-| Selector กับ 50 จังหวัด | `<ComboBox>` | สแกนหาไม่เจอ |
+| Selector กับ 50 จังหวัด | `<Typeahead>` | สแกนหาไม่เจอ |
 
 ---
 
@@ -229,7 +229,7 @@ const PROVINCES = [
 | โหมดมืด (Dark Mode) | ✅ | popover ใช้ `--elevation-*` · `lint-classes.mjs` 0 จุด — ทุกสีมาจาก token ที่ override ในโหมดมืดแล้ว |
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | ✅ | §4 `open` · ลูกศรเปิดและเลื่อน · พิมพ์ตัวอักษรเพื่อกระโดด · `Esc` ปิดแล้วคืน focus ที่ตัวเปิด |
-| กำลังโหลด (Loading) | — | ตัวเลือกมาพร้อมหน้า · ถ้าต้องค้นหาให้ใช้ [`<ComboBox>`](./ComboBox.md) |
+| กำลังโหลด (Loading) | — | ตัวเลือกมาพร้อมหน้า · ถ้าต้องค้นหาให้ใช้ [`<Typeahead>`](./Typeahead.md) |
 | ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `status` (SC 3.3.1) |
 | ว่างเปล่า (Empty) | — | select ที่ไม่มีตัวเลือกคือ select ที่ไม่ควรแสดง — ให้ซ่อนทั้งช่องพร้อมเหตุผล |
 | Skeleton | — | ตัวเลือกเป็นข้อความสั้น |

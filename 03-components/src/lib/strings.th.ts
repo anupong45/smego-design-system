@@ -45,7 +45,7 @@ export const stringsTh = {
     uploadHelp: (maxMb: number) =>
       `ไฟล์ JPG PNG หรือ PDF ขนาดไม่เกิน ${maxMb} เมกะไบต์`,
     removeFile: (name: string) => `นำไฟล์ ${name} ออก`,
-    /** ComboBox — ไม่พบตัวเลือกที่ตรงกับที่พิมพ์ */
+    /** Typeahead — ไม่พบตัวเลือกที่ตรงกับที่พิมพ์ */
     noMatches: 'ไม่พบตัวเลือกที่ตรงกัน',
   },
 

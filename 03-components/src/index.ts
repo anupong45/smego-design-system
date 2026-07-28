@@ -129,7 +129,7 @@ export {
   type SelectItemProps,
   type SelectOption,
 } from './inputs/Selector';
-export { ComboBox, type ComboBoxProps } from './inputs/ComboBox';
+export { Typeahead, type TypeaheadProps } from './inputs/Typeahead';
 export {
   FileUpload,
   type FileUploadProps,
