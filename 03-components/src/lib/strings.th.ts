@@ -367,6 +367,27 @@ export const stringsTh = {
     updatedAt: (date: string) => `ข้อมูล ณ ${date}`,
   },
 
+  /* ── การแบ่งหน้า ────────────────────────────────────────────────────────
+     ★ ชื่อปุ่มเลขหน้าต้องเป็น "หน้า 3" ไม่ใช่ "3"
+     ตัวเลขลอย ๆ ไม่บอกอะไรกับผู้ใช้ screen reader — เหตุผลเดียวกับจำนวน
+     ในตะกร้า (`TopNav`) และปุ่มลบ chip (`RemovableChip`)
+     ─────────────────────────────────────────────────────────────────────── */
+  pagination: {
+    /** ชื่อ landmark ของ <nav> */
+    label: 'การแบ่งหน้า',
+    previous: 'หน้าก่อนหน้า',
+    next: 'หน้าถัดไป',
+    /** ชื่อ accessible ของปุ่มเลขหน้า */
+    page: (n: number) => `หน้า ${n}`,
+    /** ★ หน้าปัจจุบันต้องบอกด้วยว่าเป็นหน้าปัจจุบัน ไม่ใช่พึ่ง aria-current เดียว */
+    currentPage: (n: number) => `หน้า ${n} หน้าปัจจุบัน`,
+    /** variant="compact" — บนจอแคบที่ปุ่มเลขหน้าไม่พอที่ */
+    compact: (page: number, total: number) => `หน้า ${page} จาก ${total}`,
+    /** variant="count" — บอกช่วงรายการ ไม่ใช่เลขหน้า */
+    range: (from: number, to: number, total: number) =>
+      `${from.toLocaleString('en-US')}–${to.toLocaleString('en-US')} จาก ${total.toLocaleString('en-US')} รายการ`,
+  },
+
   error: {
     required: (field: string) => `ยังไม่ได้กรอก${field}`,
     taxIdFormat:

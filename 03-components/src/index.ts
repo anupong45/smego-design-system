@@ -220,6 +220,13 @@ export {
 
 /* ── Navigation ───────────────────────────────────────────────────────────── */
 export { TopNav, type TopNavProps } from './navigation/TopNav';
+export {
+  Pagination,
+  pageSlots,
+  type PaginationProps,
+  type PaginationVariant,
+  type PaginationSize,
+} from './navigation/Pagination';
 
 /* ── Marketplace ──────────────────────────────────────────────────────────── */
 export {
