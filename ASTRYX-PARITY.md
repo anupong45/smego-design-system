@@ -63,9 +63,9 @@
 
 | ตัวใหม่ | ชื่อ Astryx | เหตุผลจากโค้ดจริง |
 |---|---|---|
-| `EmptyState` | `EmptyState` | empty state ถูก hand-roll ใน **8 ไฟล์** (Cart, Wishlist, SearchResult, Checkout, Payment, ProductCard, OrderTimeline, Compare) |
+| `EmptyState` | `EmptyState` | ⚠️ **แก้ตัวเลข 2026-07-28** — hand-roll จริง **3 ไฟล์** ไม่ใช่ 8: `Cart.tsx:319` · `Wishlist.tsx:148` · `SearchResult.tsx:93` (โครงเหมือนกันแทบ byte-identical) · `Compare.tsx:115` เป็น `return null` โดยเจตนา ไม่ใช่ empty state · `Checkout` `Payment` `ProductCard` `OrderTimeline` **ไม่มีสาขา empty เลย** |
 | `Pagination` | `Pagination` | มี `SearchResult` แต่ **ไม่มี pagination เลยทั้งระบบ** |
-| `Avatar` | `Avatar` | `SellerProfile` วาด avatar เอง |
+| `Avatar` | `Avatar` | ⚠️ **แก้เหตุผล 2026-07-28** — `SellerProfile` **ไม่ได้**วาด avatar เอง (รับ `avatar?: ReactNode` เป็น slot ที่ `SellerProfile.tsx:125`) · เหตุผลจริง: ผู้เรียกต้อง hand-roll `<img className="size-12 rounded-full">` ทุกครั้ง (เห็นใน `SellerProfile.md:248`) โดยไม่มีทางถอยเมื่อรูปพัง และ**ไม่มีตัวย่อที่ถูกต้องสำหรับชื่อไทย** (ดู `Avatar.md` §6) |
 | `Spinner` | `Spinner` | ⚠️ ต้องนิยามเขตแดนกับ `Skeleton` ก่อน — ดู §5.9 |
 | `Tabs` | `TabList` | |
 | `SegmentedControl` | `SegmentedControl` | |
@@ -212,6 +212,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | D19 | ไม่รับ `tooltip` บน `Button` `IconButton` `Link` | `IconButton.md` §5 และ `Tooltip.md` §5 เขียนตรงกันว่า `aria-describedby` **ไม่ใช่** accessible name — prop ชื่อ `tooltip` บนปุ่มเชิญให้ทำ anti-pattern ที่สองไฟล์นั้นกันไว้เอง (ใช้ `label` ตั้งชื่อ แล้วครอบด้วย `TooltipTrigger` ถ้าต้องการคำอธิบายเสริม) |
 | D20 | เส้นแบ่ง link/button — ไม่รับ `Button.href/target/rel` (และ `IconButton.href/target/rel` ด้วยเหตุผลเดียวกัน) และไม่รับ `Link.label/color/weight/display/type/maxLines/hasUnderline` | `Link.md` §1 ตั้งกฎไว้ว่า "เปลี่ยน URL = ลิงก์ · เปลี่ยนข้อมูล = ปุ่ม" · `Button.href` ลบเส้นนั้นทิ้ง ส่วน `Link.color/weight/display/type/maxLines` เปิดทางให้ลิงก์แต่งตัวเป็นปุ่ม · `hasUnderline` คือปุ่มปิด SC 1.4.1 (สีอย่างเดียวไม่พอ) ที่ `base.css` บังคับขีดเส้นใต้ด้วย `:where(a[href])` อยู่แล้ว |
 | D21 | props ที่ขัด SC หรือขัดคำตัดสินเดิม — `IconButton.isLoading/clickAction/isInterruptible` · `Tooltip.focusTrigger/alignment/anchorRef/hasHoverIndication` · `ProgressBar.isIndeterminate` · `Dialog.isInline` | `IconButton` เป็นไอคอนล้วน ไม่มีที่ให้ spinner โดยไม่บังไอคอน — `IconButton.md` §10 สั่งให้ใช้ `Button isLoading` แทนอยู่แล้ว · `clickAction`/`isInterruptible` เป็น event model ของ Astryx (เหตุผลเดียวกับ D8) · `focusTrigger` เปิดช่องปิดการแสดงตอน focus = ตก SC 1.4.13 · `alignment`/`anchorRef`/`hasHoverIndication` ขัด offset 8px ที่ตรึงไว้โดยเจตนา · `isIndeterminate` ทับเขต `Spinner` ตามกฎ §8.5 · `Dialog.isInline` คือ dialog ที่ไม่ใช่ overlay ซึ่งเป็นงานของ `Card`/`Section` |
+| D25 | `Avatar.alt` **ไม่** ถอยไปใช้ `name` อัตโนมัติ (ค่าเริ่มต้นเป็น `''` = ของตกแต่ง) | เคสที่พบจริงเกือบทั้งหมดคือ avatar วางข้างชื่อที่เป็นข้อความอยู่แล้ว (`SellerProfile` · `CartSellerGroup`) — ถ้า `alt` = ชื่อ ผู้ใช้ screen reader จะได้ยินชื่อผู้ขายสองครั้งติดกัน · ระบบนี้ตัดสินเรื่องเดียวกันมาแล้วสามที่และเลือก "ประกาศครั้งเดียว" ทุกครั้ง (จำนวนตะกร้าใน `TopNav` · ปุ่มปิด `Banner` · ปุ่มลบ `RemovableChip`) · ⚠️ gate ตรวจข้อนี้ไม่ได้เพราะเป็นความต่างของ **ค่าเริ่มต้น** ไม่ใช่ชื่อ prop |
 | D24 | `Spinner` มี `isLabelHidden` เกินจาก Astryx (เขาใช้ `aria-label` แทน) | `isLabelHidden` เป็นคำศัพท์ที่ระบบนี้ตั้งไว้แล้วใน `TextInput` `TextArea` `CheckboxInput` `RadioList` (§8.1) — การให้ `Spinner` ใช้ `aria-label` ตามเขาคือการมีสองวิธีทำสิ่งเดียวกันในระบบเดียว · และ `aria-label` ดิบเลี่ยงการตัดสินใจว่าข้อความควรเห็นด้วยตาหรือไม่ ซึ่งเป็นคำถามที่ `Spinner` ต้องบังคับให้ผู้เรียกตอบ (ดู `Spinner.md` §5) |
 | D22 | layout layer แยกทาง — ไม่รับ props ที่ขาดทั้งหมดของ `Grid` (11) `Section` (7) `Divider` (3) และคง `gutter`/`preset` ของเราไว้ | เหตุผลเดียวกับที่ปฏิเสธ control height ใน §2.4: ชั้น layout คือภาษารูปทรงของเรา ไม่ใช่ของ Meta · Astryx ให้ `columns`/`gap` ดิบให้ call site ตัดสินเอง เราให้ `preset` ที่ตัดสินใจแทนไปแล้ว การรับทั้งสองแบบพร้อมกันคือการมีสองวิธีทำสิ่งเดียวกัน |
 
@@ -269,7 +270,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 28,
+  "maxProblems": 27,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea"

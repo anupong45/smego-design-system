@@ -149,6 +149,12 @@ export {
   type ChipRowProps,
 } from './data-display/Token';
 export {
+  Avatar,
+  initialsFromName,
+  type AvatarProps,
+  type AvatarSize,
+} from './data-display/Avatar';
+export {
   Collapsible,
   AccordionItem,
   type CollapsibleProps,

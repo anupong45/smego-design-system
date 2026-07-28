@@ -47,7 +47,7 @@
 | `memberSinceYear` | `number` | — | **ค.ศ.** → แสดง พ.ศ. |
 | `responseTime` | `string` | — | |
 | `certifications` | `Certification[]` | — | |
-| `avatar` · `actions` | `ReactNode` | — | |
+| `avatar` · `actions` | `ReactNode` | — | `avatar` ควรเป็น [`<Avatar>`](../data-display/Avatar.md) — ดู §8 |
 | `headingLevel` | `1 \| 2 \| 3` | `2` | |
 
 ### Certification
@@ -245,7 +245,10 @@ Component set **`SellerProfile`**
     isVerified: c.verifiedByIssuer && !isExpired(c.expiresAt),
     expiresAt: c.expiresAt,
   }))}
-  avatar={<img src={seller.logo} alt="" className="size-12 rounded-full" />}
+  /* ★ ใช้ <Avatar> ไม่ใช่ <img> เอง — มีทางถอยเมื่อโลโก้โหลดไม่ขึ้น
+     และตัวย่อไทยที่ไม่ตัดสระ/วรรณยุกต์ทิ้ง (ดู Avatar.md §6)
+     ไม่ส่ง alt เพราะชื่อผู้ขายเป็นหัวข้ออยู่ในการ์ดแล้ว */
+  avatar={<Avatar src={seller.logo} name={seller.name} size="lg" />}
   actions={<Button size="sm" variant="secondary">{s.seller.contact}</Button>}
 />
 ```

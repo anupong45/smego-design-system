@@ -17,9 +17,9 @@ import {
   Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
   Radio, RadioList, Slider, DateInput, OTPField, NumberInput,
   SearchField, Switch, Selector, Typeahead, FileInput,
-  Card, CardMedia, Badge, Dot, Token, RemovableChip, ChipRow,
+  Card, CardMedia, Badge, Dot, Token, RemovableChip, ChipRow, Avatar,
   Collapsible, AccordionItem, ImageGallery, DescriptionList,
-  Banner, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
+  Banner, ProgressBar, Skeleton, SkeletonText, Spinner, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
   TopNav,
   EntityCard, EntityAmount, EntityMeta, DeadlineBadge, DeadlineText,
@@ -334,6 +334,34 @@ function DataDisplay() {
         </Row>
       </Specimen>
 
+      <Specimen name="Avatar" note="ทางถอย 3 ชั้น · ตัวย่อไทยไม่ตัดสระ/วรรณยุกต์">
+        <Row label="size">
+          <Avatar name="บริษัท ไทยโรสเตอร์ จำกัด" size="sm" />
+          <Avatar name="บริษัท ไทยโรสเตอร์ จำกัด" size="md" />
+          <Avatar name="บริษัท ไทยโรสเตอร์ จำกัด" size="lg" />
+          <Avatar name="บริษัท ไทยโรสเตอร์ จำกัด" size="xl" />
+        </Row>
+        <Row label="ตัวย่อไทย — ตัดคำบอกประเภทกิจการก่อน">
+          <Avatar name="บริษัท ไทยโรสเตอร์ จำกัด" size="lg" />
+          <Avatar name="ห้างหุ้นส่วนจำกัด สมชายการค้า" size="lg" />
+          <Avatar name="กำแพงเพชรอาหารสัตว์" size="lg" />
+          <Avatar name="ห้างทองไทยเจริญ" size="lg" />
+          <Avatar name="Thai Roaster Co." size="lg" />
+        </Row>
+        <Row label="ทางถอย">
+          <Avatar src={PX} name="มีรูป" size="lg" />
+          <Avatar src="/broken.png" name="รูปพัง ใช้ตัวย่อ" size="lg" />
+          <Avatar size="lg" />
+        </Row>
+        <Row label="status (ต้องไม่ถูกตัด)">
+          <Avatar
+            name="ไทยโรสเตอร์"
+            size="lg"
+            status={<Dot variant="success" label="ยืนยันตัวตนแล้ว" />}
+          />
+        </Row>
+      </Specimen>
+
       <Specimen name="Token / RemovableChip / ChipRow">
         <Row label="Token">
           <Token label="ทั้งหมด" />
@@ -434,6 +462,28 @@ function Feedback() {
           </HStack>
           <Skeleton shape="media" className="h-32" />
         </Stack>
+      </Specimen>
+
+      <Specimen name="Spinner" note="การกระทำที่รอผลโดยไม่รู้เวลา — คนละเขตกับ Skeleton (§8.5)">
+        <Row label="size">
+          <Spinner size="sm" />
+          <Spinner size="md" />
+          <Spinner size="lg" />
+          <Spinner size="xl" />
+        </Row>
+        <Row label="shade">
+          <Spinner shade="default" />
+          <Spinner shade="subtle" />
+          <span className="inline-flex rounded-(--radius-control) bg-primary-600 p-2">
+            <Spinner shade="onMedia" />
+          </span>
+          <span className="inline-flex text-danger-icon">
+            <Spinner shade="inherit" />
+          </span>
+        </Row>
+        <Row label="label (เห็นได้)">
+          <Spinner size="lg" label="กำลังยืนยันการชำระเงิน" />
+        </Row>
       </Specimen>
 
       <Specimen name="Dialog" note="modal · sheet · drawer">
