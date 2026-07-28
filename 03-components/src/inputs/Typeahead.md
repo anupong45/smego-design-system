@@ -16,7 +16,7 @@
 |---|---|---|
 | รายการสั้น (≤ ~10) | `<Selector>` | การพิมพ์ไม่ช่วยอะไร |
 | ค้นหาอิสระ ไม่ใช่ชุดปิด | `<SearchField>` | Typeahead บังคับเลือกจากรายการ |
-| เลือกหลายค่า | `<CheckboxGroup>` หรือ `<Chip>` | |
+| เลือกหลายค่า | `<CheckboxGroup>` หรือ `<Token>` | |
 | รายการมาจาก API แบบ async | Typeahead + จัดการ loading เอง | component นี้รับ `options` ที่พร้อมแล้ว |
 
 ---

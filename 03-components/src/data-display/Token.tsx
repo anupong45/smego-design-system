@@ -10,7 +10,17 @@ import { Icon, type IconName } from '../icon/Icon';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · Chip — ตัวกรองที่กดได้ · **มีสถานะเลือก/ไม่เลือก**
+   SME.GO · Token — ตัวกรองที่กดได้ · **มีสถานะเลือก/ไม่เลือก**   (เดิมชื่อ Chip — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ⚠️ ไม่ใช่ component ใหม่ข้าง Chip — Astryx มี `Token` แต่รอบ 2026-07-26
+   ตัดสินไว้แล้วว่านี่คือ**ชื่อใหม่ของ Chip** เท่านั้น (§1.4 D9) ห้ามมีทั้ง
+   Chip และ Token พร้อมกันในระบบ
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    `label` บังคับ (เดิมรับ `children`) ตาม §8.1
+   ไม่รับ `size` `color` `onRemove` `href` `endContent` `description`
+          `isLabelHidden` ของ Astryx — `onRemove` มีอยู่แล้วใน `RemovableChip`
+          แยกต่างหาก ไม่ใช่ prop ของ `Token`
    ───────────────────────────────────────────────────────────────────────────
    ★ ต่างจาก Badge: Chip **กดได้** จึงต้องเป็นเป้า ≥24×24 และมี focus + aria-pressed
    ถ้าเป็นข้อมูลอ่านอย่างเดียว ใช้ `<Badge>`
@@ -66,27 +76,28 @@ const chipStyles = cva(
   },
 );
 
-export interface ChipProps
+export interface TokenProps
   extends Omit<RACToggleButtonProps, 'children' | 'className' | 'style'> {
-  children: ReactNode;
+  /** ข้อความบน token — บังคับเสมอเพื่อ accessible name (§8.1) */
+  label: string;
   /** ไอคอนนำ — ตกแต่ง ได้ `aria-hidden` อัตโนมัติ */
   icon?: IconName;
   className?: string;
 }
 
 /**
- * Chip แบบ toggle — ใช้กับตัวกรองที่เปิด/ปิดได้
+ * Token แบบ toggle — ใช้กับตัวกรองที่เปิด/ปิดได้
  *
  * RAC `ToggleButton` ให้ `aria-pressed` และ `data-selected` มาเอง
  */
-export function Chip({ children, icon, className, ...rest }: ChipProps) {
+export function Token({ label, icon, className, ...rest }: TokenProps) {
   return (
     <RACToggleButton
       className={({ isSelected }) => cn(chipStyles({ selected: isSelected }), className)}
       {...rest}
     >
       {icon && <Icon name={icon} size={16} />}
-      {children}
+      {label}
     </RACToggleButton>
   );
 }

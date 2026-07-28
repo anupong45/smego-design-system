@@ -17,7 +17,7 @@ import {
   Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
   Radio, RadioList, Slider, DateInput, OTPField, NumberInput,
   SearchField, Switch, Selector, Typeahead, FileInput,
-  Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
+  Card, CardMedia, Badge, Dot, Token, RemovableChip, ChipRow,
   Accordion, AccordionItem, ImageGallery, DescriptionList,
   Alert, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
@@ -334,11 +334,11 @@ function DataDisplay() {
         </Row>
       </Specimen>
 
-      <Specimen name="Chip / RemovableChip / ChipRow">
-        <Row label="Chip">
-          <Chip>ทั้งหมด</Chip>
-          <Chip isSelected>อาหารแปรรูป</Chip>
-          <Chip icon="map-pin">ภาคเหนือ</Chip>
+      <Specimen name="Token / RemovableChip / ChipRow">
+        <Row label="Token">
+          <Token label="ทั้งหมด" />
+          <Token label="อาหารแปรรูป" isSelected />
+          <Token label="ภาคเหนือ" icon="map-pin" />
         </Row>
         <Row label="ChipRow + RemovableChip">
           <ChipRow label="ตัวกรองที่ใช้อยู่">

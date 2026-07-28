@@ -140,14 +140,14 @@ export {
 export { Card, CardMedia, cardStyles, type CardProps, type CardMediaProps } from './data-display/Card';
 export { Badge, Dot, badgeStyles, type BadgeProps, type DotProps } from './data-display/Badge';
 export {
-  Chip,
+  Token,
   RemovableChip,
   ChipRow,
   chipStyles,
-  type ChipProps,
+  type TokenProps,
   type RemovableChipProps,
   type ChipRowProps,
-} from './data-display/Chip';
+} from './data-display/Token';
 export {
   Accordion,
   AccordionItem,

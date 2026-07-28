@@ -1,6 +1,8 @@
-# Chip · RemovableChip · ChipRow
+# Token · RemovableChip · ChipRow
 
-**`@smego/ui`** · ชั้น 03 · [Chip.tsx](./Chip.tsx)
+**`@smego/ui`** · ชั้น 03 · [Token.tsx](./Token.tsx)
+
+> เดิมชื่อ `Chip` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2/§1.4 D9 (ไม่ใช่ component ใหม่ข้าง Chip) · `children`→`label: string` บังคับตาม §8.1
 
 ---
 
@@ -8,13 +10,13 @@
 
 ตัวกรองที่ **กดได้** และ **มีสถานะค้าง** เลือก/ไม่เลือก
 
-เส้นแบ่งจาก `<Badge>` ชัดเจน: Chip กดได้ จึงต้องเป็นเป้า **≥24×24** มี **focus ring** และมี **`aria-pressed`**
+เส้นแบ่งจาก `<Badge>` ชัดเจน: Token กดได้ จึงต้องเป็นเป้า **≥24×24** มี **focus ring** และมี **`aria-pressed`**
 
 ### ❌ เมื่อไรที่ไม่ควรใช้
 
 | สถานการณ์ | ใช้อะไรแทน | เหตุผล |
 |---|---|---|
-| ข้อมูลอ่านอย่างเดียว | `<Badge>` | Chip ที่กดไม่ได้หลอกผู้ใช้ว่ากดได้ |
+| ข้อมูลอ่านอย่างเดียว | `<Badge>` | Token ที่กดไม่ได้หลอกผู้ใช้ว่ากดได้ |
 | เลือกได้หลายข้อในฟอร์ม | `<CheckboxGroup>` | ฟอร์มต้องมี label กลุ่ม + error ที่เชื่อมกัน |
 | เลือกได้ข้อเดียว | `<RadioList>` หรือ `<Selector>` | `aria-pressed` สื่อ toggle ไม่ใช่การเลือกในกลุ่ม |
 | การกระทำครั้งเดียว | `<Button size="xs">` | ไม่มีสถานะค้างให้ toggle |
@@ -24,16 +26,16 @@
 ## 2 · React API
 
 ```tsx
-import { Chip, RemovableChip, ChipRow } from '@smego/ui';
+import { Token, RemovableChip, ChipRow } from '@smego/ui';
 
-<Chip defaultSelected icon="check" onChange={setHasCert}>มีใบรับรอง</Chip>
+<Token label="มีใบรับรอง" defaultSelected icon="check" onChange={setHasCert} />
 ```
 
-### Chip
+### Token
 
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
-| `children` | `ReactNode` | — | |
+| `label` | `string` | — | **บังคับ** — accessible name (§8.1) |
 | `icon` | `IconName` | — | ตกแต่ง ได้ `aria-hidden` อัตโนมัติ |
 | `isSelected` / `defaultSelected` | `boolean` | — | จาก RAC `ToggleButton` |
 | `onChange` | `(isSelected: boolean) => void` | — | **จาก RAC — ไม่ใช่ `onClick`** |
@@ -93,7 +95,7 @@ chip เป็นหนึ่งใน **4 อย่างที่อนุญ�
 
 | element | ขนาด | ผ่าน SC 2.5.8 |
 |---|---|---|
-| `Chip` | `py-1` + `text-caption` (lh 20px) + border 2 = **30px** | ✅ |
+| `Token` | `py-1` + `text-caption` (lh 20px) + border 2 = **30px** | ✅ |
 | ปุ่มลบใน `RemovableChip` | icon 16 + `p-1` = **24×24** | ✅ พอดีเกณฑ์ |
 
 **24×24 พอดีเกณฑ์แปลว่าผ่านโดยไม่ต้องอ้าง spacing exemption** — ข้อยกเว้นเรื่องระยะห่างใช้กับเป้าที่ **เล็กกว่า** 24 เท่านั้น
@@ -104,9 +106,9 @@ chip เป็นหนึ่งใน **4 อย่างที่อนุญ�
 
 | เรื่อง | ข้อกำหนด |
 |---|---|
-| role | `Chip` = `button` + `aria-pressed` จาก RAC `ToggleButton` |
+| role | `Token` = `button` + `aria-pressed` จาก RAC `ToggleButton` |
 | `ChipRow` | `role="group"` + `aria-label` บังคับ |
-| **SC 2.5.8** | Chip 30px · ปุ่มลบ 24×24 · วัดแล้วทั้งคู่ |
+| **SC 2.5.8** | Token 30px · ปุ่มลบ 24×24 · วัดแล้วทั้งคู่ |
 | **SC 2.5.3** | `aria-label` ปุ่มลบรวมชื่อตัวกรอง |
 | **SC 1.4.12** | `w-auto max-w-full` — ยืดตามระยะตัวอักษรที่ผู้ใช้บังคับ |
 | **SC 2.4.7** | `ChipRow` มี `p-1` เผื่อวงแหวน — ดูด้านล่าง |
@@ -184,7 +186,7 @@ const chipStyles = cva(
 
 ## 7 · Figma Variant
 
-Component set **`Chip`**
+Component set **`Token`**
 
 | Property | Values |
 |---|---|
@@ -203,10 +205,10 @@ Component set **`Chip`**
 ```tsx
 // ตัวกรองเร็วเหนือผลการค้นหา
 <ChipRow label="ตัวกรองด่วน">
-  <Chip>ทั้งหมด</Chip>
-  <Chip icon="check" isSelected={cert} onChange={setCert}>มีใบรับรอง</Chip>
-  <Chip isSelected={ready} onChange={setReady}>พร้อมส่ง</Chip>
-  <Chip isDisabled>หมดสต็อก</Chip>
+  <Token label="ทั้งหมด" />
+  <Token label="มีใบรับรอง" icon="check" isSelected={cert} onChange={setCert} />
+  <Token label="พร้อมส่ง" isSelected={ready} onChange={setReady} />
+  <Token label="หมดสต็อก" isDisabled />
 </ChipRow>
 ```
 
@@ -234,13 +236,13 @@ Component set **`Chip`**
 
 | ❌ | ✅ | ทำไม |
 |---|---|---|
-| `<Badge onClick={…}>` | `<Chip>` | Badge ไม่มี focus ring และไม่รับประกัน 24×24 |
+| `<Badge onClick={…}>` | `<Token>` | Badge ไม่มี focus ring และไม่รับประกัน 24×24 |
 | ยุบตัวกรองเป็น "ตัวกรอง (3)" | `<ChipRow>` ที่เลื่อนได้ | บังคับให้ผู้ใช้จำ — ขัดข้อ 01 §4.3 |
 | `aria-label="ลบ"` | `s.filter.removeFilter(name)` | chip 5 อันมีปุ่มชื่อเดียวกัน 5 อัน (SC 2.5.3) |
 | `<div className="overflow-x-auto">` ครอบ chip | `<ChipRow>` | ไม่มี `p-1` → วงแหวน focus ถูกตัด (SC 2.4.7) |
 | `overflow-x-auto` ที่ `<body>` | ที่ `ChipRow` | เลื่อนสองทิศ = ไม่ผ่าน SC 1.4.10 |
-| `<Chip className="bg-primary-600 text-on-brand">` | `isSelected` | น้ำเงินทึบสงวนให้ CTA — chip จะแย่งความเด่น |
-| `<Chip onClick={…}>` | `onChange` | `onClick` ไม่ครอบ keyboard/touch เท่า RAC และไม่ให้สถานะ |
+| `<Token className="bg-primary-600 text-on-brand">` | `isSelected` | น้ำเงินทึบสงวนให้ CTA — token จะแย่งความเด่น |
+| `<Token onClick={…}>` | `onChange` | `onClick` ไม่ครอบ keyboard/touch เท่า RAC และไม่ให้สถานะ |
 | chip ตัดบรรทัดบนมือถือ | เลื่อนแนวนอน + snap | chip ไทยกว้างกว่า — 2 แถวกลายเป็น 4 แถว |
 
 ---
@@ -251,7 +253,7 @@ Component set **`Chip`**
 
 | รายการ | สถานะ | หลักฐาน |
 |---|---|---|
-| การเข้าถึง (Accessibility) | ✅ | §5 · axe ผ่านใน `a11y/primitives.test.tsx` ทั้ง `Chip`, `RemovableChip` และ `ChipRow` · `SC 2.5.3` ชื่อปุ่มลบรวมข้อความของ chip ใบนั้น |
+| การเข้าถึง (Accessibility) | ✅ | §5 · axe ผ่านใน `a11y/primitives.test.tsx` ทั้ง `Token`, `RemovableChip` และ `ChipRow` · `SC 2.5.3` ชื่อปุ่มลบรวมข้อความของ chip ใบนั้น |
 | ตอบสนอง (Responsive) | ✅ | `min-w-0` · `SC 1.4.10` แถว chip ตัดขึ้นบรรทัดใหม่ ไม่เลื่อนแนวนอน |
 | โหมดมืด (Dark Mode) | ✅ | `lint-classes.mjs` 0 จุด — ทุกสีมาจาก token ที่ override ในโหมดมืดแล้ว |
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | ใช้คู่ `ms-`/`me-` อยู่แล้ว · `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |

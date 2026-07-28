@@ -3,7 +3,7 @@ import { render, expectNoViolations } from './render';
 
 import {
   Button, IconButton, Link, Icon,
-  Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
+  Card, CardMedia, Badge, Dot, Token, RemovableChip, ChipRow,
   Skeleton, SkeletonGroup, SkeletonText,
   TextInput, TextArea, CheckboxInput, CheckboxGroup, Radio, RadioList, Slider,
   Accordion, AccordionItem, Tooltip, TooltipTrigger,
@@ -44,7 +44,7 @@ const cases: [string, React.ReactElement][] = [
   ['Badge · warning', <Badge variant="warning">ใกล้ปิดรับ</Badge>],
   ['Dot', <Dot variant="success" label="ตอบกลับภายใน 1 ชั่วโมง" />],
 
-  ['Chip', <Chip defaultSelected icon="check">มีใบรับรอง</Chip>],
+  ['Token', <Token label="มีใบรับรอง" defaultSelected icon="check" />],
   [
     'ChipRow · removable',
     <ChipRow label="ตัวกรองที่เลือก">

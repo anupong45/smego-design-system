@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Accordion, AccordionItem } from '../data-display/Accordion';
-import { ChipRow, RemovableChip } from '../data-display/Chip';
+import { ChipRow, RemovableChip } from '../data-display/Token';
 import { Button } from '../inputs/Button';
 import { useStrings } from '../provider/SmeGoProvider';
 
