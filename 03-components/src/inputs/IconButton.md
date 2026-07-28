@@ -16,8 +16,12 @@
 |---|---|---|
 | ไอคอนอื่นนอกจาก 6 ตัว | `<Button icon="…">ข้อความ</Button>` | TypeScript ปฏิเสธอยู่แล้ว — ดู §3 |
 | นำทาง | `<Link>` + ไอคอน | ต้องเปิดแท็บใหม่ได้ |
-| เปิดเมนู | `<MenuTrigger>` (Pass 4) | ต้องมี `aria-expanded` + `aria-haspopup` |
-| toggle ค้าง (บันทึก/ถูกใจ) | `<SaveButton>` (Pass B) | ต้องมี `aria-pressed` |
+| เปิดเมนู | `<Dialog>` หรือ RAC `MenuTrigger` ผ่าน `@smego/ui/primitives` | ต้องมี `aria-expanded` + `aria-haspopup` — ดูหมายเหตุใต้ตาราง |
+| toggle ค้าง (บันทึก/ถูกใจ) | `<SaveButton>` | ต้องมี `aria-pressed` |
+
+> **ไม่มี `MenuTrigger` เป็น component ของระบบ** — `ASTRYX-PARITY.md` §1.4 ตัด `DropdownMenu` / `ContextMenu` ออกโดยเจตนา ไม่มี template ของ marketplace ที่ต้องใช้
+>
+> ถ้าจำเป็นจริง ใช้ RAC ตรง ๆ ผ่าน `@smego/ui/primitives` แล้ว**รับผิดชอบ `aria-expanded` / `aria-haspopup` เอง** — `<IconButton>` เปล่า ๆ ที่เปิดเมนูยังผิดอยู่เหมือนเดิม เพราะ screen reader จะไม่รู้ว่ามีอะไรเปิดขึ้นมา
 
 ---
 
@@ -242,7 +246,7 @@ Component set **`IconButton`**
 | `<IconButton className="p-0">` | ใช้ `size` | เป้าจะเหลือ 20×20 = ไม่ผ่าน SC 2.5.8 |
 | `<IconButton className="rounded-full">` | ปล่อยตามค่าเริ่มต้น | `rounded-full` สงวนไว้ 4 อย่าง (ข้อ 05) |
 | `<Icon name="x" onClick={close} />` | `<IconButton>` | `<Icon>` ไม่ใช่ปุ่ม — ไม่มี focus ไม่มี keyboard ไม่มีชื่อ |
-| `<IconButton name="more-vertical">` เปิดเมนู | `<MenuTrigger>` | ขาด `aria-expanded` + `aria-haspopup` |
+| `<IconButton name="more-vertical">` เปิดเมนู | `<Dialog>` หรือ RAC `MenuTrigger` (§1) | ขาด `aria-expanded` + `aria-haspopup` |
 | `<IconButton>` + `<Icon label="…">` | ปล่อย Icon ไม่มี label | ชื่อซ้อนสองชั้น screen reader อ่านซ้ำ |
 
 ---

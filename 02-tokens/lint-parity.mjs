@@ -240,8 +240,32 @@ if (ts && axDist) {
       const allowedExtra = new Set(cfg.propsOursOnly?.[name] || []);
       const wont = { ...wontAll, ...(cfg.wontAdopt?.[name] || {}) };
 
+      /* ── ความต่างเชิงชั้น ไม่ใช่ prop ที่ขาด ────────────────────────────
+         Astryx รวมทุกอย่างไว้ใน component เดียว เราแยกตาม RAC เช่น
+         `Tooltip` ของเขามี `delay`/`hideDelay` อยู่บนตัว tooltip เอง
+         ส่วนของเราอยู่บน `TooltipTrigger` (RAC ให้ `delay`/`closeDelay`)
+
+         ก่อนหน้านี้ 4 ตัวนั้นถูกฟ้องว่า "ขาด" ทั้งที่ **มีครบ** ถ้ารับตาม
+         คำฟ้องจะได้ prop ซ้ำสองชั้น ซึ่งแย่กว่าการต่างจาก Astryx
+
+         `layerDiff` จึงประกาศว่า prop กลุ่มนี้อยู่ที่ component คู่ตัวไหน
+         แล้วรายงานเป็น note ไม่ใช่ fail — ต่างจาก `wontAdopt` ตรงที่นั่นคือ
+         "มีแล้วไม่เอา" ส่วนนี่คือ "มีแล้ว แต่คนละที่" */
+      const layer = cfg.layerDiff?.[name];
+      const onCompanion = new Set(layer?.props || []);
+      if (onCompanion.size) {
+        const found = [...theirs].filter((p) => onCompanion.has(p));
+        if (found.length) {
+          notes.push(
+            `${name}: ${found.sort().join(' ')} อยู่บน <${layer.companion}> ไม่ใช่ <${name}> ` +
+              `— ความต่างเชิงชั้น ตรวจที่นั่นแทน`,
+          );
+        }
+      }
+
       const missing = [...theirs].filter(
-        (p) => !oursFull.has(p) && !skipAll.has(p) && !(p in wont),
+        (p) =>
+          !oursFull.has(p) && !skipAll.has(p) && !(p in wont) && !onCompanion.has(p),
       );
       const extra = [...ours].filter(
         (p) => !theirs.has(p) && !skipAll.has(p) && !allowedExtra.has(p),

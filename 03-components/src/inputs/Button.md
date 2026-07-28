@@ -15,7 +15,7 @@
 | ไปหน้าอื่น | `<Link>` | ผู้ใช้ต้องเปิดแท็บใหม่ได้ · คัดลอก URL ได้ · screen reader ประกาศต่างกัน |
 | ไอคอนล้วนไม่มีข้อความ | `<IconButton>` | ต้องบังคับ `aria-label` และเป็นเป้า ≥24×24 |
 | เปิด/ปิดสถานะค้าง | `<ToggleButton>` | ต้องมี `aria-pressed` |
-| กดแล้วเปิดเมนู | `<MenuTrigger>` | ต้องมี `aria-expanded` + `aria-haspopup` |
+| กดแล้วเปิดเมนู | `<Dialog>` หรือ RAC `MenuTrigger` ผ่าน `@smego/ui/primitives` | ต้องมี `aria-expanded` + `aria-haspopup` · ระบบไม่มี `MenuTrigger` เป็นของตัวเอง ([IconButton.md §1](./IconButton.md)) |
 
 **ห้ามใช้ `variant="ghost"` แทน `<Link>`** เพราะดูเหมือนลิงก์ — ถ้ามันนำทาง มันต้องเป็น `<a href>`
 
