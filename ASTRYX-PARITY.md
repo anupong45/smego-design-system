@@ -7,7 +7,7 @@
 | อ้างอิง Astryx | `@astryxdesign/core@0.1.8` (pinned — ไม่ใช่ canary) |
 | อ้างอิงเรา | `@smego/ui@0.1.0` · 03-components · 02-tokens |
 | วันที่ | 2026-07-27 |
-| สถานะ | **อนุมัติแล้ว 2026-07-28** — ดู §8 สำหรับคำตัดสิน 5 ข้อ |
+| สถานะ | **อนุมัติแล้ว 2026-07-28** — ดู §8 สำหรับคำตัดสิน 6 ข้อ — **เฟส 3 (rename ทั้งหมด) เสร็จสมบูรณ์** |
 
 ---
 
@@ -55,7 +55,7 @@
 | `RangeSlider` | `Slider` | |
 | `Chip` | `Token` | |
 | `Accordion` | `Collapsible` | |
-| `ImageGallery` | `Lightbox` | ⚠️ ดู §5.7 |
+| ~~`ImageGallery`~~ | ~~`Lightbox`~~ | ❌ **ตัดออกแล้ว** (§8.6 · ดู §5.7) — คนละ component (inline gallery vs overlay) |
 | `Alert` | `Banner` | |
 | `AppHeader` | `TopNav` | ⚠️ ดู §5.8 |
 
@@ -268,11 +268,10 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 31,
+  "maxProblems": 29,
   "rename": {
     "TextField": "TextInput",
-    "Textarea": "TextArea",
-    "ImageGallery": "Lightbox"
+    "Textarea": "TextArea"
   },
   "same": [
     "Button", "IconButton", "Link", "Switch", "Card", "Badge", "Dialog",
@@ -284,6 +283,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
   ],
   "renameNewBuild": { "Tabs": "TabList" },
   "extension": [
+    "ImageGallery",
     "SearchField", "OTPField", "DescriptionList", "ToastRegion",
     "CategoryNav", "CategoryBreadcrumb", "Deadline", "GrantCard", "BuyBox",
     "Checkout", "Payment", "Compare", "SellerProfile", "OrderTimeline",
@@ -408,20 +408,12 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 |---|---|---|
 | 1 | pin `@astryxdesign/core@0.1.8` (exact) + เขียน `02-tokens/lint-parity.mjs` + `npm run lint:parity` | ✅ เสร็จ |
 | 2 | token: `radius-sm` 6→4 | ✅ เสร็จ |
-| 3 | rename 15 ตัว + prop rename ตาม §3 + `label: string` (§8.1) + `@deprecated` alias | 🔄 2/15 |
-| 4 | อัปเดต `.md` คู่ + 04-patterns (5 ไฟล์) + gallery + e2e fixture | ⬜ |
+| 3 | rename 14 ตัว (`SearchField`, `ImageGallery` ตัดออก) + prop rename ตาม §3 + `label: string` (§8.1) — **หักดิบ ไม่มี `@deprecated` alias** (§8 · 0.2.0) | ✅ เสร็จ 14/14 |
+| 4 | อัปเดต `.md` คู่ + gallery + e2e fixture | ✅ เสร็จควบคู่กับเฟส 3 ทีละตัว |
 | 5 | สร้าง 6 component ใหม่ + `.md` + a11y test | ⬜ |
-| 6 | **ต่อ `lint:parity` เข้า `npm run verify`** + รัน verify ทั้งชุด | ⬜ |
+| 6 | **ต่อ `lint:parity` เข้า `npm run verify`** + รัน verify ทั้งชุด | ✅ เสร็จ — เพดานนับถอยหลัง (ดู §4.1) |
 
-**เกตเดียว:** `npm run verify` (typecheck · lint · test · e2e · validate-tokens · **parity ใหม่ในเฟส 6**)
-
-### 6.1 · หนี้ที่ต้องปิดในเฟส 6
-
-`lint:parity` **ยังไม่ได้ต่อเข้า `verify`** โดยตั้งใจ — ตอนนี้มันฟ้อง 57 ข้อซึ่งคือ worklist ของเฟส 3–5 พอดี ถ้าต่อเข้า verify ตอนนี้ build จะแดงตลอดทางจนไม่มีใครอ่านมัน ต้องต่อเมื่อเฟส 5 จบ บรรทัดที่ต้องแก้:
-
-```
-"verify": "... && node ../02-tokens/validate-tokens.js && npm run lint:parity"
-```
+**เกตเดียว:** `npm run verify` (typecheck · lint · test · e2e · validate-tokens · **lint:parity ที่เพดานนับถอยหลัง**) — ผ่านทั้งหมดหลังเฟส 3/4/6
 
 ### 6.1a · ความคืบหน้าเฟส 3
 
@@ -441,7 +433,7 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 | 12 | `Accordion` → `Collapsible` | ✅ | เฉพาะกลุ่ม — ไม่มี prop rename · `AccordionItem` คงชื่อเดิม |
 | 13 | `Alert` → `Banner` | ✅ | เปลี่ยนชื่ออย่างเดียว (§8.4/D13) — ไม่รับ `defaultIsExpanded`/`container` · `alert.test.tsx`→`banner.test.tsx`, `alert.spec.ts`→`banner.spec.ts` |
 | 14 | `AppHeader` → `TopNav` | ✅ | เพิ่ม slot props ของ Astryx (`heading` `startContent` `centerContent` `endContent` `label`) เป็นส่วนเสริม (§8.3 · D12) — คง 9 props เดิมไว้ทั้งหมด |
-| 15 | `ImageGallery` → `Lightbox` | ⬜ | ต้องตัดสิน §5.7 ก่อน — ImageGallery คือ inline gallery ไม่ใช่ overlay |
+| 15 | ~~`ImageGallery` → `Lightbox`~~ | ✅ **ตัดออก** | คนละ component (§8.6 · D23) — คง `ImageGallery` เป็น SME.GO extension แทน |
 
 **งานข้างเคียงที่เกิดขึ้นจริงในสองตัวแรก** (คาดว่าจะซ้ำกับตัวที่เหลือ):
 `fieldStyles` ย้ายออกจาก `TextField.tsx` มาเป็น `inputs/fieldStyles.ts` — เดิม Select · ComboBox · NumberField · DatePicker · SearchField ทั้งห้าตัว `import { fieldStyles } from './TextField'` ซึ่งผูกกับไฟล์ของ component อื่นโดยไม่มีเหตุผล
@@ -456,6 +448,19 @@ test          ✓ 207/207
 test:e2e      ✓ 40/40
 validate-tokens ✓ ทุกข้อ
 ```
+
+### 6.3 · baseline ตอนจบเฟส 3/4/6 (rename ครบ 14/14)
+
+```
+lint:parity   ✓ คงที่ที่เพดาน 29 — เทียบกับ Astryx 0.1.8 (ต่อเข้า verify แล้ว)
+typecheck     ✓
+lint          ✓
+test          ✓ 208/208
+test:e2e      ✓ 40/40
+validate-tokens ✓ ทุกข้อ
+```
+
+เพดานลดจาก 51 (baseline `d4f3ecd`) → **29** ตลอดรอบ rename — เหลือแต่งาน**เฟส 5** (สร้าง 6 component ใหม่: `EmptyState` `Pagination` `Avatar` `Spinner` `Tabs` `SegmentedControl`) ก่อนจะลบกลไกเพดานทิ้งได้ตาม §4.1
 
 ---
 
@@ -498,10 +503,14 @@ input ทุกตัวเปลี่ยนจาก `children: ReactNode` เ
 
 ห้ามใช้ `Spinner` แทนการโหลดเนื้อหา และห้ามใช้ `Skeleton` กับการกระทำ กฎนี้ต้องเขียนลงทั้ง `Skeleton.md` และ `Spinner.md` แบบอ้างถึงกัน เหมือนที่ `Badge.md`/`Chip.md` ทำ
 
-### 8.6 · สรุปผลต่อขอบเขต
+**8.6 · §5.7 — ตัด `ImageGallery` ออกจาก rename** ✅
+
+`ImageGallery` **ไม่ rename** เป็น `Lightbox` — คนละ component กันจริง: `Lightbox` ของ Astryx เป็น overlay ที่เปิด/ปิด (`isOpen`/`onOpenChange`) ส่วน `ImageGallery` ของเราคือ gallery ที่ฝังอยู่ในหน้า ไม่มี concept เปิด/ปิด ตัวที่ใกล้เคียงกว่าคือ `Carousel` ของ Astryx ซึ่ง §1.4 ตัดสินไปแล้วว่าไม่รับเข้าระบบ (ไม่มี template ที่ต้องใช้) → คง `ImageGallery` เป็น **SME.GO extension** แทนการสร้าง `Lightbox` ใหม่แยกต่างหากหรือบังคับ rename แบบผิดความหมาย → **D23**
+
+### 8.7 · สรุปผลต่อขอบเขต
 
 | | ก่อน | หลัง |
 |---|---|---|
-| rename | 16 | **15** (ตัด `SearchField`) |
-| divergence | D1–D10 | **D1–D14** |
+| rename | 16 | **14** (ตัด `SearchField`, `ImageGallery`) |
+| divergence | D1–D10 | **D1–D18** |
 | งานเพิ่มที่ไม่ได้อยู่ในประมาณการเดิม | — | `label: string` ทั่วทั้งระบบ + a11y test ซ้ำทุก control |
