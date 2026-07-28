@@ -45,6 +45,8 @@ import { CheckboxInput, CheckboxGroup } from '@smego/ui';
 | `isSelected` / `defaultSelected` | `boolean` | — | จาก RAC |
 | `isIndeterminate` | `boolean` | `false` | ดู §3 |
 | `isDisabled` / `isInvalid` | `boolean` | `false` | จาก RAC |
+| `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` · ใช้กับ checkbox เดี่ยวเท่านั้น — ถ้าอยู่ในกลุ่ม ใส่ที่กลุ่ม (SC 3.3.1) |
+| `isOptional` | `boolean` | `false` | ต่อท้าย label ว่า "(ไม่บังคับ)" |
 | `onChange` | `(isSelected: boolean) => void` | — | |
 
 ### CheckboxGroup
@@ -53,8 +55,8 @@ import { CheckboxInput, CheckboxGroup } from '@smego/ui';
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
 | `description` | `string` | — | |
-| `errorMessage` | `string` | — | มีค่า = invalid |
-| `showOptional` | `boolean` | `false` | |
+| `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` — `error` เท่านั้นที่ทำให้กลุ่ม invalid |
+| `isOptional` | `boolean` | `false` | |
 | `value` / `onChange` | `string[]` | — | จาก RAC |
 
 `validationBehavior` ถอดออกจาก type — `"aria"` ตายตัว
@@ -206,7 +208,7 @@ Component set **`CheckboxGroup`** แยกต่างหาก — property `E
   description="เลือกได้มากกว่าหนึ่ง"
   value={certs}
   onChange={setCerts}
-  errorMessage={certs.length === 0 ? 'กรุณาเลือกอย่างน้อยหนึ่งรายการ — ใบรับรองเป็นข้อมูลที่ผู้ซื้อใช้ตัดสินใจ' : undefined}
+  status={certs.length === 0 ? { type: 'error', message: 'กรุณาเลือกอย่างน้อยหนึ่งรายการ — ใบรับรองเป็นข้อมูลที่ผู้ซื้อใช้ตัดสินใจ' } : undefined}
 >
   <CheckboxInput value="tis" label="มาตรฐานผลิตภัณฑ์อุตสาหกรรม (มอก.)" />
   <CheckboxInput value="halal" label="ฮาลาล" description="สำหรับสินค้าอาหารและเครื่องดื่ม" />
@@ -249,7 +251,7 @@ Component set **`CheckboxGroup`** แยกต่างหาก — property `E
 | `border-neutral-300` | `border-edge-strong` | 1.56:1 ไม่ผ่าน SC 1.4.11 |
 | `label=""` ว่างเปล่า | ใส่ข้อความจริงเสมอ | screen reader อ่านว่า "ช่องทำเครื่องหมาย" เฉย ๆ |
 | `<CheckboxInput>` เป็นตัวกรองในหน้ารายการ | `<Token>` | ตัวกรองต้องเห็นค้างและลบทีละอันได้ |
-| ขอบแดงอย่างเดียวตอน invalid | + `errorMessage` | SC 3.3.1 |
+| ขอบแดงอย่างเดียวตอน invalid | + `status={{ type: 'error', message }}` | SC 3.3.1 |
 
 ---
 
@@ -265,7 +267,7 @@ Component set **`CheckboxGroup`** แยกต่างหาก — property `E
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | ใช้คู่ `ms-`/`me-` อยู่แล้ว · `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | ✅ | §4 `focus-visible` · `Space` สลับค่า · `Tab` เข้า/ออกทีละช่อง |
 | กำลังโหลด (Loading) | — | ช่องติ๊กไม่รอ API · สถานะกำลังส่งอยู่ที่ปุ่มยืนยันของฟอร์ม |
-| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `errorMessage` เป็นข้อความ ไม่ใช่แค่ขอบแดง (SC 3.3.1) |
+| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `status.message` เป็นข้อความ ไม่ใช่แค่ขอบแดง (SC 3.3.1) |
 | ว่างเปล่า (Empty) | — | ช่องติ๊กมีค่าเสมอ (ติ๊ก/ไม่ติ๊ก/indeterminate) — ไม่มีสถานะ "ไม่มีข้อมูล" |
 | Skeleton | — | กล่องติ๊ก 24px ไม่ใช่เนื้อหาที่ต้องมีตัวแทนระหว่างโหลด |
 | การเคลื่อนไหว (Animation) | ✅ | `base.css §10` ครอบ `*` ด้วย `!important` — ไม่มีการเคลื่อนไหวที่หลุดตัวกัน (`lint-quality.mjs` 0 จุด) |

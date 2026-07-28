@@ -2,7 +2,7 @@
 
 **`@smego/ui`** · ชั้น 03 · [RadioList.tsx](./RadioList.tsx)
 
-> เดิมชื่อ `RadioGroup` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `errorMessage`→`status` · `showOptional`→`isOptional` ตาม §8
+> เดิมชื่อ `RadioGroup` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `errorMessage`→`status` · `showOptional`→`isOptional` · รับ `isLabelHidden` ตาม §8
 
 ---
 
@@ -57,6 +57,7 @@ import { RadioList, Radio } from '@smego/ui';
 | `description` | `string` | — | |
 | `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` |
 | `isOptional` | `boolean` | `false` | |
+| `isLabelHidden` | `boolean` | `false` | ซ่อน label ด้วยตา แต่ยังประกาศให้ screen reader — ใช้เมื่อหัวข้อรอบข้างบอกอยู่แล้วว่ากลุ่มนี้ถามอะไร |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | |
 | `value` / `defaultValue` / `onChange` | `string` | — | จาก RAC |
 

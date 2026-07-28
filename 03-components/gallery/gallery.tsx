@@ -222,7 +222,7 @@ function Inputs() {
             <CheckboxInput value="haccp" label="HACCP" />
             <CheckboxInput value="halal" label="ฮาลาล" />
           </CheckboxGroup>
-          <CheckboxGroup label="ประเภท" errorMessage="เลือกอย่างน้อยหนึ่งรายการ">
+          <CheckboxGroup label="ประเภท" status={{ type: 'error', message: 'เลือกอย่างน้อยหนึ่งรายการ' }}>
             <CheckboxInput value="a" label="สินค้า" />
             <CheckboxInput value="b" label="บริการ" />
           </CheckboxGroup>

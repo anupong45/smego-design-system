@@ -20,9 +20,10 @@ import {
    SME.GO · RadioList / Radio   (เดิมชื่อ RadioGroup — ดู ASTRYX-PARITY.md §1.2)
    ───────────────────────────────────────────────────────────────────────────
    ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
-   รับ    `status` (เดิมชื่อ `errorMessage`) · `isOptional` (เดิมชื่อ `showOptional`)
-   ไม่รับ `isLabelHidden` `size` `width` (D6) `labelTooltip` `htmlName` (D15)
-          `disabledMessage` (D16) ของ Astryx — ไม่มี use case ใน marketplace
+   รับ    `status` (เดิมชื่อ `errorMessage`) · `isOptional` (เดิมชื่อ `showOptional`) ·
+          `isLabelHidden` (§8.1 — คำศัพท์เดียวกับ input ทุกตัว)
+   ไม่รับ `size` (D1 · 28/32/36 ต่ำกว่าเกณฑ์ touch) · `width` (D6) ·
+          `labelTooltip` `disabledMessage` (D16) · `htmlName` (D15)
    ───────────────────────────────────────────────────────────────────────────
    ★ radio ใช้ **roving tabindex** ต่างจาก checkbox
 
@@ -170,6 +171,13 @@ export interface RadioListProps
   description?: string;
   status?: InputStatus;
   isOptional?: boolean;
+  /**
+   * ซ่อน label ของกลุ่มด้วยตา แต่ยังประกาศให้ screen reader
+   *
+   * ใช้เมื่อบริบทรอบข้างบอกอยู่แล้วว่ากลุ่มนี้ถามอะไร เช่นในหัวข้อ
+   * `<FilterPanel>` ที่มีชื่อกลุ่มเป็น `<h3>` อยู่ด้านบนแล้ว
+   */
+  isLabelHidden?: boolean;
   /** เรียงแนวตั้ง (ค่าเริ่มต้น) หรือแนวนอน */
   orientation?: 'vertical' | 'horizontal';
   className?: string;
@@ -181,6 +189,7 @@ export function RadioList({
   description,
   status,
   isOptional,
+  isLabelHidden = false,
   orientation = 'vertical',
   className,
   ...rest
@@ -195,7 +204,7 @@ export function RadioList({
       className={cn('grid min-w-0 gap-2', className)}
       {...rest}
     >
-      <Label className="text-label text-fg-secondary">
+      <Label className={cn('text-label text-fg-secondary', isLabelHidden && 'sr-only')}>
         {label}
         {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>

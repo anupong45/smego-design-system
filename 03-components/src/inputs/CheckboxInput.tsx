@@ -11,15 +11,22 @@ import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
 import { useStrings } from '../provider/SmeGoProvider';
+import {
+  statusTextClass,
+  isErrorStatus,
+  type InputStatus,
+} from './fieldStyles';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SME.GO · CheckboxInput / CheckboxGroup   (เดิมชื่อ Checkbox — ดู ASTRYX-PARITY.md §1.2)
    ───────────────────────────────────────────────────────────────────────────
    ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
-   รับ    `label` บังคับ (เดิมรับ `children`) · `isLabelHidden` (§8.1)
-   ไม่รับ `size` `labelIcon` `width` `isOptional` `isLoading` `htmlName`
-          `changeAction` (D8) `disabledMessage` (D16) ของ Astryx — ไม่มี
-          use case ใน marketplace ตอนนี้
+   รับ    `label` บังคับ (เดิมรับ `children`) · `isLabelHidden` (§8.1) ·
+          `status` · `isOptional` (§3.1 กฎ 2–3 — พี่น้องทุกตัวมีแล้ว)
+   ไม่รับ `size` (D1 · 28/32/36 ต่ำกว่าเกณฑ์ touch) · `labelIcon` (D16) ·
+          `isLoading` (D8 — มีไว้คู่กับ `changeAction` แบบ async ของเขา) ·
+          `width` (D6) · `htmlName` (D15) · `changeAction` (D8) ·
+          `disabledMessage` (D16)
    ───────────────────────────────────────────────────────────────────────────
    ★ กล่อง 20px แต่ **เป้ารวมคือทั้งแถว** ไม่ใช่แค่กล่อง
 
@@ -57,6 +64,18 @@ export interface CheckboxInputProps
   isLabelHidden?: boolean;
   /** คำอธิบายใต้ข้อความ */
   description?: string;
+
+  /**
+   * สถานะของช่อง — ใช้กับ checkbox เดี่ยวที่ต้องติ๊ก เช่นการยอมรับเงื่อนไข
+   *
+   * ⚠️ ถ้าอยู่ใน `<CheckboxGroup>` ให้ใส่ `status` ที่**กลุ่ม** ไม่ใช่รายตัว —
+   * การตรวจความถูกต้องเป็นเรื่องของกลุ่ม (SC 3.3.1)
+   */
+  status?: InputStatus;
+
+  /** ต่อท้าย label ว่า "(ไม่บังคับ)" */
+  isOptional?: boolean;
+
   className?: string;
 }
 
@@ -64,11 +83,17 @@ export function CheckboxInput({
   label,
   isLabelHidden,
   description,
+  status,
+  isOptional,
   className,
   ...rest
 }: CheckboxInputProps) {
+  const s = useStrings();
+
   return (
     <RACCheckbox
+      /* เฉพาะ error ที่ทำให้ invalid — warning/success ยังส่งฟอร์มได้ */
+      isInvalid={isErrorStatus(status) || undefined}
       className={cn(
         'group flex min-w-0 items-start gap-2',
         /* ★ ถ้าไม่มีข้อความ เป้าจะเหลือ 20×20 — p-1 ทำให้เป็น 28×28 ✓
@@ -110,9 +135,17 @@ export function CheckboxInput({
               )}
             >
               {label}
+              {isOptional && (
+                <span className="text-fg-muted"> ({s.common.optional})</span>
+              )}
             </span>
             {description && !isLabelHidden && (
               <span className="text-caption text-fg-muted">{description}</span>
+            )}
+            {status?.message && !isLabelHidden && (
+              <span className={cn('text-caption', statusTextClass[status.type])}>
+                {status.message}
+              </span>
             )}
           </span>
         </>
@@ -133,8 +166,8 @@ export interface CheckboxGroupProps
   label: string;
   children: ReactNode;
   description?: string;
-  errorMessage?: string;
-  showOptional?: boolean;
+  status?: InputStatus;
+  isOptional?: boolean;
   className?: string;
 }
 
@@ -142,8 +175,8 @@ export function CheckboxGroup({
   label,
   children,
   description,
-  errorMessage,
-  showOptional,
+  status,
+  isOptional,
   className,
   ...rest
 }: CheckboxGroupProps) {
@@ -153,7 +186,7 @@ export function CheckboxGroup({
     <RACCheckboxGroup
       /* aria ไม่ใช่ native — ข้อความ validation ต้องเป็นภาษาไทยที่เราคุม */
       validationBehavior="aria"
-      isInvalid={Boolean(errorMessage)}
+      isInvalid={isErrorStatus(status)}
       className={cn('grid min-w-0 gap-2', className)}
       {...rest}
     >
@@ -161,7 +194,7 @@ export function CheckboxGroup({
          ทำให้ screen reader ประกาศชื่อกลุ่มก่อนอ่านตัวเลือกแต่ละตัว */}
       <Label className="text-label text-fg-secondary">
         {label}
-        {showOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
+        {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>
 
       {description && (
@@ -173,7 +206,15 @@ export function CheckboxGroup({
       {/* -ms-1 ชดเชย p-1 ของ Checkbox เพื่อให้กล่องตรงแนวกับ label ด้านบน */}
       <div className="-ms-1 grid gap-1">{children}</div>
 
-      <FieldError className="text-caption text-danger-icon">{errorMessage}</FieldError>
+      {isErrorStatus(status) ? (
+        <FieldError className="text-caption text-danger-icon">{status?.message}</FieldError>
+      ) : (
+        status?.message && (
+          <Text slot="description" className={statusTextClass[status.type]}>
+            {status.message}
+          </Text>
+        )
+      )}
     </RACCheckboxGroup>
   );
 }
