@@ -268,11 +268,10 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 35,
+  "maxProblems": 34,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea",
-    "Accordion": "Collapsible",
     "ImageGallery": "Lightbox",
     "Alert": "Banner",
     "AppHeader": "TopNav"
@@ -282,7 +281,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Tooltip", "Skeleton", "ProgressBar", "Icon", "Grid", "Stack",
     "Section", "Divider", "EmptyState", "Pagination", "Avatar", "Spinner",
     "SegmentedControl", "CheckboxInput", "RadioList", "Selector", "Typeahead",
-    "NumberInput", "DateInput", "FileInput", "Slider", "Token"
+    "NumberInput", "DateInput", "FileInput", "Slider", "Token", "Collapsible"
   ],
   "renameNewBuild": { "Tabs": "TabList" },
   "extension": [
@@ -440,7 +439,8 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 | 9 | `FileUpload` → `FileInput` | ✅ | `files`→`value` · `onSelect`→`onChange` · `multiple`→`isMultiple` · `maxSizeMb`→`maxSize` — `onRemove` คงเป็น ours-only |
 | 10 | `RangeSlider` → `Slider` | ✅ | `minValue`→`min` · `maxValue`→`max` — `minLabel`/`maxLabel`/`unit` คงเป็น ours-only · e2e fixture (`app.tsx`) ตามไปแก้ |
 | 11 | `Chip` → `Token` | ✅ | `children`→`label: string` บังคับ (§8.1) — ไม่ใช่ component ใหม่ข้าง Chip (§1.4 D9) · `RemovableChip`/`ChipRow` คงเดิม |
-| 12–15 | ที่เหลือ | ⬜ | `Accordion` `ImageGallery` `Alert` `AppHeader` |
+| 12 | `Accordion` → `Collapsible` | ✅ | เฉพาะกลุ่ม — ไม่มี prop rename · `AccordionItem` คงชื่อเดิม |
+| 13–15 | ที่เหลือ | ⬜ | `ImageGallery` `Alert` `AppHeader` |
 
 **งานข้างเคียงที่เกิดขึ้นจริงในสองตัวแรก** (คาดว่าจะซ้ำกับตัวที่เหลือ):
 `fieldStyles` ย้ายออกจาก `TextField.tsx` มาเป็น `inputs/fieldStyles.ts` — เดิม Select · ComboBox · NumberField · DatePicker · SearchField ทั้งห้าตัว `import { fieldStyles } from './TextField'` ซึ่งผูกกับไฟล์ของ component อื่นโดยไม่มีเหตุผล

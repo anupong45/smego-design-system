@@ -22,7 +22,7 @@
        Selector    +40 KB
 
    ที่เหลือทั้งหมดอยู่ที่ **+0 ถึง +6 KB** (Switch · CheckboxInput · OTPField ·
-   FileInput · Dialog · Accordion · Tooltip) — ไม่ต้องกังวล
+   FileInput · Dialog · Collapsible · Tooltip) — ไม่ต้องกังวล
 
    สามตัวนั้นควรโหลดแบบ lazy เมื่ออยู่ในหน้าที่ไม่ได้ใช้ทันที:
 
@@ -149,11 +149,11 @@ export {
   type ChipRowProps,
 } from './data-display/Token';
 export {
-  Accordion,
+  Collapsible,
   AccordionItem,
-  type AccordionProps,
+  type CollapsibleProps,
   type AccordionItemProps,
-} from './data-display/Accordion';
+} from './data-display/Collapsible';
 export {
   ImageGallery,
   type ImageGalleryProps,

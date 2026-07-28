@@ -6,7 +6,7 @@ import {
   Card, CardMedia, Badge, Dot, Token, RemovableChip, ChipRow,
   Skeleton, SkeletonGroup, SkeletonText,
   TextInput, TextArea, CheckboxInput, CheckboxGroup, Radio, RadioList, Slider,
-  Accordion, AccordionItem, Tooltip, TooltipTrigger,
+  Collapsible, AccordionItem, Tooltip, TooltipTrigger,
   Dialog, DialogOverlay, DialogTrigger,
   Stack, VStack, HStack, Grid, Container, Section, Divider,
 } from '../../src/index';
@@ -128,15 +128,15 @@ const cases: [string, React.ReactElement][] = [
   ],
 
   [
-    'Accordion',
-    <Accordion allowsMultipleExpanded defaultExpandedKeys={['a']}>
+    'Collapsible',
+    <Collapsible allowsMultipleExpanded defaultExpandedKeys={["a"]}>
       <AccordionItem id="a" title="คุณสมบัติผู้สมัคร">
         <p>เป็นนิติบุคคลที่จดทะเบียนในประเทศไทย</p>
       </AccordionItem>
       <AccordionItem id="b" title="เอกสารที่ต้องใช้">
         <p>หนังสือรับรองนิติบุคคล</p>
       </AccordionItem>
-    </Accordion>,
+    </Collapsible>,
   ],
 
   [

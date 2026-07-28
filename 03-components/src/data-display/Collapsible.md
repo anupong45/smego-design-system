@@ -1,6 +1,8 @@
-# Accordion · AccordionItem
+# Collapsible · AccordionItem
 
-**`@smego/ui`** · ชั้น 03 · [Accordion.tsx](./Accordion.tsx)
+**`@smego/ui`** · ชั้น 03 · [Collapsible.tsx](./Collapsible.tsx)
+
+> เดิมชื่อ `Accordion` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 (เฉพาะกลุ่ม — `AccordionItem` คงชื่อเดิม ไม่มี prop rename)
 
 ---
 
@@ -25,11 +27,11 @@ component นี้มีความขัดแย้งทางเทคน�
 ## 2 · React API
 
 ```tsx
-import { Accordion, AccordionItem } from '@smego/ui';
+import { Collapsible, AccordionItem } from '@smego/ui';
 
-<Accordion allowsMultipleExpanded defaultExpandedKeys={['a']}>
+<Collapsible allowsMultipleExpanded defaultExpandedKeys={['a']}>
   <AccordionItem id="a" title="คุณสมบัติผู้สมัคร">…</AccordionItem>
-</Accordion>
+</Collapsible>
 ```
 
 ### AccordionItem
@@ -43,7 +45,7 @@ import { Accordion, AccordionItem } from '@smego/ui';
 | `isExpanded` / `defaultExpanded` | `boolean` | — | จาก RAC |
 | `isDisabled` | `boolean` | `false` | |
 
-### Accordion
+### Collapsible
 
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
@@ -55,7 +57,7 @@ import { Accordion, AccordionItem } from '@smego/ui';
 
 ## 3 · Variants
 
-Accordion ไม่มี variant — เส้นคั่นระหว่างรายการมาจาก `border-b border-edge-subtle last:border-b-0`
+Collapsible ไม่มี variant — เส้นคั่นระหว่างรายการมาจาก `border-b border-edge-subtle last:border-b-0`
 
 | ส่วน | ค่า |
 |---|---|
@@ -216,7 +218,7 @@ Component set **`AccordionItem`**
 
 ```tsx
 // เงื่อนไขโครงการ — FAQ ปิดอัตโนมัติได้
-<Accordion defaultExpandedKeys={['eligibility']}>
+<Collapsible defaultExpandedKeys={['eligibility']}>
   <AccordionItem id="eligibility" title="คุณสมบัติผู้สมัคร">
     <p>
       เป็นนิติบุคคลที่จดทะเบียนในประเทศไทย มียอดขายไม่เกิน 500 ล้านบาทต่อปี
@@ -229,19 +231,19 @@ Component set **`AccordionItem`**
       <Link href="/forms/grant-2569">ดาวน์โหลดแบบฟอร์ม</Link>
     </p>
   </AccordionItem>
-</Accordion>
+</Collapsible>
 ```
 
 ```tsx
 // กลุ่มตัวกรอง — ต้องเปิดหลายกลุ่มพร้อมกันได้
-<Accordion allowsMultipleExpanded defaultExpandedKeys={['category', 'price']}>
+<Collapsible allowsMultipleExpanded defaultExpandedKeys={['category', 'price']}>
   <AccordionItem id="category" title="หมวดหมู่" headingLevel={3}>
     <CheckboxGroup label="หมวดหมู่" aria-label="หมวดหมู่">…</CheckboxGroup>
   </AccordionItem>
   <AccordionItem id="price" title="ช่วงราคา" headingLevel={3}>
     <Slider label="ช่วงราคา" … />
   </AccordionItem>
-</Accordion>
+</Collapsible>
 ```
 
 ```tsx
@@ -264,7 +266,7 @@ Component set **`AccordionItem`**
 | ราคาหรือเงื่อนไขซื้อใน accordion | แสดงเลย | ข้อมูลตัดสินใจที่ซ่อนไว้ = คนส่วนใหญ่ไม่เห็น |
 | การหมุนไอคอนเป็นตัวบอกสถานะเดียว | + `aria-expanded` (มีแล้ว) | reduced motion ตัดการหมุนทิ้ง |
 | `duration-fast` | `duration-medium` | 150ms เร็วเกินไปสำหรับการเปลี่ยน layout |
-| `<Accordion>` ที่มี item เดียว | แสดงเลย หรือ `<Disclosure>` | กลุ่มที่มีสมาชิกเดียวไม่ใช่กลุ่ม |
+| `<Collapsible>` ที่มี item เดียว | แสดงเลย หรือ `<Disclosure>` | กลุ่มที่มีสมาชิกเดียวไม่ใช่กลุ่ม |
 
 ---
 

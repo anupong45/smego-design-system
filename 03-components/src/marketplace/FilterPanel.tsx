@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
-import { Accordion, AccordionItem } from '../data-display/Accordion';
+import { Collapsible, AccordionItem } from '../data-display/Collapsible';
 import { ChipRow, RemovableChip } from '../data-display/Token';
 import { Button } from '../inputs/Button';
 import { useStrings } from '../provider/SmeGoProvider';
@@ -85,7 +85,7 @@ export function FilterPanel({
       </div>
 
       {/* ★ หลายกลุ่มเปิดพร้อมกันได้ — ไม่ใช่ accordion ที่ปิดตัวอื่นเอง */}
-      <Accordion
+      <Collapsible
         allowsMultipleExpanded
         defaultExpandedKeys={defaultExpandedKeys ?? groups.map((g) => g.id)}
       >
@@ -94,7 +94,7 @@ export function FilterPanel({
             {g.children}
           </AccordionItem>
         ))}
-      </Accordion>
+      </Collapsible>
 
       {footer}
     </section>

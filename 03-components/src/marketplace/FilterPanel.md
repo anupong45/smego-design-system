@@ -150,14 +150,14 @@
     </Button>}
   </div>
 
-  <Accordion allowsMultipleExpanded
+  <Collapsible allowsMultipleExpanded
     defaultExpandedKeys={defaultExpandedKeys ?? groups.map((g) => g.id)}>
     {groups.map((g) => (
       <AccordionItem key={g.id} id={g.id} title={g.title} headingLevel={3}>
         {g.children}
       </AccordionItem>
     ))}
-  </Accordion>
+  </Collapsible>
   {footer}
 </section>
 ```

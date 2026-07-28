@@ -18,7 +18,7 @@ import {
   Radio, RadioList, Slider, DateInput, OTPField, NumberInput,
   SearchField, Switch, Selector, Typeahead, FileInput,
   Card, CardMedia, Badge, Dot, Token, RemovableChip, ChipRow,
-  Accordion, AccordionItem, ImageGallery, DescriptionList,
+  Collapsible, AccordionItem, ImageGallery, DescriptionList,
   Alert, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
   AppHeader,
@@ -351,15 +351,15 @@ function DataDisplay() {
         </Row>
       </Specimen>
 
-      <Specimen name="Accordion">
-        <Accordion>
+      <Specimen name="Collapsible">
+        <Collapsible>
           <AccordionItem id="a" title="เอกสารที่ต้องเตรียม">
             <p className="text-body">สำเนาหนังสือรับรองนิติบุคคล · ภ.พ.20 · งบการเงินปีล่าสุด</p>
           </AccordionItem>
           <AccordionItem id="b" title="ระยะเวลาพิจารณา">
             <p className="text-body">ประมาณ 15 วันทำการนับจากวันที่เอกสารครบถ้วน</p>
           </AccordionItem>
-        </Accordion>
+        </Collapsible>
       </Specimen>
 
       <Specimen name="DescriptionList" note="stacked · inline · divided · numeric">

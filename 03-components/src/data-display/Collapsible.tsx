@@ -12,7 +12,10 @@ import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · Accordion
+   SME.GO · Collapsible / AccordionItem   (เดิมชื่อ Accordion — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ⚠️ เฉพาะกลุ่ม (เดิม `Accordion`) เปลี่ยนชื่อเป็น `Collapsible` — `AccordionItem`
+   คงชื่อเดิม ไม่มีการ rename prop (parity table §3: ไม่มีรายการ ตรง/rename)
    ───────────────────────────────────────────────────────────────────────────
    ★★ ความขัดแย้งที่ต้องแก้: `overflow-hidden` vs วงแหวน focus
 
@@ -133,10 +136,10 @@ export function AccordionItem({
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Accordion — กลุ่มของ AccordionItem
+   Collapsible — กลุ่มของ AccordionItem
    ───────────────────────────────────────────────────────────────────────────── */
 
-export interface AccordionProps
+export interface CollapsibleProps
   extends Omit<RACDisclosureGroupProps, 'children' | 'className' | 'style'> {
   children: ReactNode;
   className?: string;
@@ -150,7 +153,7 @@ export interface AccordionProps
  * ที่เปิดไว้พร้อมกัน ไม่ใช่ให้กลุ่มก่อนหน้าปิดเอง ซึ่งขัดหลัก
  * recognition over recall ในข้อ 01 §4.3
  */
-export function Accordion({ children, className, ...rest }: AccordionProps) {
+export function Collapsible({ children, className, ...rest }: CollapsibleProps) {
   return (
     <RACDisclosureGroup className={cn('min-w-0', className)} {...rest}>
       {children}
