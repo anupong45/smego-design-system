@@ -18,6 +18,7 @@
     "gallery:build": "esbuild gallery/gallery.tsx --bundle --outfile=gallery/gallery.js --loader:.tsx=tsx --jsx=automatic --define:process.env.NODE_ENV='\"development\"' && tailwindcss -i gallery/gallery.in.css -o gallery/gallery.css",
     "gallery": "npm run gallery:build && http-server gallery -p 4400 -c-1 -o",
     "verify": "npm run typecheck && npm run lint && npm run test && npm run test:e2e && node ../02-tokens/validate-tokens.js",
+    "verify:head": "node ../02-tokens/verify-head.mjs",
     "lint": "node ../02-tokens/lint-classes.mjs && npm run lint:quality && npm run lint:parity",
     "lint:quality": "node ../02-tokens/lint-quality.mjs",
     "lint:parity": "node ../02-tokens/lint-parity.mjs"
