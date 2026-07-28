@@ -13,7 +13,14 @@ import { cn } from '../lib/cn';
 import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · RangeSlider — ตัวกรองช่วงราคา
+   SME.GO · Slider — ตัวกรองช่วงราคา   (เดิมชื่อ RangeSlider — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    `min` (เดิมชื่อ `minValue`) · `max` (เดิมชื่อ `maxValue`)
+   คงไว้  `minLabel` `maxLabel` `unit` (ours-only)
+   ไม่รับ `marks` `valueDisplay` `formatValue` `onChangeEnd`
+          `minStepsBetweenThumbs` `orientation` ของ Astryx — ไม่มี use case
+          ใน marketplace ตอนนี้
    ───────────────────────────────────────────────────────────────────────────
    ★★ SC 2.5.7 Dragging Movements — **ช่องกรอกตัวเลขไม่ใช่ของแถม**
 
@@ -40,13 +47,13 @@ import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
    ปรับอันไหน
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export interface RangeSliderProps {
+export interface SliderProps {
   label: string;
   /** ค่าปัจจุบัน [ต่ำสุด, สูงสุด] */
   value: [number, number];
   onChange: (value: [number, number]) => void;
-  minValue: number;
-  maxValue: number;
+  min: number;
+  max: number;
   step?: number;
   /** หน่วยต่อท้ายตัวเลข เช่น "บาท" */
   unit?: string;
@@ -57,19 +64,19 @@ export interface RangeSliderProps {
   className?: string;
 }
 
-export function RangeSlider({
+export function Slider({
   label,
   value,
   onChange,
-  minValue,
-  maxValue,
+  min,
+  max,
   step = 1,
   unit,
   minLabel,
   maxLabel,
   isDisabled,
   className,
-}: RangeSliderProps) {
+}: SliderProps) {
   const s = useStrings();
   const { locale } = useSmeGoLocale();
   const groupId = useId();
@@ -89,8 +96,8 @@ export function RangeSlider({
       <RACSlider
         value={value}
         onChange={(v) => onChange(v as [number, number])}
-        minValue={minValue}
-        maxValue={maxValue}
+        minValue={min}
+        maxValue={max}
         step={step}
         isDisabled={isDisabled}
         className="grid min-w-0 gap-2"
@@ -161,7 +168,7 @@ export function RangeSlider({
         <NumberField
           value={value[0]}
           onChange={setLo}
-          minValue={minValue}
+          minValue={min}
           maxValue={value[1]}
           step={step}
           isDisabled={isDisabled}
@@ -184,7 +191,7 @@ export function RangeSlider({
           value={value[1]}
           onChange={setHi}
           minValue={value[0]}
-          maxValue={maxValue}
+          maxValue={max}
           step={step}
           isDisabled={isDisabled}
           formatOptions={{ useGrouping: true }}

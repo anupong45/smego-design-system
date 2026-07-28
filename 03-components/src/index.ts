@@ -112,7 +112,7 @@ export {
   type RadioProps,
   type RadioListProps,
 } from './inputs/RadioList';
-export { RangeSlider, type RangeSliderProps } from './inputs/RangeSlider';
+export { Slider, type SliderProps } from './inputs/Slider';
 export {
   DateInput,
   createBuddhistCalendar,

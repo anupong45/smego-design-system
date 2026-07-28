@@ -39,7 +39,7 @@ export interface FilterGroup {
   id: string;
   /** ชื่อกลุ่ม เช่น "หมวดหมู่" "ช่วงราคา" */
   title: string;
-  /** เนื้อหา — `<CheckboxGroup>` · `<RangeSlider>` · `<RadioList>` */
+  /** เนื้อหา — `<CheckboxGroup>` · `<Slider>` · `<RadioList>` */
   children: ReactNode;
 }
 

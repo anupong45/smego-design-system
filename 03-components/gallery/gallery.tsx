@@ -15,7 +15,7 @@ import {
   Stack, HStack, Grid, Container, Divider,
   Icon, iconRegistry, type IconName,
   Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
-  Radio, RadioList, RangeSlider, DateInput, OTPField, NumberInput,
+  Radio, RadioList, Slider, DateInput, OTPField, NumberInput,
   SearchField, Switch, Selector, Typeahead, FileInput,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Accordion, AccordionItem, ImageGallery, DescriptionList,
@@ -244,8 +244,8 @@ function Inputs() {
         </Stack>
       </Specimen>
 
-      <Specimen name="RangeSlider" note="สองหัวจับ · หน่วยไทย">
-        <RangeSlider label="ช่วงราคา" value={range} onChange={setRange} minValue={0} maxValue={500000} step={5000} unit="บาท" />
+      <Specimen name="Slider" note="สองหัวจับ · หน่วยไทย">
+        <Slider label="ช่วงราคา" value={range} onChange={setRange} min={0} max={500000} step={5000} unit="บาท" />
       </Specimen>
 
       <Specimen name="DateInput" note="ปฏิทินพุทธศักราช (พ.ศ.)">

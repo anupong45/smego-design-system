@@ -1,6 +1,8 @@
-# RangeSlider
+# Slider
 
-**`@smego/ui`** · ชั้น 03 · [RangeSlider.tsx](./RangeSlider.tsx)
+**`@smego/ui`** · ชั้น 03 · [Slider.tsx](./Slider.tsx)
+
+> เดิมชื่อ `RangeSlider` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `minValue`→`min` · `maxValue`→`max` ตาม §8
 
 ---
 
@@ -24,14 +26,14 @@ component นี้เป็นตัวอย่างที่ชัดที�
 ## 2 · React API
 
 ```tsx
-import { RangeSlider } from '@smego/ui';
+import { Slider } from '@smego/ui';
 
-<RangeSlider
+<Slider
   label="ช่วงราคา"
   value={price}
   onChange={setPrice}
-  minValue={0}
-  maxValue={5_000_000}
+  min={0}
+  max={5_000_000}
   step={10_000}
 />
 ```
@@ -41,7 +43,7 @@ import { RangeSlider } from '@smego/ui';
 | `label` | `string` | — | **บังคับ** |
 | `value` | `[number, number]` | — | `[ต่ำสุด, สูงสุด]` |
 | `onChange` | `(v: [number, number]) => void` | — | |
-| `minValue` / `maxValue` | `number` | — | |
+| `min` / `max` | `number` | — | |
 | `step` | `number` | `1` | ต้องหยาบพอที่ 1px จะไม่กระโดดหลายค่า |
 | `unit` | `string` | `s.common.currency` | |
 | `minLabel` / `maxLabel` | `string` | จาก `strings.th.ts` | |
@@ -53,7 +55,7 @@ import { RangeSlider } from '@smego/ui';
 
 ## 3 · Variants
 
-RangeSlider ไม่มี variant — **โดยตั้งใจ**
+Slider ไม่มี variant — **โดยตั้งใจ**
 
 slider ที่มีหลายหน้าตาจะทำให้ผู้ใช้ต้องเรียนรู้ใหม่ทุกครั้ง และไม่มีเคสใช้งานจริงในระบบนี้ที่ต้องการหน้าตาต่าง
 
@@ -195,7 +197,7 @@ slider กว้าง 300px ที่ช่วง 0–5,000,000 บาท ห�
 
 ## 7 · Figma Variant
 
-Component set **`RangeSlider`**
+Component set **`Slider`**
 
 | Property | Values |
 |---|---|
@@ -214,38 +216,38 @@ Component set **`RangeSlider`**
 ```tsx
 const [price, setPrice] = useState<[number, number]>([50_000, 2_000_000]);
 
-<RangeSlider
+<Slider
   label="ช่วงราคา"
   value={price}
   onChange={setPrice}
-  minValue={0}
-  maxValue={5_000_000}
+  min={0}
+  max={5_000_000}
   step={10_000}
 />
 ```
 
 ```tsx
 // จำนวนสั่งซื้อขั้นต่ำ — หน่วยไม่ใช่บาท
-<RangeSlider
+<Slider
   label="จำนวนสั่งซื้อขั้นต่ำ"
   unit="ชิ้น"
   minLabel="อย่างน้อย"
   maxLabel="ไม่เกิน"
   value={moq}
   onChange={setMoq}
-  minValue={1}
-  maxValue={10_000}
+  min={1}
+  max={10_000}
   step={10}
 />
 ```
 
 ```tsx
 // ยิง API แบบ debounce ที่ฝั่งผู้เรียก ไม่ใช่ใน component
-<RangeSlider
+<Slider
   label="ช่วงราคา"
   value={price}
   onChange={(v) => { setPrice(v); debouncedSearch(v); }}
-  minValue={0} maxValue={5_000_000} step={10_000}
+  min={0} max={5_000_000} step={10_000}
 />
 ```
 
@@ -276,7 +278,7 @@ const [price, setPrice] = useState<[number, number]>([50_000, 2_000_000]);
 | การเข้าถึง (Accessibility) | ✅ | §5 · axe ผ่านใน `a11y/primitives.test.tsx` |
 | ตอบสนอง (Responsive) | ✅ | `min-w-0` · `e2e/wcag22.spec.ts:204` กดบนรางได้เลยไม่ต้องลาก ซึ่งสำคัญกว่าบนจอสัมผัสแคบ |
 | โหมดมืด (Dark Mode) | ✅ | `lint-classes.mjs` 0 จุด — ทุกสีมาจาก token ที่ override ในโหมดมืดแล้ว |
-| คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `left-1/2` ที่ [RangeSlider.tsx:140](./RangeSlider.tsx) เป็น**สำนวนจัดกึ่งกลาง**คู่กับ `-translate-x-1/2` ไม่ใช่การเลือกข้าง — `lint-quality.mjs` ยกเว้นไว้โดยตั้งใจ (Tailwind ไม่มี translate เชิงตรรกะ การเปลี่ยนเป็น `start-1/2` จะทำให้เยื้อง) |
+| คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `left-1/2` ที่ [Slider.tsx:140](./Slider.tsx) เป็น**สำนวนจัดกึ่งกลาง**คู่กับ `-translate-x-1/2` ไม่ใช่การเลือกข้าง — `lint-quality.mjs` ยกเว้นไว้โดยตั้งใจ (Tailwind ไม่มี translate เชิงตรรกะ การเปลี่ยนเป็น `start-1/2` จะทำให้เยื้อง) |
 | คีย์บอร์ด (Keyboard) | ✅ | `e2e/wcag22.spec.ts:167` คีย์บอร์ดเปลี่ยนค่าได้ (SC 2.1.1) · §4 `focus-visible` และ `dragging` แยกกัน |
 | กำลังโหลด (Loading) | — | ช่วงค่ามาพร้อมหน้า |
 | ข้อผิดพลาด (Error) | — | ค่าถูกบีบให้อยู่ในช่วงเสมอ — ไม่มีค่าที่ผิดได้ |

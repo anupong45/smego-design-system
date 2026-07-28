@@ -5,7 +5,7 @@ import {
   Button, IconButton, Link, Icon,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Skeleton, SkeletonGroup, SkeletonText,
-  TextInput, TextArea, CheckboxInput, CheckboxGroup, Radio, RadioList, RangeSlider,
+  TextInput, TextArea, CheckboxInput, CheckboxGroup, Radio, RadioList, Slider,
   Accordion, AccordionItem, Tooltip, TooltipTrigger,
   Dialog, DialogOverlay, DialogTrigger,
   Stack, VStack, HStack, Grid, Container, Section, Divider,
@@ -116,13 +116,13 @@ const cases: [string, React.ReactElement][] = [
   ],
 
   [
-    'RangeSlider',
-    <RangeSlider
+    'Slider',
+    <Slider
       label="ช่วงราคา"
       value={[50_000, 2_000_000]}
       onChange={() => {}}
-      minValue={0}
-      maxValue={5_000_000}
+      min={0}
+      max={5_000_000}
       step={10_000}
     />,
   ],

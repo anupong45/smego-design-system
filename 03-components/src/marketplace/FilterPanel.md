@@ -33,7 +33,7 @@
   onClearAll={clearAll}
   groups={[
     { id: 'cat',   title: 'หมวดหมู่ย่อย', children: <CheckboxGroup …/> },
-    { id: 'price', title: 'ช่วงราคา',     children: <RangeSlider …/> },
+    { id: 'price', title: 'ช่วงราคา',     children: <Slider …/> },
   ]}
 />
 ```
@@ -215,8 +215,8 @@ Component set **`FilterChipRow`** — property `Count` = `1` · `3` · `6 (scrol
           </CheckboxGroup>
         )},
         { id: 'price', title: 'ช่วงราคา', children: (
-          <RangeSlider label="ช่วงราคา" value={price} onChange={setPrice}
-            minValue={0} maxValue={5_000_000} step={10_000} />
+          <Slider label="ช่วงราคา" value={price} onChange={setPrice}
+            min={0} max={5_000_000} step={10_000} />
         )},
       ]}
     />

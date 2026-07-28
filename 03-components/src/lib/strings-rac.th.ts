@@ -145,6 +145,7 @@ export const racStringsTh: Record<string, Record<string, RacString>> = {
    @react-aria/color           43 ข้อความ  ← ไม่มีในระบบนี้
    @react-aria/tree             2 ข้อความ  ← ยังไม่มี
 
-   หมายเหตุ: `Slider` และ `RangeSlider` **ไม่มีข้อความภายใน** จึงไม่ต้องแปล
+   หมายเหตุ: `Slider` ของ RAC และ `Slider` ของเรา (เดิม `RangeSlider`)
+   **ไม่มีข้อความภายใน** จึงไม่ต้องแปล
    ค่า min/max ที่ screen reader อ่านมาจาก `aria-label` ที่เราส่งให้เอง
    ═══════════════════════════════════════════════════════════════════════════ */

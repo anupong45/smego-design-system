@@ -239,7 +239,7 @@ Component set **`AccordionItem`**
     <CheckboxGroup label="หมวดหมู่" aria-label="หมวดหมู่">…</CheckboxGroup>
   </AccordionItem>
   <AccordionItem id="price" title="ช่วงราคา" headingLevel={3}>
-    <RangeSlider label="ช่วงราคา" … />
+    <Slider label="ช่วงราคา" … />
   </AccordionItem>
 </Accordion>
 ```

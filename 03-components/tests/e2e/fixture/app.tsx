@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  SmeGoProvider, Container, Section, Button, TextInput, RangeSlider,
+  SmeGoProvider, Container, Section, Button, TextInput, Slider,
   Dialog, DialogOverlay, DialogTrigger, CompareBar, Link, Grid, ProductCard,
   ProgressBar, DescriptionList, FundingCard, BusinessCard, Alert,
   AppHeader, SearchField, BuyBox, ImageGallery, CheckoutSummary,
@@ -120,12 +120,12 @@ function App() {
           </div>
 
           <div className="mt-6 max-w-md" data-testid="slider-block">
-            <RangeSlider
+            <Slider
               label="ช่วงราคา"
               value={price}
               onChange={setPrice}
-              minValue={0}
-              maxValue={5_000_000}
+              min={0}
+              max={5_000_000}
               step={10_000}
             />
           </div>
