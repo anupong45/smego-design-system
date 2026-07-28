@@ -22,6 +22,8 @@ import {
   Banner, ProgressBar, Skeleton, SkeletonText, Spinner, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
   TopNav, BottomNav, Pagination, TabList, Tab, TabPanel,
+  DropdownMenu, DropdownMenuItem, DropdownMenuSection,
+  DropdownMenuSeparator, DropdownMenuTrigger,
   SegmentedControl, SegmentedControlItem,
   EntityCard, EntityAmount, EntityMeta, DeadlineBadge, DeadlineText,
   ProductCard, ServiceCard, ProgramCard, GrantCard, FundingCard,
@@ -807,6 +809,44 @@ function Navigation() {
             search={<SearchField label="ค้นหาสินค้าและบริการ" labelHidden placeholder="ค้นหาสินค้าและบริการ" />}
             className="!static"
           />
+        </div>
+      </Specimen>
+
+      <Specimen
+        name="DropdownMenu"
+        note="เมนูคำสั่ง — ชื่อเมนูมาจากปุ่ม ตั้งเองไม่ได้ (§5) · คำสั่งอันตรายได้ไอคอนมาด้วย ไม่ใช่แค่สี"
+      >
+        <div className="flex flex-wrap gap-3">
+          <DropdownMenuTrigger>
+            <Button variant="secondary" icon="more-horizontal">
+              คำสั่งสำหรับ เครื่องคั่วกาแฟ TR-500
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuSection title="แก้ไข">
+                <DropdownMenuItem id="edit" label="แก้ไขรายละเอียดสินค้า" icon="file-text" />
+                <DropdownMenuItem
+                  id="dup"
+                  label="ทำสำเนา"
+                  description="สร้างรายการใหม่จากรายการนี้"
+                />
+              </DropdownMenuSection>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem id="unpub" label="ยกเลิกการเผยแพร่" isDisabled />
+              <DropdownMenuItem id="del" label="ลบรายการถาวร" isDestructive />
+            </DropdownMenu>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuTrigger>
+            <IconButton name="more-vertical" label="คำสั่งสำหรับ ผ้าฝ้ายทอมือ" variant="ghost" />
+            <DropdownMenu>
+              <DropdownMenuItem id="a" label="บันทึกไว้ดูภายหลัง" icon="heart" />
+              <DropdownMenuItem
+                id="b"
+                label="ยกเลิกคำสั่งซื้อและขอคืนเงินเต็มจำนวน"
+                description="คืนเงินภายใน 7 วันทำการ"
+              />
+            </DropdownMenu>
+          </DropdownMenuTrigger>
         </div>
       </Specimen>
 

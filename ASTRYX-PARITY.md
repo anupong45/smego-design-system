@@ -292,7 +292,8 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Button", "IconButton", "Link", "Switch", "Card", "Badge", "Dialog",
     "Tooltip", "Skeleton", "ProgressBar", "Icon", "Grid", "Stack",
     "Section", "Divider", "EmptyState", "Pagination", "Avatar", "Spinner",
-    "SegmentedControl", "CheckboxInput", "RadioList", "Selector", "Typeahead",
+    "SegmentedControl", "DropdownMenu",
+    "CheckboxInput", "RadioList", "Selector", "Typeahead",
     "NumberInput", "DateInput", "FileInput", "Slider", "Token", "Collapsible",
     "Banner", "TopNav"
   ],
@@ -321,6 +322,10 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Token": {
       "companion": "RemovableChip",
       "props": ["onRemove"]
+    },
+    "DropdownMenu": {
+      "companion": "DropdownMenuTrigger",
+      "props": ["isMenuOpen", "onOpenChange", "button"]
     }
   },
   "propsOursOnly": {
@@ -332,6 +337,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Spinner": ["isLabelHidden"],
     "EmptyState": ["isLive"],
     "TabList": ["label", "isDisabled"],
+    "DropdownMenu": ["width"],
     "Card": ["selected", "elevation", "interactive"],
     "Badge": ["showIcon"],
     "Icon": ["name"],

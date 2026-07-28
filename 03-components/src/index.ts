@@ -221,6 +221,16 @@ export {
 /* ── Navigation ───────────────────────────────────────────────────────────── */
 export { TopNav, type TopNavProps } from './navigation/TopNav';
 export {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuSection,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  type DropdownMenuProps,
+  type DropdownMenuItemProps,
+  type DropdownMenuSectionProps,
+} from './navigation/DropdownMenu';
+export {
   BottomNav,
   type BottomNavProps,
   type BottomNavItem,
