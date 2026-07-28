@@ -12,7 +12,7 @@
 
 | สถานการณ์ | ใช้อะไรแทน | เหตุผล |
 |---|---|---|
-| รายการสั้น (≤ ~10) | `<Select>` | การพิมพ์ไม่ช่วยอะไร |
+| รายการสั้น (≤ ~10) | `<Selector>` | การพิมพ์ไม่ช่วยอะไร |
 | ค้นหาอิสระ ไม่ใช่ชุดปิด | `<SearchField>` | ComboBox บังคับเลือกจากรายการ |
 | เลือกหลายค่า | `<CheckboxGroup>` หรือ `<Chip>` | |
 | รายการมาจาก API แบบ async | ComboBox + จัดการ loading เอง | component นี้รับ `options` ที่พร้อมแล้ว |
@@ -34,7 +34,7 @@
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
-| `options` | `SelectOption[]` | — | ใช้ type เดียวกับ `<Select>` |
+| `options` | `SelectOption[]` | — | ใช้ type เดียวกับ `<Selector>` |
 | `placeholder` · `description` · `errorMessage` · `showOptional` | | | |
 | `size` | `'md' \| 'lg'` | `'md'` | |
 | `selectedKey` / `onSelectionChange` / `inputValue` / `onInputChange` | | | จาก RAC |
@@ -45,9 +45,9 @@
 
 ## 3 · Variants
 
-ไม่มี variant · หน้าตาเหมือน `<Select>` ทุกอย่างยกเว้นช่องพิมพ์ได้
+ไม่มี variant · หน้าตาเหมือน `<Selector>` ทุกอย่างยกเว้นช่องพิมพ์ได้
 
-`SelectItem` ถูกใช้ซ้ำจาก `Select.tsx` — รายการในสองตัวนี้ต้องหน้าตาเหมือนกัน ไม่งั้นผู้ใช้จะคิดว่าเป็นคนละอย่าง
+`SelectItem` ถูกใช้ซ้ำจาก `Selector.tsx` — รายการในสองตัวนี้ต้องหน้าตาเหมือนกัน ไม่งั้นผู้ใช้จะคิดว่าเป็นคนละอย่าง
 
 ### ★★ `allowsEmptyCollection` เปิดไว้ พร้อมข้อความ "ไม่พบตัวเลือกที่ตรงกัน"
 
@@ -209,9 +209,9 @@ const filtered = useMemo(
 | กัน `onChange` ทั้งหมดแบบ TextField | กันเฉพาะการกรอง | ผู้ใช้ไม่เห็นสิ่งที่ตัวเองพิมพ์ |
 | ไม่ตั้ง `allowsEmptyCollection` | ตั้ง (ตายตัวแล้ว) | popover ปิดเงียบเมื่อไม่พบ |
 | ไม่มีข้อความ "ไม่พบ" | `renderEmptyState` | ผู้ใช้ไม่รู้ว่าพิมพ์ผิดหรือไม่มีข้อมูล |
-| ComboBox กับ 5 ตัวเลือก | `<Select>` | การพิมพ์ไม่ช่วยอะไร |
+| ComboBox กับ 5 ตัวเลือก | `<Selector>` | การพิมพ์ไม่ช่วยอะไร |
 | ใช้แทน `<SearchField>` | `<SearchField>` | ComboBox บังคับเลือกจากรายการ |
-| รายการหน้าตาต่างจาก Select | ใช้ `SelectItem` ร่วมกัน | ผู้ใช้คิดว่าเป็นคนละอย่าง |
+| รายการหน้าตาต่างจาก Selector | ใช้ `SelectItem` ร่วมกัน | ผู้ใช้คิดว่าเป็นคนละอย่าง |
 | ลืม `textValue` | ใส่เสมอ | การกรองด้วยการพิมพ์และการประกาศพัง |
 
 ---

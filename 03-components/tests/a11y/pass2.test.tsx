@@ -5,7 +5,7 @@ import { CalendarDate } from '@internationalized/date';
 import { render, expectNoViolations } from './render';
 import {
   DatePicker, OTPField, createBuddhistCalendar,
-  NumberField, SearchField, Switch, Select, ComboBox, FileUpload,
+  NumberField, SearchField, Switch, Selector, ComboBox, FileUpload,
 } from '../../src/index';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -222,10 +222,10 @@ const pass2Cases: [string, React.ReactElement][] = [
   ['Switch', <Switch defaultSelected description="ระบบจะแจ้งเตือนเมื่อมีคำสั่งซื้อใหม่">
     รับการแจ้งเตือนทางอีเมล</Switch>],
   ['Switch · align end', <Switch align="end">แสดงราคารวมภาษี</Switch>],
-  ['Select', <Select label="จังหวัดที่ตั้ง" options={OPTIONS}
+  ['Selector', <Selector label="จังหวัดที่ตั้ง" options={OPTIONS}
     description="เลือกจังหวัดที่โรงงานตั้งอยู่" />],
-  ['Select · invalid', <Select label="จังหวัดที่ตั้ง" options={OPTIONS}
-    errorMessage="ยังไม่ได้เลือกจังหวัด — จำเป็นสำหรับการคำนวณค่าขนส่ง" />],
+  ['Selector · invalid', <Selector label="จังหวัดที่ตั้ง" options={OPTIONS}
+    status={{ type: 'error', message: 'ยังไม่ได้เลือกจังหวัด — จำเป็นสำหรับการคำนวณค่าขนส่ง' }} />],
   ['ComboBox', <ComboBox label="จังหวัดที่ตั้ง" options={OPTIONS}
     placeholder="พิมพ์เพื่อค้นหาจังหวัด" />],
   ['FileUpload', <FileUpload label="เอกสารประกอบการสมัคร"
@@ -277,8 +277,8 @@ describe('Pass 2 · กฎเฉพาะ', () => {
     expect(screen.queryByRole('checkbox')).toBeNull();
   });
 
-  it('Select ไม่ใช้ <select> ของ browser', () => {
-    const { container } = render(<Select label="จังหวัด" options={OPTIONS} />);
+  it('Selector ไม่ใช้ <select> ของ browser', () => {
+    const { container } = render(<Selector label="จังหวัด" options={OPTIONS} />);
     /* ★ ตัวที่ผู้ใช้เห็นและกดต้องเป็น <button> ไม่ใช่ <select>
        เพราะ UI ของ <select> style ไม่ได้และขึ้นภาษาตาม OS */
     expect(screen.getByRole('button')).toBeDefined();

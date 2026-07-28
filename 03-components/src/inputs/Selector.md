@@ -1,6 +1,8 @@
-# Select · SelectItem
+# Selector · SelectItem
 
-**`@smego/ui`** · ชั้น 03 · [Select.tsx](./Select.tsx)
+**`@smego/ui`** · ชั้น 03 · [Selector.tsx](./Selector.tsx)
+
+> เดิมชื่อ `Select` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `errorMessage`→`status` · `showOptional`→`isOptional` ตาม §8
 
 ---
 
@@ -22,7 +24,7 @@
 ## 2 · React API
 
 ```tsx
-<Select
+<Selector
   label="จังหวัดที่ตั้งโรงงาน"
   description="ใช้คำนวณค่าขนส่ง"
   options={provinces}
@@ -35,7 +37,7 @@
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
 | `options` | `SelectOption[]` | — | `{ id, label, description?, isDisabled? }` |
-| `description` · `errorMessage` · `showOptional` | | | |
+| `description` · `status` · `isOptional` | | | |
 | `placeholder` | `string` | `s.common.selectPlaceholder` | |
 | `size` | `'md' \| 'lg'` | `'md'` | |
 | `selectedKey` / `onSelectionChange` | | | จาก RAC |
@@ -150,7 +152,7 @@
 
 ## 7 · Figma Variant
 
-Component set **`Select`**
+Component set **`Selector`**
 
 | Property | Values |
 |---|---|
@@ -174,19 +176,19 @@ const PROVINCES = [
   { id: 'hkt', label: 'ภูเก็ต', isDisabled: true },
 ];
 
-<Select
+<Selector
   label="จังหวัดที่ตั้งโรงงาน"
   description="ใช้คำนวณค่าขนส่ง"
   options={PROVINCES}
   selectedKey={province}
   onSelectionChange={(k) => setProvince(String(k))}
-  errorMessage={submitted && !province ? 'ยังไม่ได้เลือกจังหวัด — จำเป็นสำหรับการคำนวณค่าขนส่ง' : undefined}
+  status={submitted && !province ? { type: 'error', message: 'ยังไม่ได้เลือกจังหวัด — จำเป็นสำหรับการคำนวณค่าขนส่ง' } : undefined}
 />
 ```
 
 ```tsx
 // การเรียงลำดับในหน้าค้นหา
-<Select
+<Selector
   label="เรียงตาม"
   options={[
     { id: 'relevant', label: 'ตรงกับคำค้นมากที่สุด' },
@@ -204,15 +206,15 @@ const PROVINCES = [
 
 | ❌ | ✅ | ทำไม |
 |---|---|---|
-| `<select>` ของ browser ที่ผู้ใช้เห็น | `<Select>` | UI ขึ้นภาษาตาม OS · style ไม่ได้ |
+| `<select>` ของ browser ที่ผู้ใช้เห็น | `<Selector>` | UI ขึ้นภาษาตาม OS · style ไม่ได้ |
 | assert "ต้องไม่มี `<select>` เลย" | assert ตัวที่เห็นเป็น `button` | RAC ใช้ `<select>` ซ่อนสำหรับ submit |
 | selected ต่างแค่พื้นสี | + เครื่องหมายถูก | hover กับ selected แยกไม่ออก |
 | รายการยาวไม่จำกัดความสูง | `max-h-64 overflow-auto` | ล้นจอ ผู้ใช้เลื่อนหน้าแทน |
 | `overflow-auto` ไม่มี `p-1` | มี | วงแหวน focus ถูกตัด (SC 2.4.7) |
 | popover กว้างตามข้อความ | `w-(--trigger-width)` | ดูไม่เกี่ยวกับช่อง |
 | `description` เป็น `title` | บรรทัดที่สองในรายการ | tooltip ผู้ใช้ touch เข้าไม่ถึง |
-| Select กับ 3 ตัวเลือกในฟอร์มสั้น | `<RadioList>` | ต้องเปิดถึงจะเห็น |
-| Select กับ 50 จังหวัด | `<ComboBox>` | สแกนหาไม่เจอ |
+| Selector กับ 3 ตัวเลือกในฟอร์มสั้น | `<RadioList>` | ต้องเปิดถึงจะเห็น |
+| Selector กับ 50 จังหวัด | `<ComboBox>` | สแกนหาไม่เจอ |
 
 ---
 
@@ -228,7 +230,7 @@ const PROVINCES = [
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | ✅ | §4 `open` · ลูกศรเปิดและเลื่อน · พิมพ์ตัวอักษรเพื่อกระโดด · `Esc` ปิดแล้วคืน focus ที่ตัวเปิด |
 | กำลังโหลด (Loading) | — | ตัวเลือกมาพร้อมหน้า · ถ้าต้องค้นหาให้ใช้ [`<ComboBox>`](./ComboBox.md) |
-| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `errorMessage` (SC 3.3.1) |
+| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `status` (SC 3.3.1) |
 | ว่างเปล่า (Empty) | — | select ที่ไม่มีตัวเลือกคือ select ที่ไม่ควรแสดง — ให้ซ่อนทั้งช่องพร้อมเหตุผล |
 | Skeleton | — | ตัวเลือกเป็นข้อความสั้น |
 | การเคลื่อนไหว (Animation) | ✅ | `base.css §10` ครอบ `*` ด้วย `!important` — ไม่มีการเคลื่อนไหวที่หลุดตัวกัน (`lint-quality.mjs` 0 จุด) · เข้า/ออกด้วย `fade` opacity ล้วน |

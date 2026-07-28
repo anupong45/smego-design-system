@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
 import { fieldStyles } from './fieldStyles';
-import { SelectItem, type SelectOption } from './Select';
+import { SelectItem, type SelectOption } from './Selector';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════

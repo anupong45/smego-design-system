@@ -22,7 +22,7 @@
 | ค้นหาพร้อม suggestion | `<ComboBox>` (Pass 2) | ต้องมี `aria-autocomplete` + listbox |
 | วันที่ | `<DatePicker>` (Pass 2) | ต้องเป็น พ.ศ. ผ่าน `BuddhistCalendar` |
 | OTP | `<OTPField>` (Pass 2) | ต้องวางเลข 6 หลักได้ (SC 3.3.8) |
-| เลือกจากรายการปิด | `<Select>` (Pass 2) | พิมพ์เองทำให้ข้อมูลไม่สม่ำเสมอ |
+| เลือกจากรายการปิด | `<Selector>` (Pass 2) | พิมพ์เองทำให้ข้อมูลไม่สม่ำเสมอ |
 
 ---
 

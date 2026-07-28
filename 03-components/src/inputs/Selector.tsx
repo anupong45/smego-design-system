@@ -14,11 +14,21 @@ import {
 import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
-import { fieldStyles } from './fieldStyles';
+import {
+  fieldStyles,
+  statusTextClass,
+  isErrorStatus,
+  type InputStatus,
+} from './fieldStyles';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · Select
+   SME.GO · Selector   (เดิมชื่อ Select — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    `status` (เดิมชื่อ `errorMessage`) · `isOptional` (เดิมชื่อ `showOptional`)
+   ไม่รับ `hasSearch` `hasClear` `renderOption` `placement` `startIcon`
+          `isDefaultOpen` ของ Astryx — ไม่มี use case ใน marketplace ตอนนี้
    ───────────────────────────────────────────────────────────────────────────
    ★★ ใช้เมื่อ **ตัวเลือกเป็นชุดปิดและผู้ใช้รู้ว่าจะเลือกอะไร**
 
@@ -50,7 +60,7 @@ export interface SelectOption {
   isDisabled?: boolean;
 }
 
-export interface SelectProps
+export interface SelectorProps
   extends Omit<
     RACSelectProps<SelectOption>,
     'children' | 'className' | 'style' | 'validationBehavior' | 'items'
@@ -58,38 +68,38 @@ export interface SelectProps
   label: string;
   options: SelectOption[];
   description?: string;
-  errorMessage?: string;
-  showOptional?: boolean;
+  status?: InputStatus;
+  isOptional?: boolean;
   /** ข้อความเมื่อยังไม่เลือก */
   placeholder?: string;
   size?: 'md' | 'lg';
   className?: string;
 }
 
-export function Select({
+export function Selector({
   label,
   options,
   description,
-  errorMessage,
-  showOptional,
+  status,
+  isOptional,
   placeholder,
   size,
   className,
   ...rest
-}: SelectProps) {
+}: SelectorProps) {
   const s = useStrings();
 
   return (
     <RACSelect
       validationBehavior="aria"
-      isInvalid={Boolean(errorMessage)}
+      isInvalid={isErrorStatus(status)}
       placeholder={placeholder ?? s.common.selectPlaceholder}
       className={cn(fieldStyles.root, className)}
       {...rest}
     >
       <Label className={fieldStyles.label}>
         {label}
-        {showOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
+        {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>
 
       <RACButton
@@ -112,7 +122,16 @@ export function Select({
           {description}
         </Text>
       )}
-      <FieldError className={fieldStyles.error}>{errorMessage}</FieldError>
+
+      {isErrorStatus(status) ? (
+        <FieldError className={fieldStyles.error}>{status?.message}</FieldError>
+      ) : (
+        status?.message && (
+          <Text slot="description" className={statusTextClass[status.type]}>
+            {status.message}
+          </Text>
+        )
+      )}
 
       <Popover
         offset={4}

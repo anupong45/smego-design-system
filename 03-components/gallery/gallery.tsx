@@ -16,7 +16,7 @@ import {
   Icon, iconRegistry, type IconName,
   Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
   Radio, RadioList, RangeSlider, DatePicker, OTPField, NumberField,
-  SearchField, Switch, Select, ComboBox, FileUpload,
+  SearchField, Switch, Selector, ComboBox, FileUpload,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Accordion, AccordionItem, ImageGallery, DescriptionList,
   Alert, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
@@ -265,10 +265,10 @@ function Inputs() {
         </Stack>
       </Specimen>
 
-      <Specimen name="Select / ComboBox" note="Select = เลือกจากรายการ · ComboBox = พิมพ์กรองได้">
+      <Specimen name="Selector / ComboBox" note="Selector = เลือกจากรายการ · ComboBox = พิมพ์กรองได้">
         <Stack gap="4">
-          <Select label="จังหวัด" options={provinces} selectedKey={sel} onSelectionChange={(k) => setSel(k as string)} />
-          <Select label="หมวดหมู่" options={provinces} placeholder="เลือกหมวดหมู่" errorMessage="กรุณาเลือกหมวดหมู่" />
+          <Selector label="จังหวัด" options={provinces} selectedKey={sel} onSelectionChange={(k) => setSel(k as string)} />
+          <Selector label="หมวดหมู่" options={provinces} placeholder="เลือกหมวดหมู่" status={{ type: 'error', message: 'กรุณาเลือกหมวดหมู่' }} />
           <ComboBox label="ค้นหาจังหวัด" options={provinces} description="พิมพ์เพื่อกรอง" />
         </Stack>
       </Specimen>
@@ -572,7 +572,7 @@ function Marketplace() {
 
       <Specimen name="SearchResult" note="ครอบผลลัพธ์ — นับจำนวน · loading · ว่างเปล่า" wide>
         <Stack gap="6">
-          <SearchResult count={2} query="เครื่องคั่วกาแฟ" toolbar={<Select label="เรียงตาม" options={[{ id: 'rel', label: 'ตรงที่สุด' }, { id: 'new', label: 'ใหม่ล่าสุด' }]} defaultSelectedKey="rel" />}>
+          <SearchResult count={2} query="เครื่องคั่วกาแฟ" toolbar={<Selector label="เรียงตาม" options={[{ id: 'rel', label: 'ตรงที่สุด' }, { id: 'new', label: 'ใหม่ล่าสุด' }]} defaultSelectedKey="rel" />}>
             <Grid preset="cards">
               <ProductCard href="#" name="เครื่องคั่วกาแฟ TR-500" price={1_250_000} sellerName="ดอยคำ" as="li" media={<Thumb />} />
               <ProductCard href="#" name="เครื่องคั่วกาแฟ HB-200" price={880_000} sellerName="ฮิลล์บีน" as="li" media={<Thumb />} />

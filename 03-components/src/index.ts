@@ -123,12 +123,12 @@ export { NumberField, type NumberFieldProps } from './inputs/NumberField';
 export { SearchField, type SearchFieldProps } from './inputs/SearchField';
 export { Switch, type SwitchProps } from './inputs/Switch';
 export {
-  Select,
+  Selector,
   SelectItem,
-  type SelectProps,
+  type SelectorProps,
   type SelectItemProps,
   type SelectOption,
-} from './inputs/Select';
+} from './inputs/Selector';
 export { ComboBox, type ComboBoxProps } from './inputs/ComboBox';
 export {
   FileUpload,
