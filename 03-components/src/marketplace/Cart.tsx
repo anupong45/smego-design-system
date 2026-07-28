@@ -5,7 +5,7 @@ import { Button, buttonStyles } from '../inputs/Button';
 import { IconButton } from '../inputs/IconButton';
 import { Link } from '../inputs/Link';
 import { NumberInput } from '../inputs/NumberInput';
-import { Alert } from '../feedback/Alert';
+import { Banner } from '../feedback/Banner';
 import { Dialog, DialogOverlay } from '../feedback/Dialog';
 import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
 
@@ -334,9 +334,9 @@ export function CartList({
   return (
     <div className={cn('grid min-w-0 gap-4', className)}>
       {sellerCount > 1 && (
-        <Alert tone="info" title={s.checkout.perSellerNotice}>
+        <Banner tone="info" title={s.checkout.perSellerNotice}>
           {s.cart.sellerCount(sellerCount)} · {s.checkout.itemCount(itemCount)}
-        </Alert>
+        </Banner>
       )}
 
       {children}

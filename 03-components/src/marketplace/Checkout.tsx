@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
 import { Button } from '../inputs/Button';
-import { Alert } from '../feedback/Alert';
+import { Banner } from '../feedback/Banner';
 import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -39,8 +39,8 @@ import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
    `onSubmit` + `isSubmitting` จึงเป็น API หลัก · RAC `isPending` ปิดการกด
    โดย **คง focus ไว้** และประกาศสถานะให้ screen reader (ดู `Button.md`)
 
-   ★★ **ข้อผิดพลาดใช้ `Alert` ไม่ใช่ `Toast`** (`Alert.md`)
-   ข้อความที่บอกว่าต้องทำอะไรต่อห้ามหายไปเอง · Alert อยู่**เหนือ**ปุ่ม
+   ★★ **ข้อผิดพลาดใช้ `Banner` ไม่ใช่ `Toast`** (`Banner.md`)
+   ข้อความที่บอกว่าต้องทำอะไรต่อห้ามหายไปเอง · Banner อยู่**เหนือ**ปุ่ม
    เพราะผู้ใช้ที่กำลังมองปุ่มต้องเห็นเหตุผลก่อนกดอีกครั้ง
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -87,9 +87,9 @@ export interface CheckoutSummaryProps {
   isSubmitDisabled?: boolean;
 
   /**
-   * ข้อผิดพลาดจากการยืนยัน — แสดงเป็น `<Alert tone="danger" isLive>` เหนือปุ่ม
+   * ข้อผิดพลาดจากการยืนยัน — แสดงเป็น `<Banner tone="danger" isLive>` เหนือปุ่ม
    *
-   * ตามสูตร **อะไรผิด → ทำไม → แก้อย่างไร** · ห้ามใช้ Toast (`Alert.md`)
+   * ตามสูตร **อะไรผิด → ทำไม → แก้อย่างไร** · ห้ามใช้ Toast (`Banner.md`)
    */
   errorMessage?: string;
 
@@ -182,11 +182,11 @@ export function CheckoutSummary({
       </div>
 
       {/* ★ error อยู่เหนือปุ่ม — ผู้ใช้ต้องเห็นเหตุผลก่อนกดอีกครั้ง
-         `isLive` เพราะ Alert นี้โผล่มาตอบการกระทำของผู้ใช้ (SC 4.1.3) */}
+         `isLive` เพราะ Banner นี้โผล่มาตอบการกระทำของผู้ใช้ (SC 4.1.3) */}
       {errorMessage && (
-        <Alert isLive tone="danger" title={s.checkout.submitFailed}>
+        <Banner isLive tone="danger" title={s.checkout.submitFailed}>
           {errorMessage}
-        </Alert>
+        </Banner>
       )}
 
       {onSubmit && (

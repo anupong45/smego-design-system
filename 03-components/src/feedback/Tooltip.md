@@ -55,7 +55,7 @@ import { Tooltip, TooltipTrigger, Button } from '@smego/ui';
 
 Tooltip ไม่มี variant — **โดยตั้งใจ**
 
-tooltip หลายสีจะกลายเป็นระบบสถานะที่สอง ซึ่งซ้ำกับ `<Badge>` และ `<Alert>` และผู้ใช้เข้าถึงไม่ได้บน touch
+tooltip หลายสีจะกลายเป็นระบบสถานะที่สอง ซึ่งซ้ำกับ `<Badge>` และ `<Banner>` และผู้ใช้เข้าถึงไม่ได้บน touch
 
 | ส่วน | ค่า |
 |---|---|

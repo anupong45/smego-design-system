@@ -287,7 +287,7 @@ Component set **`WishlistGrid`** — property `State` = `Filled` · **`Empty`**
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | ✅ | §4 `focus-visible` · ปุ่มบันทึกได้ `z-(--z-raised)` อัตโนมัติผ่าน `actions` ของ [`EntityCard`](./EntityCard.md) จึงกดถึงจริงโดยไม่ถูก link overlay กลืน |
 | กำลังโหลด (Loading) | — | `SC 4.1.3` ผลการบันทึกประกาศทันทีผ่าน `aria-pressed` — ไม่มีช่วงรอที่ต้องแสดง |
-| ข้อผิดพลาด (Error) | — | บันทึกไม่สำเร็จแจ้งด้วย [`<Alert>`](../feedback/Alert.md) ที่ระดับหน้า |
+| ข้อผิดพลาด (Error) | — | บันทึกไม่สำเร็จแจ้งด้วย [`<Banner>`](../feedback/Banner.md) ที่ระดับหน้า |
 | ว่างเปล่า (Empty) | ✅ | axe ผ่านกรณี `WishlistGrid count={0}` พร้อม `emptyAction` ("เลือกดูสินค้า") — รายการที่บันทึกว่างต้องมีทางออก |
 | Skeleton | — | รายการที่บันทึกอ่านจาก store ในเครื่อง |
 | การเคลื่อนไหว (Animation) | ✅ | `base.css §10` ครอบ `*` ด้วย `!important` — ไม่มีการเคลื่อนไหวที่หลุดตัวกัน (`lint-quality.mjs` 0 จุด) — ปุ่มบันทึกเปลี่ยนเฉพาะสีและไอคอน ไม่มีหัวใจเต้น |

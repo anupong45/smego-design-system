@@ -109,7 +109,7 @@ describe('BuyBox', () => {
     expect(screen.getByText('สั่งขั้นต่ำ 100 เครื่อง')).toBeTruthy();
   });
 
-  it('★★ ข้อผิดพลาดเป็น Alert ที่ประกาศทันที ไม่ใช่ toast', () => {
+  it('★★ ข้อผิดพลาดเป็น Banner ที่ประกาศทันที ไม่ใช่ toast', () => {
     render(
       <BuyBox
         {...product}
@@ -291,7 +291,7 @@ describe('CheckoutSummary · สถานะปุ่มยืนยัน', () 
     expect(presses).toBe(0);
   });
 
-  it('★★★ ข้อผิดพลาดเป็น Alert ที่ประกาศทันที ไม่ใช่ toast', () => {
+  it('★★★ ข้อผิดพลาดเป็น Banner ที่ประกาศทันที ไม่ใช่ toast', () => {
     render(
       <CheckoutSummary {...base} onSubmit={() => {}} errorMessage="เชื่อมต่อไม่ได้" />,
     );

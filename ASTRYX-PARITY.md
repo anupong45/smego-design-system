@@ -273,7 +273,6 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "TextField": "TextInput",
     "Textarea": "TextArea",
     "ImageGallery": "Lightbox",
-    "Alert": "Banner",
     "AppHeader": "TopNav"
   },
   "same": [
@@ -281,7 +280,8 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Tooltip", "Skeleton", "ProgressBar", "Icon", "Grid", "Stack",
     "Section", "Divider", "EmptyState", "Pagination", "Avatar", "Spinner",
     "SegmentedControl", "CheckboxInput", "RadioList", "Selector", "Typeahead",
-    "NumberInput", "DateInput", "FileInput", "Slider", "Token", "Collapsible"
+    "NumberInput", "DateInput", "FileInput", "Slider", "Token", "Collapsible",
+    "Banner"
   ],
   "renameNewBuild": { "Tabs": "TabList" },
   "extension": [
@@ -440,7 +440,8 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 | 10 | `RangeSlider` → `Slider` | ✅ | `minValue`→`min` · `maxValue`→`max` — `minLabel`/`maxLabel`/`unit` คงเป็น ours-only · e2e fixture (`app.tsx`) ตามไปแก้ |
 | 11 | `Chip` → `Token` | ✅ | `children`→`label: string` บังคับ (§8.1) — ไม่ใช่ component ใหม่ข้าง Chip (§1.4 D9) · `RemovableChip`/`ChipRow` คงเดิม |
 | 12 | `Accordion` → `Collapsible` | ✅ | เฉพาะกลุ่ม — ไม่มี prop rename · `AccordionItem` คงชื่อเดิม |
-| 13–15 | ที่เหลือ | ⬜ | `ImageGallery` `Alert` `AppHeader` |
+| 13 | `Alert` → `Banner` | ✅ | เปลี่ยนชื่ออย่างเดียว (§8.4/D13) — ไม่รับ `defaultIsExpanded`/`container` · `alert.test.tsx`→`banner.test.tsx`, `alert.spec.ts`→`banner.spec.ts` |
+| 14–15 | ที่เหลือ | ⬜ | `ImageGallery` `AppHeader` |
 
 **งานข้างเคียงที่เกิดขึ้นจริงในสองตัวแรก** (คาดว่าจะซ้ำกับตัวที่เหลือ):
 `fieldStyles` ย้ายออกจาก `TextField.tsx` มาเป็น `inputs/fieldStyles.ts` — เดิม Select · ComboBox · NumberField · DatePicker · SearchField ทั้งห้าตัว `import { fieldStyles } from './TextField'` ซึ่งผูกกับไฟล์ของ component อื่นโดยไม่มีเหตุผล

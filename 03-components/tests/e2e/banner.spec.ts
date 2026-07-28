@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Alert · การวัดจาก render จริง
+   Banner · การวัดจาก render จริง
    ───────────────────────────────────────────────────────────────────────────
    สิ่งที่ `tsc` · lint · axe จับไม่ได้เลย
 
@@ -39,10 +39,10 @@ async function setTheme(page: Page, theme: 'light' | 'dark') {
   }, theme);
 }
 
-/** อ่านสีจริงของ Alert ทั้ง 4 ใบตามลำดับ info · success · warning · danger */
-async function alertColors(page: Page) {
+/** อ่านสีจริงของ Banner ทั้ง 4 ใบตามลำดับ info · success · warning · danger */
+async function bannerColors(page: Page) {
   return page.evaluate(() => {
-    const block = document.querySelector('[data-testid="alert-block"]')!;
+    const block = document.querySelector('[data-testid="banner-block"]')!;
     return [...block.children].map((box) => {
       const cs = getComputedStyle(box as HTMLElement);
       const icon = box.querySelector('svg') as SVGElement;
@@ -65,11 +65,11 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
 
-test.describe('Alert · utility generate จริงไหม', () => {
+test.describe('Banner · utility generate จริงไหม', () => {
   test('★★ พื้น tint ของทั้ง 4 tone ไม่ใช่ transparent — class มี CSS จริง', async ({ page }) => {
     for (const theme of ['light', 'dark'] as const) {
       await setTheme(page, theme);
-      const rows = await alertColors(page);
+      const rows = await bannerColors(page);
       expect(rows).toHaveLength(4);
       rows.forEach((r, i) => {
         expect(r.bg, `${TONES[i]} · ${theme}`).not.toBe('rgba(0, 0, 0, 0)');
@@ -81,18 +81,18 @@ test.describe('Alert · utility generate จริงไหม', () => {
   test('★★ พื้นของ 4 tone ต่างกันจริงทั้งสองโหมด — ไม่ยุบเป็นสีเดียว', async ({ page }) => {
     for (const theme of ['light', 'dark'] as const) {
       await setTheme(page, theme);
-      const rows = await alertColors(page);
+      const rows = await bannerColors(page);
       expect(new Set(rows.map((r) => r.bg)).size, `พื้น · ${theme}`).toBe(4);
       expect(new Set(rows.map((r) => r.iconColor)).size, `ไอคอน · ${theme}`).toBe(4);
     }
   });
 });
 
-test.describe('Alert · contrast จาก computed style', () => {
+test.describe('Banner · contrast จาก computed style', () => {
   test('★★ ข้อความและไอคอนผ่าน AA ทุก tone ทั้งสองโหมด', async ({ page }) => {
     for (const theme of ['light', 'dark'] as const) {
       await setTheme(page, theme);
-      const rows = await alertColors(page);
+      const rows = await bannerColors(page);
       rows.forEach((r, i) => {
         const bg = parseRgb(r.bg);
         const title = contrast(parseRgb(r.titleColor), bg);
@@ -107,11 +107,11 @@ test.describe('Alert · contrast จาก computed style', () => {
 
   test('⚠️ บันทึกความจริง: กล่องแทบมองไม่เห็นในโหมดสว่าง — ขอบอยู่ในย่านตกแต่ง', async ({ page }) => {
     await setTheme(page, 'light');
-    const rows = await alertColors(page);
+    const rows = await bannerColors(page);
     rows.forEach((r, i) => {
       const edge = contrast(parseRgb(r.border), parseRgb(r.pageBg));
       /* ไม่ใช่บั๊ก — อยู่ในย่านเดียวกับ --color-edge (1.56) ที่ระบบเรียกว่าตกแต่ง
-         ความหมายมาจากไอคอน + ข้อความ (SC 1.4.1) · Alert ไม่ใช่ control
+         ความหมายมาจากไอคอน + ข้อความ (SC 1.4.1) · Banner ไม่ใช่ control
          เทสนี้มีไว้ให้ค่าที่เปลี่ยนไปในอนาคตไม่หลุดไปเงียบ ๆ */
       expect(edge, `ขอบ ${TONES[i]}`).toBeLessThan(3);
       expect(edge, `ขอบ ${TONES[i]}`).toBeGreaterThan(1.1);
@@ -119,7 +119,7 @@ test.describe('Alert · contrast จาก computed style', () => {
   });
 });
 
-test.describe('Alert · การวัดขนาด', () => {
+test.describe('Banner · การวัดขนาด', () => {
   test('เป้าของปุ่มปิด ≥ 24×24 จริง (SC 2.5.8)', async ({ page }) => {
     const box = await page.getByRole('button', { name: /^ปิด:/ }).boundingBox();
     expect(box).not.toBeNull();
@@ -131,7 +131,7 @@ test.describe('Alert · การวัดขนาด', () => {
 
   test('★ ปุ่มใน action ซ้อนแนวตั้งที่ 320px และไม่ล้น (SC 1.4.10)', async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 900 });
-    const block = page.locator('[data-testid="alert-block"]');
+    const block = page.locator('[data-testid="banner-block"]');
     const outer = (await block.boundingBox())!;
     const action = (await page.getByRole('button', { name: 'ลองบันทึกอีกครั้ง' }).boundingBox())!;
     expect(action.x + action.width).toBeLessThanOrEqual(outer.x + outer.width + 0.5);
@@ -144,7 +144,7 @@ test.describe('Alert · การวัดขนาด', () => {
 
   test('ข้อความไทยหลายบรรทัดไม่ถูกตัด — กล่องสูงตามเนื้อหา', async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 900 });
-    const warning = page.locator('[data-testid="alert-block"] > div').nth(2);
+    const warning = page.locator('[data-testid="banner-block"] > div').nth(2);
     const overflow = await warning.evaluate(
       (el) => el.scrollHeight - el.clientHeight,
     );

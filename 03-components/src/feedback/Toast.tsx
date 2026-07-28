@@ -13,13 +13,13 @@ import { useStrings } from '../provider/SmeGoProvider';
 /* ═══════════════════════════════════════════════════════════════════════════
    SME.GO · Toast — การยืนยันที่หายไปเองได้
    ───────────────────────────────────────────────────────────────────────────
-   ★★★ **Toast หายเอง · Alert ไม่หาย** — นี่คือเส้นแบ่งทั้งหมด (`Alert.md`)
+   ★★★ **Toast หายเอง · Banner ไม่หาย** — นี่คือเส้นแบ่งทั้งหมด (`Banner.md`)
 
    ผลที่ตามมาซึ่งบังคับด้วย **type ไม่ใช่เอกสาร**: `tone` มีแค่
    `success` กับ `info` — **ไม่มี `danger` และไม่มี `warning`**
 
    ข้อความที่บอกว่าผู้ใช้ต้องทำอะไรต่อ ห้ามหายก่อนที่ผู้ใช้จะอ่านจบ
-   ถ้าอยากได้ toast สีแดง แปลว่าสิ่งนั้นคือ `<Alert tone="danger" isLive>`
+   ถ้าอยากได้ toast สีแดง แปลว่าสิ่งนั้นคือ `<Banner tone="danger" isLive>`
 
    ★★★ **เนื้อหาต้องซ้ำกับสิ่งที่เห็นบนหน้าอยู่แล้ว**
 
@@ -46,7 +46,7 @@ import { useStrings } from '../provider/SmeGoProvider';
    ที่ลอยทับ ถ้าจองจะทำให้หน้าขยับทุกครั้งที่มี toast
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/** ★ ไม่มี `danger` และ `warning` โดยตั้งใจ — นั่นคือ `<Alert>` */
+/** ★ ไม่มี `danger` และ `warning` โดยตั้งใจ — นั่นคือ `<Banner>` */
 export type ToastTone = 'success' | 'info';
 
 export interface ToastContent {
@@ -75,7 +75,7 @@ export const toastQueue = new RACToastQueue<ToastContent>({
 /**
  * แสดงการยืนยันชั่วคราว
  *
- * ⚠️ **ห้ามใช้กับ error** — ใช้ `<Alert tone="danger" isLive>` แทน
+ * ⚠️ **ห้ามใช้กับ error** — ใช้ `<Banner tone="danger" isLive>` แทน
  *
  * ```tsx
  * showToast({ title: s.buy.addedToCart(product.name) });
@@ -160,7 +160,7 @@ export function ToastRegion({ className }: ToastRegionProps) {
 
             <RACToastContent className="min-w-0 flex-1">
               {/* ข้อความเป็น `text-fg` ทุก tone — สีสถานะอยู่ที่ไอคอน
-                 เหตุผลเดียวกับ Alert (ดู `Alert.tsx` หัวไฟล์) */}
+                 เหตุผลเดียวกับ Banner (ดู `Banner.tsx` หัวไฟล์) */}
               <Text slot="title" className="block min-w-0 text-body-sm text-fg">
                 {toast.content.title}
               </Text>

@@ -19,7 +19,7 @@ import {
   SearchField, Switch, Selector, Typeahead, FileInput,
   Card, CardMedia, Badge, Dot, Token, RemovableChip, ChipRow,
   Collapsible, AccordionItem, ImageGallery, DescriptionList,
-  Alert, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
+  Banner, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
   AppHeader,
   EntityCard, EntityAmount, EntityMeta, DeadlineBadge, DeadlineText,
@@ -399,17 +399,17 @@ function Feedback() {
 
   return (
     <Group id="feedback" title="4 · Feedback">
-      <Specimen name="Alert" note="4 tone · action · dismiss · isLive">
+      <Specimen name="Banner" note="4 tone · action · dismiss · isLive">
         <Stack gap="3">
-          <Alert tone="info" title="ระบบจะปิดปรับปรุง">วันอาทิตย์ที่ 3 ส.ค. เวลา 01:00–03:00 น.</Alert>
-          <Alert tone="success" title="ยืนยันตัวตนสำเร็จ" />
-          <Alert tone="warning" title="ใกล้ครบกำหนดชำระ" action={<Button size="sm" variant="secondary">ชำระเงิน</Button>}>
+          <Banner tone="info" title="ระบบจะปิดปรับปรุง">วันอาทิตย์ที่ 3 ส.ค. เวลา 01:00–03:00 น.</Banner>
+          <Banner tone="success" title="ยืนยันตัวตนสำเร็จ" />
+          <Banner tone="warning" title="ใกล้ครบกำหนดชำระ" action={<Button size="sm" variant="secondary">ชำระเงิน</Button>}>
             ครบกำหนดวันที่ 31 ก.ค. 2569
-          </Alert>
+          </Banner>
           {!dismissed && (
-            <Alert tone="danger" title="อัปโหลดเอกสารไม่สำเร็จ" onDismiss={() => setDismissed(true)}>
+            <Banner tone="danger" title="อัปโหลดเอกสารไม่สำเร็จ" onDismiss={() => setDismissed(true)}>
               ไฟล์มีขนาดเกิน 5 MB — ลองบีบอัดแล้วอัปโหลดใหม่
-            </Alert>
+            </Banner>
           )}
         </Stack>
       </Specimen>

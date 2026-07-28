@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Button } from '../inputs/Button';
 import { NumberInput } from '../inputs/NumberInput';
-import { Alert } from '../feedback/Alert';
+import { Banner } from '../feedback/Banner';
 import { Badge } from '../data-display/Badge';
 import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
 
@@ -73,7 +73,7 @@ export interface BuyBoxProps {
   /** ติดต่อผู้ขาย — เส้นทางของบริการ และของสินค้าที่หมด */
   onContact?: () => void;
 
-  /** ข้อผิดพลาดจากการเพิ่มลงตะกร้า — `<Alert>` ไม่ใช่ `<Toast>` */
+  /** ข้อผิดพลาดจากการเพิ่มลงตะกร้า — `<Banner>` ไม่ใช่ `<Toast>` */
   errorMessage?: string;
 
   /** ปุ่มรอง เช่น `<SaveButton variant="full">` */
@@ -161,10 +161,10 @@ export function BuyBox({
           </div>
 
           {errorMessage && (
-            /* ★ error ค้างจนผู้ใช้จัดการ — ห้ามเป็น Toast (`Alert.md`) */
-            <Alert isLive tone="danger" title={s.error.network}>
+            /* ★ error ค้างจนผู้ใช้จัดการ — ห้ามเป็น Toast (`Banner.md`) */
+            <Banner isLive tone="danger" title={s.error.network}>
               {errorMessage}
-            </Alert>
+            </Banner>
           )}
 
           {onAddToCart && (

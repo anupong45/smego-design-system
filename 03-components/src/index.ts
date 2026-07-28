@@ -168,11 +168,11 @@ export {
 
 /* ── Feedback ─────────────────────────────────────────────────────────────── */
 export {
-  Alert,
+  Banner,
   alertStyles,
-  type AlertProps,
-  type AlertTone,
-} from './feedback/Alert';
+  type BannerProps,
+  type BannerTone,
+} from './feedback/Banner';
 export {
   ProgressBar,
   progressBarStyles,

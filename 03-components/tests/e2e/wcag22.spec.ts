@@ -271,7 +271,7 @@ test.describe('SC 2.1.2 · Esc ออกจาก modal ได้ และ focu
     await trigger.click();
 
     /* ★ ต้องจำกัดขอบเขตไว้ใน dialog — `name` ของ getByRole จับแบบ substring
-       และหน้านี้มีปุ่มปิดของ Alert ชื่อ "ปิด: บันทึกไม่สำเร็จ" อยู่ด้วย
+       และหน้านี้มีปุ่มปิดของ Banner ชื่อ "ปิด: บันทึกไม่สำเร็จ" อยู่ด้วย
        ซึ่งเป็นผลโดยตรงของกฎ SC 2.5.3 ที่บังคับให้ชื่อปุ่มปิดรวมหัวเรื่อง */
     await page.getByRole('dialog').getByRole('button', { name: 'ปิด' }).click();
     await expect(page.getByRole('dialog')).toBeHidden();

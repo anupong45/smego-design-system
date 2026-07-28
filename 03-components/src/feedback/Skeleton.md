@@ -254,7 +254,7 @@ Component set **`Skeleton`**
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | — | skeleton ไม่มีอะไรให้กด · `aria-hidden` ไม่อยู่ใน tab order โดยตั้งใจ |
 | กำลังโหลด (Loading) | ✅ | **นี่คือหน้าที่หลักของ component นี้** — `isLoading` สลับระหว่าง skeleton กับเนื้อหาจริง |
-| ข้อผิดพลาด (Error) | — | โหลดไม่สำเร็จให้เปลี่ยนไปเป็น [`<Alert tone="danger">`](./Alert.md) — skeleton ที่ค้างอยู่คือคำโกหกว่ายังโหลดอยู่ |
+| ข้อผิดพลาด (Error) | — | โหลดไม่สำเร็จให้เปลี่ยนไปเป็น [`<Banner tone="danger">`](./Banner.md) — skeleton ที่ค้างอยู่คือคำโกหกว่ายังโหลดอยู่ |
 | ว่างเปล่า (Empty) | — | ไม่มีอะไรจะโหลด = ไม่ต้องมี skeleton ให้ไปที่ empty state ของกริดโดยตรง |
 | Skeleton | ✅ | **component นี้คือรายการนั้นเอง** · §1 อธิบายว่าทำไมไม่ fade เข้า |
 | การเคลื่อนไหว (Animation) | ✅ | `base.css §10` มี `.skeleton { animation: none; background-image: none }` ใน**รายการ DENY** โดยเจาะจง — คลาส `skeleton` ถูกใส่ไว้ที่ [Skeleton.tsx:30](./Skeleton.tsx) เพื่อให้กฎนั้นจับได้ (SC 2.3.3 · 2.3.1) |

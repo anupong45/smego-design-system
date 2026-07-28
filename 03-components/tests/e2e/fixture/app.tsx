@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import {
   SmeGoProvider, Container, Section, Button, TextInput, Slider,
   Dialog, DialogOverlay, DialogTrigger, CompareBar, Link, Grid, ProductCard,
-  ProgressBar, DescriptionList, FundingCard, BusinessCard, Alert,
+  ProgressBar, DescriptionList, FundingCard, BusinessCard, Banner,
   AppHeader, SearchField, BuyBox, ImageGallery, CheckoutSummary,
   CartDrawer, CartList, CartSellerGroup, CartLineItem,
   ToastRegion, showToast, useStrings,
@@ -168,15 +168,15 @@ function App() {
             />
           </div>
 
-          {/* ★ Alert ทั้ง 4 tone — ตรวจว่า utility ของ tint generate จริง
+          {/* ★ Banner ทั้ง 4 tone — ตรวจว่า utility ของ tint generate จริง
               ไม่ใช่ class ที่ไม่มี CSS (บทเรียนจาก bg-primary-50 ในโหมดมืด) */}
-          <div className="mt-8 grid max-w-md gap-3" data-testid="alert-block">
-            <Alert tone="info" title="ปิดรับสมัครวันที่ 30 กันยายน 2569" />
-            <Alert tone="success" title="ส่งคำสั่งซื้อแล้ว" />
-            <Alert tone="warning" title="ผู้ขายรายนี้ไม่ได้จดทะเบียนภาษีมูลค่าเพิ่ม">
+          <div className="mt-8 grid max-w-md gap-3" data-testid="banner-block">
+            <Banner tone="info" title="ปิดรับสมัครวันที่ 30 กันยายน 2569" />
+            <Banner tone="success" title="ส่งคำสั่งซื้อแล้ว" />
+            <Banner tone="warning" title="ผู้ขายรายนี้ไม่ได้จดทะเบียนภาษีมูลค่าเพิ่ม">
               ผู้ซื้อจะขอคืนภาษีซื้อไม่ได้ ต้นทุนจริงต่างจากราคาที่แสดงประมาณ 7%
-            </Alert>
-            <Alert
+            </Banner>
+            <Banner
               isLive
               tone="danger"
               title="บันทึกไม่สำเร็จ"
@@ -184,7 +184,7 @@ function App() {
               action={<Button size="sm">ลองบันทึกอีกครั้ง</Button>}
             >
               เชื่อมต่อไม่ได้ — ตรวจสอบสัญญาณอินเทอร์เน็ตแล้วลองอีกครั้ง
-            </Alert>
+            </Banner>
           </div>
 
           <div className="mt-6 max-w-md" data-testid="desclist-block">
