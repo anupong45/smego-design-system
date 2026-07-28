@@ -1,6 +1,8 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { I18nProvider } from 'react-aria-components';
 import { stringsTh, type Strings, type PartialStrings } from '../lib/strings.th';
+import { installRacThaiStrings } from '../lib/install-rac-th';
+import { RAC_EN_FALLBACK } from '../lib/rac-en-fallback';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SME.GO · Provider
@@ -46,6 +48,15 @@ export interface SmeGoProviderProps {
   strings?: PartialStrings;
 
   /**
+   * ปิดการติดตั้งคำแปลไทยของข้อความภายใน RAC
+   *
+   * ค่าเริ่มต้นคือ **ติดตั้งให้เอง** (ดูกล่องท้ายไฟล์) · ตั้ง `true`
+   * เมื่อแอปติดตั้งเองด้วย reference ของตัวเอง หรือทำ SSR ด้วย
+   * `PackageLocalizationProvider` — เรียกซ้ำไม่พังแต่ก็ไม่มีประโยชน์
+   */
+  skipRacStrings?: boolean;
+
+  /**
    * locale · ค่าเริ่มต้น `th-TH-u-ca-buddhist`
    *
    * 📌 **แก้ความแม่นยำ** — ฉบับแรกของคอมเมนต์นี้เขียนว่า "ถ้าใช้ `th-TH` เฉย ๆ
@@ -71,12 +82,27 @@ export interface SmeGoProviderProps {
   timeZone?: string;
 }
 
+/* ★ ติดตั้งครั้งเดียวต่อหน้า — ตัวแปรระดับ module ไม่ใช่ state
+   เพราะ `@internationalized/string` cache ทันทีที่อ่านครั้งแรก
+   การเรียกซ้ำจึงไม่มีผล และ Provider อาจถูก mount หลายตัวได้ */
+let racInstalled = false;
+
 export function SmeGoProvider({
   children,
   strings,
   locale = SMEGO_LOCALE,
   timeZone = SMEGO_TIMEZONE,
+  skipRacStrings = false,
 }: SmeGoProviderProps) {
+  /* ★★ เรียก**ในเนื้อ component ก่อน return** ไม่ใช่ใน effect
+
+     ต้องตั้ง global ให้เสร็จก่อน RAC component ตัวแรก render · เนื้อของ
+     Provider ทำงานก่อน children ทุกตัวใน render รอบแรก จึงทันพอดี
+     ส่วน effect จะสายไป เพราะ effect ยิงหลัง children render แล้ว */
+  if (!racInstalled && !skipRacStrings) {
+    racInstalled = true;
+    installRacThaiStrings(RAC_EN_FALLBACK);
+  }
   const value = useMemo<SmeGoContextValue>(() => {
     if (!strings) return { strings: stringsTh, locale, timeZone };
 
@@ -128,27 +154,38 @@ export function useSmeGoLocale(): { locale: string; timeZone: string } {
    React Aria ส่งชุดแปลมา 34 locale และ **ไม่มี th-TH**
    (ภาษาเอเชียมีแค่ ja-JP · ko-KR · zh-CN · zh-TW)
 
-   ═══ วิธีเปิดใช้ ═══
+   ═══ สถานะ: ติดตั้งให้เองแล้ว (เปลี่ยนเมื่อ 2026-07-28) ═══
 
-   เรียก **ครั้งเดียวที่ระดับ module ก่อน render ครั้งแรก** — ไม่ใช่ใน effect
-   เพราะ `@internationalized/string` อ่าน global แล้ว cache ทันที
+   `SmeGoProvider` **เรียก `installRacThaiStrings(RAC_EN_FALLBACK)` ให้เอง**
+   ในเนื้อ component ก่อน return — ทันก่อน RAC component ตัวแรก render
+   ปิดได้ด้วย `skipRacStrings`
 
-       // src/main.tsx — บรรทัดบนสุด ก่อน createRoot
-       import { dictionary } from 'react-aria-components/i18n';
-       import { installRacThaiStrings } from '@smego/ui';
+   ★ ทำไมเปลี่ยนจาก opt-in
 
-       installRacThaiStrings(dictionary.strings['en-US']);
+   เดิมบังคับให้แอปส่ง `dictionary.strings['en-US']` เข้ามาเอง โดยให้เหตุผลว่า
+   `react-aria-components/i18n` ลากชุดแปลทั้ง 34 locale เข้า bundle ซึ่งขัดกับ
+   เกณฑ์อุปกรณ์ในข้อ 01 — **ข้อเท็จจริงถูก แต่ข้อสรุปผิด**
 
-   ⚠️ **ไม่ได้เรียกให้อัตโนมัติใน Provider ตัวนี้โดยตั้งใจ** เพราะ
-   `react-aria-components/i18n` ดึงชุดแปลทั้ง 34 locale เข้า bundle
-   ซึ่งขัดกับเกณฑ์อุปกรณ์ในข้อ 01 (Android ระดับล่าง 4G)
+   วัดจริง (2026-07-28):
+     · ทั้ง 34 locale       355 KB raw · **59 KB gzip** — ใหญ่กว่าไลบรารีทั้งก้อน
+                            (35 KB gzip) เกือบ 1.7 เท่า → รับไม่ได้จริง
+     · **en-US locale เดียว  22 package · 146 key · ~4 KB raw · ~1.3 KB gzip**
 
-   แอปที่ต้องการให้ TalkBack ไทยได้ยินภาษาไทยต้อง **เลือกจ่าย bundle นั้นเอง**
-   และแอปที่ไม่ต้องการก็ไม่ต้องจ่าย — ถ้า library เรียกให้เอง จะไม่มีทางเลือก
+   ตารางที่จำเป็นจริงคือก้อนหลัง ซึ่งเล็กจนฝังไว้ในไลบรารีได้เกือบฟรี
+   เอกสารเดิมตัดสินด้วยขนาดของ 34 locale แทนขนาดของ locale เดียว จึงผลัก
+   ภาระไปให้แอป และผลคือ **ผู้ใช้ TalkBack ไทยได้ยินภาษาอังกฤษถ้าแอปลืมเรียก**
+   ซึ่งบนแพลตฟอร์มภาครัฐไม่ควรเป็นค่าเริ่มต้น
 
-   ทางเลือกที่ไม่กิน bundle: ส่ง object `en-US` ที่ hardcode ไว้เองเข้ามาแทน
-   (`installRacThaiStrings` รับ reference อะไรก็ได้ที่มีรูปร่างถูก)
+   ⚠️ เหตุผลที่ต้องเติม **ทุก** package ไม่ใช่แค่ที่เราแปล: ถ้า global มีแล้วแต่
+   package ไหนขาด `LocalizedStringDictionary` จะ **throw แล้วพังทั้งหน้า**
+   ไม่ใช่ fallback เงียบ ๆ · และมันอ่าน global ด้วย `for...in` **ครั้งเดียว**
+   แล้ว snapshot เป็น plain object (`private/LocalizedStringDictionary.js:36,41`)
+   จึงดัก Proxy ไม่ได้ — ต้องเป็นตารางที่ครบจริงเท่านั้น
 
-   สถานะ: **ทดสอบแล้วใช้ได้จริง** — `tests/a11y/rac-i18n.test.tsx`
+   ⚠️ ตารางจึงเก่าได้ถ้า RAC เพิ่ม package/key —
+   `tests/a11y/rac-fallback.test.ts` เทียบกับ RAC ที่ติดตั้งจริงทุกครั้งที่
+   `verify` รัน เปลี่ยนความพังตอน runtime เป็นความแดงตอน build
+   อัปเกรด RAC แล้วรัน `npm run gen:rac-fallback`
+
    ยืนยันว่าปุ่มล้างค่าใน `SearchField` ประกาศว่า "ล้างคำค้นหา"
    ═══════════════════════════════════════════════════════════════════════════ */

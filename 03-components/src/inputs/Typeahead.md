@@ -121,7 +121,7 @@ onChange={(e) => { if (!isComposing) onInputChange?.(e.target.value); }}
 
 `@react-aria/combobox` มี 5 ข้อความ — `countAnnouncement` · `focusAnnouncement` · `selectedAnnouncement` · `buttonLabel` · `listboxLabel`
 
-แปลไว้ใน `strings-rac.th.ts` แล้ว · จะเป็นภาษาไทยเมื่อเรียก `installRacThaiStrings` ที่ root ของแอป (ดู [SmeGoProvider](../provider/SmeGoProvider.tsx))
+แปลไว้ใน `strings-rac.th.ts` แล้ว · เป็นภาษาไทยอัตโนมัติเพราะ `SmeGoProvider` ติดตั้งให้เอง (ดู [SmeGoProvider](../provider/SmeGoProvider.tsx))
 
 **ถ้าไม่เรียก** ผู้ใช้ TalkBack ไทยจะได้ยิน "5 options available" เป็นภาษาอังกฤษ
 

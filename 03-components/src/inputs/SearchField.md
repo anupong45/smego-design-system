@@ -51,7 +51,7 @@
 | `type="search"` → **role `searchbox`** | screen reader ประกาศต่างจาก textbox |
 | **Escape ล้างค่า** | พฤติกรรมมาตรฐานที่ผู้ใช้คีย์บอร์ดคาดหวัง |
 | ปุ่มล้างโผล่เมื่อมีค่า | ไม่ต้องเช็คเอง |
-| ชื่อปุ่มล้างจาก RAC | "ล้างคำค้นหา" หลัง `installRacThaiStrings` |
+| ชื่อปุ่มล้างจาก RAC | "ล้างคำค้นหา" — `SmeGoProvider` ติดตั้งให้เองแล้ว |
 
 **วัดแล้ว:** input เป็น `type="search"` · role เป็น **implicit** (ไม่มี attribute `role`) ซึ่งถูกต้อง — `getByRole('searchbox')` หาเจอเพราะใช้ computed role
 

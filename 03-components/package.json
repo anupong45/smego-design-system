@@ -21,6 +21,7 @@
     "verify:head": "node ../02-tokens/verify-head.mjs",
     "lint": "node ../02-tokens/lint-classes.mjs && npm run lint:quality && npm run lint:parity && npm run lint:docs",
     "lint:quality": "node ../02-tokens/lint-quality.mjs",
+    "gen:rac-fallback": "node scripts/gen-rac-fallback.mjs",
     "lint:docs": "node ../02-tokens/lint-docs.mjs",
     "lint:parity": "node ../02-tokens/lint-parity.mjs"
   },

@@ -110,7 +110,7 @@ RAC ตั้ง `aria-label` ให้เองพร้อม **จำนว�
 
 เดิมโค้ดส่ง `aria-label={s.toast.regionLabel}` = `"ข้อความแจ้งเตือน"` ซึ่ง **ทับข้อมูลจำนวนทิ้งเงียบ ๆ** — ผู้ใช้ screen reader ที่กด F6 มาที่ landmark นี้จะไม่รู้ว่ามีกี่ใบรออยู่ · ตัดออกแล้ว พร้อมลบ `s.toast.regionLabel` ออกจาก dictionary
 
-⚠️ **ข้อความนี้เป็นไทยก็ต่อเมื่อแอปเรียก `installRacThaiStrings()`** ที่ระดับ module — ถ้าไม่เรียกจะได้ `"2 notifications."` (วัดแล้ว) ซึ่งเป็นเงื่อนไขเดียวกับปุ่มล้างค่าของ [`SearchField`](../inputs/SearchField.md) และทุก component ที่พึ่งข้อความภายในของ RAC
+✅ **ข้อความนี้เป็นไทยโดยไม่ต้องทำอะไร** ตั้งแต่ 2026-07-28 — `SmeGoProvider` ติดตั้งคำแปลภายในของ RAC ให้เอง (ก่อนหน้านี้เป็น opt-in และถ้าแอปลืมเรียกจะได้ `"2 notifications."` ซึ่งวัดไว้แล้ว) · ปิดได้ด้วย `skipRacStrings` ถ้าแอปติดตั้งเอง — ดู [`SmeGoProvider.tsx`](../provider/SmeGoProvider.tsx)
 
 ### ★★ Toast **ไม่มีปุ่มการกระทำ** — และ `s.toast.undo` ถูกลบทิ้ง
 

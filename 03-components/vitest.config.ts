@@ -7,6 +7,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./tests/setup.ts'],
-    include: ['tests/a11y/**/*.test.tsx'],
+    /* ts ด้วย — เทสต์ที่ไม่มี JSX (เช่น rac-fallback) ไม่ควรถูกบังคับเป็น .tsx */
+    include: ['tests/a11y/**/*.test.{ts,tsx}'],
   },
 });
