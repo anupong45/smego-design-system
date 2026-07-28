@@ -281,7 +281,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 4,
+  "maxProblems": 3,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea"

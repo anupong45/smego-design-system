@@ -6,7 +6,7 @@ import { render } from './render';
 import {
   TextInput, TextArea, Selector, Typeahead,
   NumberInput, DateInput, FileInput, Slider,
-  CheckboxInput, Switch,
+  CheckboxInput, Switch, ProgressBar,
 } from '../../src/index';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -191,5 +191,14 @@ describe('Switch · labelPosition / labelSpacing แยกกันได้จ�
     const label = screen.getByText('แสดงราคารวมภาษี');
     const track = row.querySelector('.rounded-full')!;
     expect(label.compareDocumentPosition(track) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});
+
+describe('ProgressBar · isLabelHidden', () => {
+  it('ซ่อนป้ายด้วยตาแต่ยังเป็นชื่อของแถบ', () => {
+    render(<ProgressBar label="ความคืบหน้าการยื่นเอกสาร" value={40} isLabelHidden />);
+    const bar = screen.getByRole('progressbar', { name: 'ความคืบหน้าการยื่นเอกสาร' });
+    const labelEl = document.getElementById(bar.getAttribute('aria-labelledby')!);
+    expect(labelEl?.className).toContain('sr-only');
   });
 });

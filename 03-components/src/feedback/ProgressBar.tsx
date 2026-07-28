@@ -90,6 +90,15 @@ export interface ProgressBarProps
    * แถบที่ไม่มีชื่อบอกไม่ได้ว่ากำลังวัดอะไร
    */
   label: string;
+
+  /**
+   * ซ่อน label ด้วยตา แต่ยังประกาศให้ screen reader (§8.1)
+   *
+   * ใช้กับแถบที่อยู่ในบริบทที่บอกความหมายอยู่แล้ว เช่นในการ์ดที่มีหัวข้อ
+   * กำกับด้านบน — แต่ **ห้าม**ใช้เพื่อซ่อนตัวเลข: `note` กับ `format`
+   * เป็นคนละเรื่อง เพราะแถบที่ไม่มีทั้งป้ายและตัวเลขคือแถบที่อ่านไม่ได้
+   */
+  isLabelHidden?: boolean;
   /** ค่าปัจจุบัน — `null` = ยังไม่ทราบ (แสดงข้อความ ไม่ใช่แถบเปล่า) */
   value: number | null;
   /** ค่าสูงสุด · ค่าเริ่มต้น `100` */
@@ -120,6 +129,7 @@ export interface ProgressBarProps
  */
 export function ProgressBar({
   label,
+  isLabelHidden,
   value,
   maxValue = 100,
   format = 'percent',
@@ -160,7 +170,14 @@ export function ProgressBar({
       <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-2">
         {/* ★ ต้องเป็น RAC `Label` ไม่ใช่ `<span>` — RAC ต่อ `aria-labelledby`
             ให้เอง · `<span>` ธรรมดาทำให้แถบไม่มีชื่อ (axe: progressbar-name) */}
-        <Label className="text-body-sm text-fg-secondary">{label}</Label>
+        <Label
+          className={cn(
+            'text-body-sm text-fg-secondary',
+            isLabelHidden && 'sr-only',
+          )}
+        >
+          {label}
+        </Label>
         <span className="text-body-sm text-fg font-numeric">{valueText}</span>
       </div>
 
