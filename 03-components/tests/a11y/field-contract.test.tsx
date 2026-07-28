@@ -6,6 +6,7 @@ import { render } from './render';
 import {
   TextInput, TextArea, Selector, Typeahead,
   NumberInput, DateInput, FileInput, Slider,
+  CheckboxInput, Switch,
 } from '../../src/index';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -109,5 +110,86 @@ describe('§3.1 · status / isOptional บนตัวที่เพิ่ง�
       <Slider label="ช่วงราคา" isOptional value={[0, 100]} onChange={() => {}} min={0} max={100} />,
     );
     expect(screen.getByText('(ไม่บังคับ)')).toBeTruthy();
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ★★★ accessible name ต้องเป็น **label เท่านั้น**
+   ───────────────────────────────────────────────────────────────────────────
+   RAC ครอบ input ด้วย `<label>` ทั้งก้อน — ถ้าไม่ชี้ `aria-labelledby` เอง
+   เบราว์เซอร์จะคำนวณชื่อจาก**ข้อความทุกอย่างในแถวต่อกัน**
+
+   วัดจริงก่อนแก้ (2026-07-28):
+     CheckboxInput → "ยอมรับเงื่อนไขอ่านก่อนติ๊กต้องยอมรับก่อน"
+     Switch        → "รับการแจ้งเตือนเมื่อมีคำสั่งซื้อใหม่บันทึกไม่สำเร็จ"
+
+   คำอธิบายและข้อความ error กลายเป็นส่วนหนึ่งของ**ชื่อ** ซึ่งผิดบทบาท
+   (SC 4.1.2 คู่กับ SC 3.3.1) และไม่มีเทสต์ไหนจับได้ เพราะเทสต์ที่มีใช้
+   regex `/label.*ไม่บังคับ/` ซึ่ง **ผ่านเพราะบั๊กนี้เอง**
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+describe('accessible name = label เท่านั้น', () => {
+  const nameOf = (el: Element) => {
+    const ref = el.getAttribute('aria-labelledby');
+    expect(ref).toBeTruthy();
+    return document.getElementById(ref!)?.textContent;
+  };
+  const descOf = (el: Element) =>
+    (el.getAttribute('aria-describedby') ?? '')
+      .split(' ')
+      .filter(Boolean)
+      .map((id) => document.getElementById(id)?.textContent)
+      .join(' / ');
+
+  it('★★★ CheckboxInput — description/status ไปอยู่ describedby ไม่ใช่ชื่อ', () => {
+    render(
+      <CheckboxInput
+        label="ยอมรับเงื่อนไข"
+        description="อ่านก่อนติ๊ก"
+        status={{ type: 'error', message: 'ต้องยอมรับก่อน' }}
+      />,
+    );
+    const cb = screen.getByRole('checkbox');
+    expect(nameOf(cb)).toBe('ยอมรับเงื่อนไข');
+    expect(descOf(cb)).toBe('อ่านก่อนติ๊ก / ต้องยอมรับก่อน');
+  });
+
+  it('★★★ Switch — เหมือนกัน', () => {
+    render(
+      <Switch
+        label="รับการแจ้งเตือน"
+        description="เมื่อมีคำสั่งซื้อใหม่"
+        status={{ type: 'error', message: 'บันทึกไม่สำเร็จ' }}
+      />,
+    );
+    const sw = screen.getByRole('switch');
+    expect(nameOf(sw)).toBe('รับการแจ้งเตือน');
+    expect(descOf(sw)).toBe('เมื่อมีคำสั่งซื้อใหม่ / บันทึกไม่สำเร็จ');
+  });
+
+  it('"(ไม่บังคับ)" อยู่ใน**ชื่อ** โดยเจตนา — เป็นส่วนของสิ่งที่ถาม', () => {
+    render(<CheckboxInput label="รับข่าวสาร" isOptional />);
+    expect(nameOf(screen.getByRole('checkbox'))).toBe('รับข่าวสาร (ไม่บังคับ)');
+  });
+});
+
+describe('Switch · labelPosition / labelSpacing แยกกันได้จริง', () => {
+  /* ★ `align="end"` เดิมทำสองอย่างพร้อมกัน — ย้ายป้าย **และ** ดันสองฝั่ง
+     ผู้เรียกที่อยากได้อย่างเดียวทำไม่ได้ เทสต์นี้ล็อกว่าตอนนี้แยกได้ */
+  const rowOf = () => document.querySelector('label')!;
+
+  it('spread ดันสองฝั่งโดยไม่ต้องย้ายป้าย', () => {
+    render(<Switch label="แสดงราคารวมภาษี" labelSpacing="spread" />);
+    expect(rowOf().className).toContain('justify-between');
+  });
+
+  it('ย้ายป้ายไปหน้าแถวโดยไม่ต้องดันสองฝั่ง', () => {
+    render(<Switch label="แสดงราคารวมภาษี" labelPosition="start" />);
+    const row = rowOf();
+    expect(row.className).not.toContain('justify-between');
+    /* ป้ายต้องมาก่อนราง — เทียบลำดับใน DOM จริง */
+    const label = screen.getByText('แสดงราคารวมภาษี');
+    const track = row.querySelector('.rounded-full')!;
+    expect(label.compareDocumentPosition(track) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

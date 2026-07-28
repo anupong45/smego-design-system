@@ -7,7 +7,7 @@ import {
   Text,
   FieldError,
 } from 'react-aria-components';
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
 import { useStrings } from '../provider/SmeGoProvider';
@@ -89,9 +89,23 @@ export function CheckboxInput({
   ...rest
 }: CheckboxInputProps) {
   const s = useStrings();
+  const labelId = useId();
+  const descId = useId();
+  const statusId = useId();
+
+  /* ★★ ผูกชื่อ/คำอธิบายเอง — เหตุผลเดียวกับ `Switch.tsx`
+     RAC ครอบ input ด้วย `<label>` ทั้งก้อน ถ้าไม่ชี้ `aria-labelledby`
+     accessible name จะเป็นข้อความทั้งแถวต่อกัน วัดจริงได้
+     "ยอมรับเงื่อนไขอ่านก่อนติ๊กต้องยอมรับก่อน" — คำอธิบายและข้อความ error
+     กลายเป็นส่วนหนึ่งของ**ชื่อ** ทั้งที่ควรเป็น description */
+  const describedBy =
+    [description && descId, status?.message && statusId].filter(Boolean).join(' ') ||
+    undefined;
 
   return (
     <RACCheckbox
+      aria-labelledby={labelId}
+      aria-describedby={describedBy}
       /* เฉพาะ error ที่ทำให้ invalid — warning/success ยังส่งฟอร์มได้ */
       isInvalid={isErrorStatus(status) || undefined}
       className={cn(
@@ -128,7 +142,9 @@ export function CheckboxInput({
           </span>
 
           <span className={cn('grid min-w-0 gap-1', isLabelHidden && 'sr-only')}>
+            {/* ★ "(ไม่บังคับ)" อยู่**ใน**ชื่อโดยเจตนา — เป็นส่วนของสิ่งที่ถาม */}
             <span
+              id={labelId}
               className={cn(
                 'text-body-sm',
                 isDisabled ? 'text-fg-disabled' : 'text-fg',
@@ -140,10 +156,12 @@ export function CheckboxInput({
               )}
             </span>
             {description && !isLabelHidden && (
-              <span className="text-caption text-fg-muted">{description}</span>
+              <span id={descId} className="text-caption text-fg-muted">
+                {description}
+              </span>
             )}
             {status?.message && !isLabelHidden && (
-              <span className={cn('text-caption', statusTextClass[status.type])}>
+              <span id={statusId} className={cn('text-caption', statusTextClass[status.type])}>
                 {status.message}
               </span>
             )}

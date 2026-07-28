@@ -219,9 +219,10 @@ const pass2Cases: [string, React.ReactElement][] = [
     status={{ type: 'error', message: 'จำนวนต้องไม่น้อยกว่า 1 ชิ้น — ตรวจสอบจำนวนสั่งขั้นต่ำของสินค้า' }} />],
   ['SearchField', <SearchField label="ค้นหา" defaultValue="เครื่องคั่วกาแฟ" />],
   ['SearchField · label ซ่อน', <SearchField label="ค้นหาสินค้า" labelHidden />],
-  ['Switch', <Switch defaultSelected description="ระบบจะแจ้งเตือนเมื่อมีคำสั่งซื้อใหม่">
-    รับการแจ้งเตือนทางอีเมล</Switch>],
-  ['Switch · align end', <Switch align="end">แสดงราคารวมภาษี</Switch>],
+  ['Switch', <Switch defaultSelected label="รับการแจ้งเตือนทางอีเมล"
+    description="ระบบจะแจ้งเตือนเมื่อมีคำสั่งซื้อใหม่" />],
+  ['Switch · ป้ายอยู่หน้าแถว + ดันสองฝั่ง',
+    <Switch labelPosition="start" labelSpacing="spread" label="แสดงราคารวมภาษี" />],
   ['Selector', <Selector label="จังหวัดที่ตั้ง" options={OPTIONS}
     description="เลือกจังหวัดที่โรงงานตั้งอยู่" />],
   ['Selector · invalid', <Selector label="จังหวัดที่ตั้ง" options={OPTIONS}
@@ -268,7 +269,7 @@ describe('Pass 2 · กฎเฉพาะ', () => {
   });
 
   it('Switch เป็น role="switch" ไม่ใช่ checkbox', () => {
-    render(<Switch defaultSelected>รับการแจ้งเตือน</Switch>);
+    render(<Switch defaultSelected label="รับการแจ้งเตือน" />);
     const sw = screen.getByRole('switch') as HTMLInputElement;
     /* ★ เป็น native checkbox ที่ override role — สถานะมาจาก `checked`
        ไม่ใช่ `aria-checked` (ซึ่งเป็น null และนั่นถูกต้อง) */

@@ -262,7 +262,7 @@ function Inputs() {
           <NumberInput label="จำนวน" value={num} onChange={setNum} minValue={1} suffix="ชิ้น" />
           <NumberInput label="ไม่มีปุ่มเพิ่ม-ลด" defaultValue={12} hideStepper suffix="กก." />
           <SearchField label="ค้นหาสินค้า" value={q} onChange={setQ} placeholder="เครื่องคั่วกาแฟ" />
-          <Switch isSelected={on} onChange={setOn} description="แจ้งเตือนเมื่อมีคำสั่งซื้อใหม่">รับการแจ้งเตือน</Switch>
+          <Switch isSelected={on} onChange={setOn} label="รับการแจ้งเตือน" description="แจ้งเตือนเมื่อมีคำสั่งซื้อใหม่" />
         </Stack>
       </Specimen>
 
@@ -733,7 +733,7 @@ function Marketplace() {
             ]}
           />
           {/* CompareBar ยึดล่างจอจริง — ให้กดเปิด/ปิดเอง จะได้ไม่บังหน้าอื่นตลอดเวลา */}
-          <Switch isSelected={showBar} onChange={setShowBar}>แสดง CompareBar (ยึดล่างจอ)</Switch>
+          <Switch isSelected={showBar} onChange={setShowBar} label="แสดง CompareBar (ยึดล่างจอ)" />
           {showBar && (
             <CompareBar
               items={compare}
@@ -833,9 +833,8 @@ function ThemeToggle() {
         setDark(v);
         document.documentElement.dataset.theme = v ? 'dark' : 'light';
       }}
-    >
-      โหมดมืด
-    </Switch>
+      label="โหมดมืด"
+    />
   );
 }
 

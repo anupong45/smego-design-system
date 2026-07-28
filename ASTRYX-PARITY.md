@@ -281,7 +281,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 5,
+  "maxProblems": 4,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea"
@@ -329,7 +329,6 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Spinner": ["isLabelHidden"],
     "EmptyState": ["isLive"],
     "TabList": ["label", "isDisabled"],
-    "Switch": ["align"],
     "Card": ["selected", "elevation", "interactive"],
     "Badge": ["showIcon"],
     "Banner": ["isLive", "titleAs", "action", "tone"],

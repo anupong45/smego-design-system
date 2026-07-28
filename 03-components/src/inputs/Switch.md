@@ -33,9 +33,16 @@
 
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
-| `children` | `ReactNode` | — | ข้อความกำกับ |
+| ~~`children`~~ | — | — | เปลี่ยนเป็น `label: string` (§8.1) |
+| ~~`align`~~ | — | — | แยกเป็น `labelPosition` + `labelSpacing` |
+| | ข้อความกำกับ |
 | `description` | `string` | — | **บอกผลของการเปิด** |
-| `align` | `'start' \| 'end'` | `'start'` | `end` = ปุ่มอยู่ท้ายแถว |
+| `label` | `string` | — | **บังคับ** — accessible name (§8.1) |
+| `isLabelHidden` | `boolean` | `false` | ซ่อน label ด้วยตา แต่ยังประกาศให้ screen reader |
+| `status` | `InputStatus` | — | ใช้รายงานว่า**สลับไม่สำเร็จ** ไม่ใช่ validation แบบฟอร์ม (SC 4.1.3) |
+| `isOptional` | `boolean` | `false` | ต่อท้าย label ว่า "(ไม่บังคับ)" |
+| `labelPosition` | `'start' \| 'end'` | `'end'` | ป้ายอยู่ฝั่งไหนของปุ่ม |
+| `labelSpacing` | `'compact' \| 'spread'` | `'compact'` | `spread` ดันป้ายกับปุ่มไปสุดสองฝั่ง |
 | `isSelected` / `defaultSelected` / `onChange` / `isDisabled` | | | จาก RAC |
 
 ---
@@ -175,14 +182,14 @@ Component set **`Switch`**
 ```tsx
 // รายการตั้งค่า — ปุ่มเรียงตรงแนวขวา
 <VStack gap="2">
-  <Switch align="end" defaultSelected>แสดงราคารวมภาษีมูลค่าเพิ่ม</Switch>
-  <Switch align="end">แสดงเฉพาะสินค้าที่มีใบรับรอง</Switch>
+  <Switch labelPosition="start" labelSpacing="spread" defaultSelected label="แสดงราคารวมภาษีมูลค่าเพิ่ม" />
+  <Switch labelPosition="start" labelSpacing="spread" label="แสดงเฉพาะสินค้าที่มีใบรับรอง" />
 </VStack>
 ```
 
 ```tsx
 // ❌ ในฟอร์มที่มีปุ่มบันทึก
-// <Switch>ยอมรับเงื่อนไข</Switch>
+// <Switch label="ยอมรับเงื่อนไข" />
 // ✅
 <Checkbox value="terms">ข้าพเจ้ายอมรับข้อกำหนดการใช้งาน</Checkbox>
 ```
