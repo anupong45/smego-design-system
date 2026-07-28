@@ -115,15 +115,19 @@ for (const name of targets) {
   else fail(`barrel ไม่ export "${name}"`);
 }
 
-// 3b — ชื่อเก่าต้องไม่หลงเหลือแบบไม่ได้ตั้งใจ (alias ที่ mark @deprecated ยอมได้)
+/* 3b — ชื่อเก่าต้องหายไปจากบาร์เรล
+
+   เดิมกฎนี้ยอมให้ชื่อเก่าอยู่ต่อได้ถ้า mark `@deprecated` แล้วค่อยตัดใน 0.2.0
+   **คำตัดสิน 2026-07-28 กลับกฎนี้** — rename หักดิบ ไม่มี alias แล้วขยับเป็น
+   0.2.0 เลย เหตุผล: ยังไม่มี consumer นอกรีโป (04-patterns เป็น .md ล้วน)
+   0.x จึงหัก API ได้ตามกติกา semver และนี่คือหน้าต่างสุดท้ายที่ราคาเป็นศูนย์
+
+   ถ้าเก็บ alias ไว้ บาร์เรลจะมี 15 ชื่อคู่ และจะได้ capsule สี่ตัวโผล่พร้อมกัน
+   ในออโต้คอมพลีต (Badge · Chip · RemovableChip · Token) ซึ่งเป็นความสับสน
+   ตัวเดียวกับที่ §1.4 อุตส่าห์กันไว้ */
 for (const [ours, theirs] of Object.entries(cfg.rename)) {
   if (exported.has(ours)) {
-    const near = barrel.slice(Math.max(0, barrel.indexOf(ours) - 400), barrel.indexOf(ours));
-    if (!/@deprecated/.test(near)) {
-      fail(`"${ours}" ยัง export อยู่โดยไม่มี @deprecated — ควรเป็น alias ชั่วคราวของ "${theirs}" และตัดออกใน 0.2.0`);
-    } else {
-      notes.push(`alias "${ours}" → "${theirs}" ยังอยู่ (ตัดออกใน 0.2.0)`);
-    }
+    fail(`"${ours}" ยัง export อยู่ — rename เป็น "${theirs}" แบบหักดิบ ไม่มี alias (§8 · 0.2.0)`);
   }
 }
 

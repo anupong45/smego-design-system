@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-  SmeGoProvider, Container, Section, Button, TextField, RangeSlider,
+  SmeGoProvider, Container, Section, Button, TextInput, RangeSlider,
   Dialog, DialogOverlay, DialogTrigger, CompareBar, Link, Grid, ProductCard,
   ProgressBar, DescriptionList, FundingCard, BusinessCard, Alert,
   AppHeader, SearchField, BuyBox, ImageGallery, CheckoutSummary,
@@ -111,7 +111,7 @@ function App() {
           <h1 className="text-heading-lg text-fg">หน้าทดสอบ WCAG 2.2</h1>
 
           <div className="mt-6 max-w-md">
-            <TextField
+            <TextInput
               label="เลขทะเบียนนิติบุคคล"
               description="ตัวเลข 13 หลักจากหนังสือรับรอง DBD"
               value={taxId}

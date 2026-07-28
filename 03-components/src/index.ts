@@ -90,16 +90,16 @@ export {
   type BaseFieldProps,
 } from './inputs/fieldStyles';
 
-/* ── alias ชั่วคราวถึง 0.2.0 ────────────────────────────────────────────────
-   ASTRYX-PARITY.md §8 ตกลงให้เก็บชื่อเดิมไว้ 1 minor แล้วตัดทิ้ง
-   ⚠️ alias ส่งต่อแค่ *ชื่อ* ไม่ได้ส่งต่อ API เดิม — `errorMessage` กลายเป็น
-   `status` และ `showOptional` กลายเป็น `isOptional` แล้ว โค้ดที่ยังเรียก
-   ชื่อเก่าจะ error ที่ typecheck ซึ่งตั้งใจให้เป็นแบบนั้น */
+/* ── ไม่มี alias ชื่อเก่า ────────────────────────────────────────────────────
+   เคยมี `TextField` / `Textarea` เป็น alias `@deprecated` อยู่ตรงนี้
+   **คำตัดสิน 2026-07-28 กลับนโยบาย** — rename หักดิบ ไม่มี alias แล้วขยับเป็น
+   0.2.0 เลย เพราะยังไม่มี consumer นอกรีโป (04-patterns เป็น .md ล้วน)
+   หน้าต่างที่หัก API ได้ฟรีจึงยังเปิดอยู่ และจะปิดทันทีที่มีคนแรกมา import
 
-/** @deprecated ใช้ `TextInput` — ชื่อนี้จะถูกตัดออกใน 0.2.0 */
-export { TextInput as TextField } from './inputs/TextInput';
-/** @deprecated ใช้ `TextArea` — ชื่อนี้จะถูกตัดออกใน 0.2.0 */
-export { TextArea as Textarea } from './inputs/TextArea';
+   alias ยังส่งต่อแค่ *ชื่อ* ไม่ได้ส่งต่อ API เดิมอยู่แล้ว (`errorMessage` →
+   `status` · `showOptional` → `isOptional`) มันจึงไม่เคยกันของพังได้จริง
+   มีแต่ทำให้บาร์เรลมีชื่อคู่ · `lint:parity` กฎ 3b บังคับข้อนี้ */
+
 export {
   Checkbox,
   CheckboxGroup,

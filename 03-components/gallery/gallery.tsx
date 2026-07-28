@@ -14,7 +14,7 @@ import {
   SmeGoProvider, ToastRegion, showToast,
   Stack, HStack, Grid, Container, Divider,
   Icon, iconRegistry, type IconName,
-  Button, IconButton, Link, TextField, Textarea, Checkbox, CheckboxGroup,
+  Button, IconButton, Link, TextInput, TextArea, Checkbox, CheckboxGroup,
   Radio, RadioGroup, RangeSlider, DatePicker, OTPField, NumberField,
   SearchField, Switch, Select, ComboBox, FileUpload,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
@@ -197,14 +197,14 @@ function Inputs() {
         </Row>
       </Specimen>
 
-      <Specimen name="TextField / Textarea" note="label · description · error · prefix · size">
+      <Specimen name="TextInput / TextArea" note="label · description · error · prefix · size">
         <Stack gap="4">
-          <TextField label="ชื่อกิจการ" value={text} onChange={setText} placeholder="เช่น ร้านกาแฟดอยคำ" description="ตามที่จดทะเบียน" />
-          <TextField label="เลขนิติบุคคล" errorMessage="ต้องมี 13 หลัก" defaultValue="012" />
-          <TextField label="ราคา" prefix="฿" size="lg" defaultValue="1250000" />
-          <TextField label="อีเมล" showOptional />
-          <Textarea label="รายละเอียดสินค้า" rows={3} placeholder="อธิบายสั้น ๆ" />
-          <TextField label="ปิดใช้งาน" isDisabled defaultValue="แก้ไขไม่ได้" />
+          <TextInput label="ชื่อกิจการ" value={text} onChange={setText} placeholder="เช่น ร้านกาแฟดอยคำ" description="ตามที่จดทะเบียน" />
+          <TextInput label="เลขนิติบุคคล" status={{ type: 'error', message: 'ต้องมี 13 หลัก' }} defaultValue="012" />
+          <TextInput label="ราคา" startIcon="฿" size="lg" defaultValue="1250000" />
+          <TextInput label="อีเมล" isOptional />
+          <TextArea label="รายละเอียดสินค้า" rows={3} placeholder="อธิบายสั้น ๆ" />
+          <TextInput label="ปิดใช้งาน" isDisabled defaultValue="แก้ไขไม่ได้" />
         </Stack>
       </Specimen>
 
