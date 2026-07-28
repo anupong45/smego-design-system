@@ -22,7 +22,7 @@
        Selector    +40 KB
 
    ที่เหลือทั้งหมดอยู่ที่ **+0 ถึง +6 KB** (Switch · CheckboxInput · OTPField ·
-   FileUpload · Dialog · Accordion · Tooltip) — ไม่ต้องกังวล
+   FileInput · Dialog · Accordion · Tooltip) — ไม่ต้องกังวล
 
    สามตัวนั้นควรโหลดแบบ lazy เมื่ออยู่ในหน้าที่ไม่ได้ใช้ทันที:
 
@@ -131,10 +131,10 @@ export {
 } from './inputs/Selector';
 export { Typeahead, type TypeaheadProps } from './inputs/Typeahead';
 export {
-  FileUpload,
-  type FileUploadProps,
+  FileInput,
+  type FileInputProps,
   type UploadedFile,
-} from './inputs/FileUpload';
+} from './inputs/FileInput';
 
 /* ── Data display ─────────────────────────────────────────────────────────── */
 export { Card, CardMedia, cardStyles, type CardProps, type CardMediaProps } from './data-display/Card';

@@ -5,7 +5,14 @@ import { Button } from './Button';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · FileUpload
+   SME.GO · FileInput   (เดิมชื่อ FileUpload — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    `value` (เดิมชื่อ `files`) · `onChange` (เดิมชื่อ `onSelect`) ·
+          `isMultiple` (เดิมชื่อ `multiple`) · `maxSize` (เดิมชื่อ `maxSizeMb`)
+   คงไว้  `onRemove` (ours-only)
+   ไม่รับ `maxFiles` `mode` `status` `isLoading` ของ Astryx — ไม่มี use case
+          ใน marketplace ตอนนี้
    ───────────────────────────────────────────────────────────────────────────
    ★★★ SC 2.5.7 Dragging Movements — **ลากวางต้องไม่ใช่ทางเดียว**
 
@@ -41,18 +48,18 @@ export interface UploadedFile {
   size: number;
 }
 
-export interface FileUploadProps {
+export interface FileInputProps {
   label: string;
   description?: string;
   /** MIME types ที่รับ */
   accept?: string[];
   /** ขนาดสูงสุดต่อไฟล์ (เมกะไบต์) */
-  maxSizeMb?: number;
+  maxSize?: number;
   /** รับหลายไฟล์ */
-  multiple?: boolean;
+  isMultiple?: boolean;
   /** ไฟล์ที่อัปโหลดแล้ว */
-  files?: UploadedFile[];
-  onSelect: (files: File[]) => void;
+  value?: UploadedFile[];
+  onChange: (files: File[]) => void;
   onRemove?: (id: string) => void;
   isDisabled?: boolean;
   className?: string;
@@ -67,18 +74,18 @@ function formatSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
-export function FileUpload({
+export function FileInput({
   label,
   description,
   accept = DEFAULT_ACCEPT,
-  maxSizeMb = 5,
-  multiple,
-  files,
-  onSelect,
+  maxSize = 5,
+  isMultiple,
+  value,
+  onChange,
   onRemove,
   isDisabled,
   className,
-}: FileUploadProps) {
+}: FileInputProps) {
   const s = useStrings();
   const inputRef = useRef<HTMLInputElement>(null);
   const labelId = useId();
@@ -94,8 +101,8 @@ export function FileUpload({
         setError(s.error.fileWrongType);
         return null;
       }
-      if (file.size > maxSizeMb * 1024 * 1024) {
-        setError(s.error.fileTooLarge(maxSizeMb));
+      if (file.size > maxSize * 1024 * 1024) {
+        setError(s.error.fileTooLarge(maxSize));
         return null;
       }
       accepted.push(file);
@@ -107,7 +114,7 @@ export function FileUpload({
   const handleFiles = (list: FileList | null) => {
     if (!list || list.length === 0) return;
     const accepted = validate([...list]);
-    if (accepted) onSelect(accepted);
+    if (accepted) onChange(accepted);
   };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
@@ -123,7 +130,7 @@ export function FileUpload({
         {label}
       </span>
       <p id={descId} className="text-caption text-fg-muted">
-        {description ?? s.common.uploadHelp(maxSizeMb)}
+        {description ?? s.common.uploadHelp(maxSize)}
       </p>
 
       {/* พื้นที่ลากวาง — เป็น **ของเสริม** ไม่ใช่ทางเดียว
@@ -157,7 +164,7 @@ export function FileUpload({
         <input
           ref={inputRef}
           type="file"
-          multiple={multiple}
+          multiple={isMultiple}
           accept={accept.join(',')}
           disabled={isDisabled}
           aria-labelledby={labelId}
@@ -181,9 +188,9 @@ export function FileUpload({
         </Button>
       </div>
 
-      {files && files.length > 0 && (
+      {value && value.length > 0 && (
         <ul className="grid min-w-0 gap-2">
-          {files.map((f) => (
+          {value.map((f) => (
             <li
               key={f.id}
               className="flex min-w-0 items-center gap-2 rounded-(--radius-control) border border-edge bg-surface p-3"

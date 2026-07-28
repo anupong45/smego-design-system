@@ -1,6 +1,8 @@
-# FileUpload
+# FileInput
 
-**`@smego/ui`** · ชั้น 03 · [FileUpload.tsx](./FileUpload.tsx)
+**`@smego/ui`** · ชั้น 03 · [FileInput.tsx](./FileInput.tsx)
+
+> เดิมชื่อ `FileUpload` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `files`→`value` · `onSelect`→`onChange` · `multiple`→`isMultiple` · `maxSizeMb`→`maxSize` ตาม §8
 
 ---
 
@@ -15,7 +17,7 @@
 | สถานการณ์ | ใช้อะไรแทน | เหตุผล |
 |---|---|---|
 | สลิปการโอนเงิน | `<SlipUpload>` | มีการตรวจและสถานะเฉพาะ |
-| รูปโปรไฟล์ | ตัวตัดรูป + FileUpload | ต้อง crop ก่อนส่ง |
+| รูปโปรไฟล์ | ตัวตัดรูป + FileInput | ต้อง crop ก่อนส่ง |
 | ไฟล์ขนาดใหญ่มาก | อัปโหลดแบบ chunk | ต้องมีความคืบหน้าและ resume |
 
 ---
@@ -23,12 +25,12 @@
 ## 2 · React API
 
 ```tsx
-<FileUpload
+<FileInput
   label="เอกสารประกอบการสมัคร"
   description="หนังสือรับรองนิติบุคคล และงบการเงินย้อนหลัง 2 ปี"
-  multiple
-  files={files}
-  onSelect={upload}
+  isMultiple
+  value={files}
+  onChange={upload}
   onRemove={remove}
 />
 ```
@@ -36,12 +38,12 @@
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
-| `description` | `string` | `s.common.uploadHelp(maxSizeMb)` | |
+| `description` | `string` | `s.common.uploadHelp(maxSize)` | |
 | `accept` | `string[]` | JPEG · PNG · PDF | MIME types |
-| `maxSizeMb` | `number` | `5` | ต่อไฟล์ |
-| `multiple` | `boolean` | `false` | |
-| `files` | `UploadedFile[]` | — | `{ id, name, size }` |
-| `onSelect` | `(files: File[]) => void` | — | **บังคับ** · เรียกหลังตรวจผ่าน |
+| `maxSize` | `number` | `5` | ต่อไฟล์ |
+| `isMultiple` | `boolean` | `false` | |
+| `value` | `UploadedFile[]` | — | `{ id, name, size }` |
+| `onChange` | `(files: File[]) => void` | — | **บังคับ** · เรียกหลังตรวจผ่าน |
 | `onRemove` | `(id: string) => void` | — | |
 | `isDisabled` | `boolean` | `false` | |
 
@@ -67,7 +69,7 @@ component จึงมี **ปุ่ม "เลือกไฟล์" เสม
 **มีเทสยืนยัน:**
 
 ```
-✓ ★ FileUpload มีปุ่มเลือกไฟล์เสมอ — ไม่ใช่แค่พื้นที่ลาก (SC 2.5.7)
+✓ ★ FileInput มีปุ่มเลือกไฟล์เสมอ — ไม่ใช่แค่พื้นที่ลาก (SC 2.5.7)
 ```
 
 ---
@@ -170,7 +172,7 @@ UI ของมัน **style ไม่ได้และขึ้นภาษ�
 
 ## 7 · Figma Variant
 
-Component set **`FileUpload`**
+Component set **`FileInput`**
 
 | Property | Values |
 |---|---|
@@ -188,14 +190,14 @@ Component set **`FileUpload`**
 ```tsx
 const [files, setFiles] = useState<UploadedFile[]>([]);
 
-<FileUpload
+<FileInput
   label="เอกสารประกอบการสมัคร"
   description="หนังสือรับรองนิติบุคคล และงบการเงินย้อนหลัง 2 ปี — ไฟล์ PDF ไม่เกิน 5 เมกะไบต์"
   accept={['application/pdf']}
-  maxSizeMb={5}
-  multiple
-  files={files}
-  onSelect={async (selected) => {
+  maxSize={5}
+  isMultiple
+  value={files}
+  onChange={async (selected) => {
     const uploaded = await Promise.all(selected.map(upload));
     setFiles((prev) => [...prev, ...uploaded]);
   }}
@@ -205,13 +207,13 @@ const [files, setFiles] = useState<UploadedFile[]>([]);
 
 ```tsx
 // รูปสินค้า — จำกัดชนิดและขนาดต่างออกไป
-<FileUpload
+<FileInput
   label="รูปสินค้า"
   accept={['image/jpeg', 'image/png']}
-  maxSizeMb={2}
-  multiple
-  files={images}
-  onSelect={uploadImages}
+  maxSize={2}
+  isMultiple
+  value={images}
+  onChange={uploadImages}
   onRemove={removeImage}
 />
 ```

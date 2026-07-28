@@ -16,7 +16,7 @@ import {
   Icon, iconRegistry, type IconName,
   Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
   Radio, RadioList, RangeSlider, DateInput, OTPField, NumberInput,
-  SearchField, Switch, Selector, Typeahead, FileUpload,
+  SearchField, Switch, Selector, Typeahead, FileInput,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Accordion, AccordionItem, ImageGallery, DescriptionList,
   Alert, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
@@ -273,15 +273,15 @@ function Inputs() {
         </Stack>
       </Specimen>
 
-      <Specimen name="FileUpload" note="ลากวาง · จำกัดชนิดและขนาด">
-        <FileUpload
+      <Specimen name="FileInput" note="ลากวาง · จำกัดชนิดและขนาด">
+        <FileInput
           label="เอกสารรับรอง"
           description="PDF หรือรูปภาพ ไม่เกิน 5 MB"
           accept={['application/pdf', 'image/*']}
-          maxSizeMb={5}
-          multiple
-          files={files}
-          onSelect={(fs) => setFiles((p) => [...p, ...fs.map((f, i) => ({ id: `${f.name}-${i}`, name: f.name, size: f.size }))])}
+          maxSize={5}
+          isMultiple
+          value={files}
+          onChange={(fs) => setFiles((p) => [...p, ...fs.map((f, i) => ({ id: `${f.name}-${i}`, name: f.name, size: f.size }))])}
           onRemove={(id) => setFiles((p) => p.filter((f) => f.id !== id))}
         />
       </Specimen>

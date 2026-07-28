@@ -39,7 +39,7 @@ export const stringsTh = {
     /** ใช้แทนตัวเลขที่ยังคำนวณไม่ได้ เช่นค่าขนส่งที่รอที่อยู่ */
     calculating: 'รอคำนวณ',
     selectPlaceholder: 'เลือกรายการ',
-    /** FileUpload — ปุ่มต้องมีเสมอ ไม่ใช่แค่พื้นที่ลาก (SC 2.5.7) */
+    /** FileInput — ปุ่มต้องมีเสมอ ไม่ใช่แค่พื้นที่ลาก (SC 2.5.7) */
     chooseFile: 'เลือกไฟล์',
     dropFilesHere: 'ลากไฟล์มาวางที่นี่ หรือกดปุ่มเพื่อเลือกไฟล์',
     uploadHelp: (maxMb: number) =>

@@ -276,7 +276,7 @@ Component set **`SlipUpload`** — property `State` = `Empty` · **`Uploaded`** 
 | โหมดมืด (Dark Mode) | ✅ | `bg-scannable` สำหรับพื้น QR ซึ่ง**ต้องขาวทั้งสองโหมด** เพราะกล้องอ่านจากคอนทราสต์จริง · `lint-classes.mjs` 0 จุด — ทุกสีมาจาก token ที่ override ในโหมดมืดแล้ว |
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | ใช้คู่ `ms-`/`me-` อยู่แล้ว · `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | ✅ | `SC 3.3.8` และ `SC 1.3.5` — เลขอ้างอิงคัดลอกและวางได้ · `SlipUpload` มีปุ่มเลือกไฟล์เสมอ ไม่ใช่แค่พื้นที่ลาก |
-| กำลังโหลด (Loading) | ⚠️ | `SlipUpload` ยังไม่มีสถานะ "กำลังอัปโหลด" ในตัว — **หนี้เดียวกับ [`FileUpload`](../inputs/FileUpload.md)** ผู้เรียกต้องประกอบเองด้วย [`<ProgressBar>`](../feedback/ProgressBar.md) |
+| กำลังโหลด (Loading) | ⚠️ | `SlipUpload` ยังไม่มีสถานะ "กำลังอัปโหลด" ในตัว — **หนี้เดียวกับ [`FileInput`](../inputs/FileInput.md)** ผู้เรียกต้องประกอบเองด้วย [`<ProgressBar>`](../feedback/ProgressBar.md) |
 | ข้อผิดพลาด (Error) | ✅ | `errorMessage` · สลิปที่อ่านไม่ออกหรือยอดไม่ตรงบอกเป็นข้อความพร้อมวิธีแก้ |
 | ว่างเปล่า (Empty) | ✅ | `SlipUpload` ก่อนอัปโหลดบอกชนิดและขนาดไฟล์ที่รับได้ (axe ผ่านทั้งสองสถานะ) · วิธีชำระที่ใช้ไม่ได้ใช้ `disabledMethods` พร้อมเหตุผล ไม่ใช่ซ่อนทิ้ง |
 | Skeleton | — | ขั้นตอนชำระเงินต้องแสดงของจริงเท่านั้น |

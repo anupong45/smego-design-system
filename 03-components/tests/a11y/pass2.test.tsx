@@ -5,7 +5,7 @@ import { CalendarDate } from '@internationalized/date';
 import { render, expectNoViolations } from './render';
 import {
   DateInput, OTPField, createBuddhistCalendar,
-  NumberInput, SearchField, Switch, Selector, Typeahead, FileUpload,
+  NumberInput, SearchField, Switch, Selector, Typeahead, FileInput,
 } from '../../src/index';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -228,11 +228,11 @@ const pass2Cases: [string, React.ReactElement][] = [
     status={{ type: 'error', message: 'ยังไม่ได้เลือกจังหวัด — จำเป็นสำหรับการคำนวณค่าขนส่ง' }} />],
   ['Typeahead', <Typeahead label="จังหวัดที่ตั้ง" options={OPTIONS}
     placeholder="พิมพ์เพื่อค้นหาจังหวัด" />],
-  ['FileUpload', <FileUpload label="เอกสารประกอบการสมัคร"
-    description="หนังสือรับรองนิติบุคคล และงบการเงินย้อนหลัง 2 ปี" multiple onSelect={() => {}} />],
-  ['FileUpload · มีไฟล์แล้ว', <FileUpload label="เอกสารประกอบการสมัคร"
-    files={[{ id: '1', name: 'หนังสือรับรองนิติบุคคล.pdf', size: 245_760 }]}
-    onSelect={() => {}} onRemove={() => {}} />],
+  ['FileInput', <FileInput label="เอกสารประกอบการสมัคร"
+    description="หนังสือรับรองนิติบุคคล และงบการเงินย้อนหลัง 2 ปี" isMultiple onChange={() => {}} />],
+  ['FileInput · มีไฟล์แล้ว', <FileInput label="เอกสารประกอบการสมัคร"
+    value={[{ id: '1', name: 'หนังสือรับรองนิติบุคคล.pdf', size: 245_760 }]}
+    onChange={() => {}} onRemove={() => {}} />],
 ];
 
 describe('Pass 2 · axe', () => {
@@ -289,14 +289,14 @@ describe('Pass 2 · กฎเฉพาะ', () => {
     if (hidden) expect(hidden.getAttribute('tabindex')).toBe('-1');
   });
 
-  it('★ FileUpload มีปุ่มเลือกไฟล์เสมอ — ไม่ใช่แค่พื้นที่ลาก (SC 2.5.7)', () => {
-    render(<FileUpload label="เอกสาร" onSelect={() => {}} />);
+  it('★ FileInput มีปุ่มเลือกไฟล์เสมอ — ไม่ใช่แค่พื้นที่ลาก (SC 2.5.7)', () => {
+    render(<FileInput label="เอกสาร" onChange={() => {}} />);
     /* ทางที่กดครั้งเดียวได้ ต้องมีจริง ไม่ใช่แค่ลากวาง */
     expect(screen.getByRole('button', { name: 'เลือกไฟล์' })).toBeDefined();
   });
 
-  it('FileUpload ซ่อน input ด้วย sr-only ไม่ใช่ display:none และมีชื่อ', () => {
-    const { container } = render(<FileUpload label="เอกสารประกอบ" onSelect={() => {}} />);
+  it('FileInput ซ่อน input ด้วย sr-only ไม่ใช่ display:none และมีชื่อ', () => {
+    const { container } = render(<FileInput label="เอกสารประกอบ" onChange={() => {}} />);
     const input = container.querySelector('input[type="file"]')!;
     expect(input.className).toContain('sr-only');
     expect(input.className).not.toContain('hidden');
@@ -304,10 +304,10 @@ describe('Pass 2 · กฎเฉพาะ', () => {
     expect(input.getAttribute('aria-labelledby')).toBeTruthy();
   });
 
-  it('FileUpload ปุ่มลบมีชื่อไฟล์ในชื่อปุ่ม', () => {
+  it('FileInput ปุ่มลบมีชื่อไฟล์ในชื่อปุ่ม', () => {
     render(
-      <FileUpload label="เอกสาร" onSelect={() => {}} onRemove={() => {}}
-        files={[
+      <FileInput label="เอกสาร" onChange={() => {}} onRemove={() => {}}
+        value={[
           { id: '1', name: 'หนังสือรับรอง.pdf', size: 1024 },
           { id: '2', name: 'งบการเงิน.pdf', size: 2048 },
         ]} />,
