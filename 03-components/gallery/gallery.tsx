@@ -502,7 +502,7 @@ function Feedback() {
         <Row label="hover / focus">
           <TooltipTrigger>
             <IconButton name="more-vertical" label="ตัวเลือกเพิ่มเติม" />
-            <Tooltip>ตัวเลือกเพิ่มเติม</Tooltip>
+            <Tooltip content="ตัวเลือกเพิ่มเติม" />
           </TooltipTrigger>
         </Row>
       </Specimen>

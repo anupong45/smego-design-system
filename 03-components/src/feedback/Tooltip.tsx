@@ -41,12 +41,16 @@ import { cn } from '../lib/cn';
 export interface TooltipProps extends Omit<RACTooltipProps, 'children' | 'className' | 'style'> {
   /**
    * ข้อความสั้น — **ห้ามใส่ลิงก์ ปุ่ม หรือข้อมูลที่จำเป็นต่อการตัดสินใจ**
+   *
+   * ชื่อ prop ตาม Astryx (เดิมเป็น `children`) — แยกเนื้อ tooltip ออกจาก
+   * trigger ชัดกว่า เพราะ `<TooltipTrigger>` มี children ของตัวเองอยู่แล้ว
+   * การที่ทั้งสองชั้นใช้ `children` ทำให้อ่านโครงผิดได้ง่าย
    */
-  children: ReactNode;
+  content: ReactNode;
   className?: string;
 }
 
-export function Tooltip({ children, className, ...rest }: TooltipProps) {
+export function Tooltip({ content, className, ...rest }: TooltipProps) {
   return (
     <RACTooltip
       /* ระยะห่างจาก trigger — 8px ให้ลูกศรมีที่พอโดยไม่ห่างจนดูไม่เกี่ยวกัน */
@@ -76,7 +80,7 @@ export function Tooltip({ children, className, ...rest }: TooltipProps) {
           <path d="M0 0 L4 4 L8 0" />
         </svg>
       </OverlayArrow>
-      {children}
+      {content}
     </RACTooltip>
   );
 }

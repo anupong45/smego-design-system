@@ -35,13 +35,13 @@ import { Tooltip, TooltipTrigger, Button } from '@smego/ui';
 
 <TooltipTrigger delay={200}>
   <Button variant="secondary" icon="info">วงเงินสูงสุด</Button>
-  <Tooltip>เพดานที่ขอได้ ไม่ใช่จำนวนที่ได้รับจริง</Tooltip>
+  <Tooltip content="เพดานที่ขอได้ ไม่ใช่จำนวนที่ได้รับจริง" />
 </TooltipTrigger>
 ```
 
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
-| `children` | `ReactNode` | — | **ข้อความสั้น** — ห้ามลิงก์ ปุ่ม หรือข้อมูลจำเป็น |
+| `content` | `ReactNode` | — | **ข้อความสั้น** — ห้ามลิงก์ ปุ่ม หรือข้อมูลจำเป็น |
 | `placement` | `'top' \| 'bottom' \| 'start' \| 'end'` … | `'top'` | จาก RAC |
 | `className` | `string` | — | |
 
@@ -191,7 +191,7 @@ Component set **`Tooltip`**
 // ข้อมูลเสริมที่ไม่จำเป็นต่อการตัดสินใจ
 <TooltipTrigger delay={200}>
   <Button variant="secondary" icon="info">วงเงินสูงสุด</Button>
-  <Tooltip>เพดานที่ขอได้ ไม่ใช่จำนวนที่ได้รับจริง</Tooltip>
+  <Tooltip content="เพดานที่ขอได้ ไม่ใช่จำนวนที่ได้รับจริง" />
 </TooltipTrigger>
 ```
 
@@ -202,13 +202,13 @@ Component set **`Tooltip`**
   <Button variant="primary" isDisabled={false} onPress={warn}>
     ยื่นคำขอ
   </Button>
-  <Tooltip>ต้องยืนยันตัวตนด้วย ThaID ก่อนยื่นคำขอ</Tooltip>
+  <Tooltip content="ต้องยืนยันตัวตนด้วย ThaID ก่อนยื่นคำขอ" />
 </TooltipTrigger>
 ```
 
 ```tsx
 // ❌ แบบนี้ผิด — ข้อมูลจำเป็นต่อการตัดสินใจ
-// <Tooltip>ต้องร่วมจ่าย 30% ของวงเงินที่ได้รับ</Tooltip>
+// <Tooltip content="ต้องร่วมจ่าย 30% ของวงเงินที่ได้รับ" />
 // ✅ แสดงเป็นข้อความในหน้า
 <VStack gap="1">
   <span className="text-label text-fg-secondary">สัดส่วนร่วมจ่าย</span>
@@ -224,7 +224,7 @@ Component set **`Tooltip`**
 |---|---|---|
 | `setTimeout(() => hide(), 3000)` | ปล่อยให้อยู่จนกว่าจะออก | ไม่ผ่าน SC 1.4.13 ข้อ 3 |
 | เงื่อนไขคุณสมบัติใน tooltip | ข้อความในหน้า | ผู้ใช้ touch เข้าไม่ถึงเลย |
-| `<Tooltip><Link>อ่านเพิ่ม</Link></Tooltip>` | `<Dialog>` | tooltip หายเมื่อ focus ย้าย |
+| `<Tooltip content={<Link>อ่านเพิ่ม</Link>} />` | `<Dialog>` | tooltip หายเมื่อ focus ย้าย |
 | `<IconButton>` ที่ชื่อมาจาก tooltip | `label` prop | `aria-describedby` ≠ ชื่อ accessible |
 | tooltip บนปุ่มที่ `isDisabled` | ห่อด้วย `<span>` หรือใช้ปุ่มที่กดได้ | element ที่ disabled ไม่ยิง event |
 | `data-entering:animate-[slide-up]` | fade อย่างเดียว | transform ใกล้จุดจ้อง = กระตุ้นระบบทรงตัว |

@@ -38,6 +38,7 @@ import { Link } from '@smego/ui';
 | `size` | `'caption' \| 'body-sm' \| 'body' \| 'inherit'` | `'inherit'` | `inherit` = สืบขนาดจากย่อหน้า |
 | `quiet` | `boolean` | `false` | ⚠️ ใช้ได้เฉพาะที่บริบทบอกอยู่แล้ว — ดู §3 |
 | `external` | `boolean` | `false` | เพิ่มไอคอน + ข้อความซ่อน · **ไม่ตั้ง `target` ให้** |
+| `newTabLabel` | `string` | จาก `s.common.opensInNewTab` | ข้อความ SR ต่อท้ายลิงก์ภายนอก · ชื่อ prop ตาม Astryx |
 | `target` | `string` | — | ต้องตั้งเองถ้าจะเปิดแท็บใหม่ |
 | `isDisabled` | `boolean` | `false` | จาก RAC |
 | `onPress` | `(e) => void` | — | จาก RAC · ใช้กับ client-side router |

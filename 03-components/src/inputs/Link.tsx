@@ -75,10 +75,26 @@ export interface LinkProps
    */
   external?: boolean;
 
+  /**
+   * ข้อความสำหรับ screen reader ที่ต่อท้ายลิงก์ภายนอก
+   *
+   * ค่าเริ่มต้นมาจาก `s.common.opensInNewTab` — ส่งค่านี้เมื่อ call site
+   * ต้องการถ้อยคำที่ต่างไป (ชื่อ prop ตาม Astryx)
+   */
+  newTabLabel?: string;
+
   className?: string;
 }
 
-export function Link({ children, external, size, quiet, className, ...rest }: LinkProps) {
+export function Link({
+  children,
+  external,
+  newTabLabel,
+  size,
+  quiet,
+  className,
+  ...rest
+}: LinkProps) {
   const s = useStrings();
 
   return (
@@ -89,7 +105,7 @@ export function Link({ children, external, size, quiet, className, ...rest }: Li
           <Icon name="external-link" size={16} />
           {/* ข้อความซ่อน — ผู้ใช้ screen reader ต้องรู้ว่าจะเปิดแท็บใหม่
              ก่อนกด ไม่ใช่หลังกด */}
-          <span className="sr-only">{` (${s.common.opensInNewTab})`}</span>
+          <span className="sr-only">{` (${newTabLabel ?? s.common.opensInNewTab})`}</span>
         </>
       )}
     </RACLink>

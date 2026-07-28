@@ -212,6 +212,8 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | D19 | ไม่รับ `tooltip` บน `Button` `IconButton` `Link` | `IconButton.md` §5 และ `Tooltip.md` §5 เขียนตรงกันว่า `aria-describedby` **ไม่ใช่** accessible name — prop ชื่อ `tooltip` บนปุ่มเชิญให้ทำ anti-pattern ที่สองไฟล์นั้นกันไว้เอง (ใช้ `label` ตั้งชื่อ แล้วครอบด้วย `TooltipTrigger` ถ้าต้องการคำอธิบายเสริม) |
 | D20 | เส้นแบ่ง link/button — ไม่รับ `Button.href/target/rel` (และ `IconButton.href/target/rel` ด้วยเหตุผลเดียวกัน) และไม่รับ `Link.label/color/weight/display/type/maxLines/hasUnderline` | `Link.md` §1 ตั้งกฎไว้ว่า "เปลี่ยน URL = ลิงก์ · เปลี่ยนข้อมูล = ปุ่ม" · `Button.href` ลบเส้นนั้นทิ้ง ส่วน `Link.color/weight/display/type/maxLines` เปิดทางให้ลิงก์แต่งตัวเป็นปุ่ม · `hasUnderline` คือปุ่มปิด SC 1.4.1 (สีอย่างเดียวไม่พอ) ที่ `base.css` บังคับขีดเส้นใต้ด้วย `:where(a[href])` อยู่แล้ว |
 | D21 | props ที่ขัด SC หรือขัดคำตัดสินเดิม — `IconButton.isLoading/clickAction/isInterruptible` · `Tooltip.focusTrigger/alignment/anchorRef/hasHoverIndication` · `ProgressBar.isIndeterminate` · `Dialog.isInline` | `IconButton` เป็นไอคอนล้วน ไม่มีที่ให้ spinner โดยไม่บังไอคอน — `IconButton.md` §10 สั่งให้ใช้ `Button isLoading` แทนอยู่แล้ว · `clickAction`/`isInterruptible` เป็น event model ของ Astryx (เหตุผลเดียวกับ D8) · `focusTrigger` เปิดช่องปิดการแสดงตอน focus = ตก SC 1.4.13 · `alignment`/`anchorRef`/`hasHoverIndication` ขัด offset 8px ที่ตรึงไว้โดยเจตนา · `isIndeterminate` ทับเขต `Spinner` ตามกฎ §8.5 · `Dialog.isInline` คือ dialog ที่ไม่ใช่ overlay ซึ่งเป็นงานของ `Card`/`Section` |
+| D34 | `Link` ไม่รับ `isExternalLink` / `isStandalone` — **รับ `newTabLabel`** | ⚠️ **§4 เดิมเขียนผิดทั้งสองข้อ** (ตรวจกับ `Link.d.ts` แล้ว) · **`isExternalLink`**: เอกสารเดิมว่า "rename จาก `external` งานเดียวกัน" — **ไม่จริง** · ของ Astryx **ตั้ง `target="_blank"` + `rel="noopener noreferrer"` ให้อัตโนมัติ** ส่วน `external` ของเราตั้งใจไม่ตั้ง (คอมเมนต์ใน `Link.tsx` ระบุว่า "การเปิดแท็บใหม่เป็นการตัดสินใจระดับผลิตภัณฑ์ ไม่ใช่ผลข้างเคียงของการมีไอคอน" — สอดคล้อง WCAG G200) · ถ้ารับชื่อเขาแต่คงพฤติกรรมเราจะได้ **ชื่อเดียวกันพฤติกรรมต่างกัน** ซึ่งเป็นกับดักที่แย่กว่าการต่างชื่อ · **`isStandalone`**: เอกสารเดิมว่า "ต้องการ hit area ของตัวเอง" — **ไม่จริง** · `.d.ts` ระบุว่า "Applies base font sizing" คือเรื่อง**ขนาดตัวอักษร** ซึ่งซ้ำกับ `size` ของเราที่มี `inherit`/`body` อยู่แล้ว (หลักเดียวกับ D22: ไม่มีสองวิธีทำสิ่งเดียวกัน) · **`newTabLabel` รับเข้ามาแล้ว** — ข้อความ SR ต้องแปลไทยได้ต่อ call site |
+| D33 | `Button` ไม่รับ `label` · `isIconOnly` · `endContent` | **`label`**: §8.1 จำกัดขอบเขต `label: string` ไว้ที่ input + `Badge` + `Chip` และ**จงใจไม่รวม `Button`** — ปุ่มต้องรับ `ReactNode` เพราะมี composition จริงในระบบ (ไอคอน + ข้อความ + จำนวน) และมี 71 call site (ยืนยันคำตัดสิน 2026-07-28) · **`isIconOnly`**: เรามี `IconButton` เป็น component แยกอยู่แล้ว — เอกสารของ Astryx เองก็บอกให้ใช้ `IconButton` แทน `<Button isIconOnly>` การมีทั้งสองทางคือสองวิธีทำสิ่งเดียวกัน (หลักเดียวกับ D15) · **`endContent`**: ซ้ำกับ `icon` + `iconPosition="end"` ที่อยู่ใน `propsOursOnly` แล้ว |
 | D32 | `Dialog` ไม่รับ `purpose` · `padding` · `maxHeight` · `position` | `purpose` ของ Astryx พ่วงความหมายอื่นมาด้วย ส่วนของเราคุมแค่ปุ่มปิด (`hideClose` — เขียนไว้ใน propsOursOnly อยู่แล้ว) · `padding`/`maxHeight` เป็นเรื่องเดียวกับ D2 (ขนาดกล่องมาจาก `variant` ไม่ใช่ค่าดิบ) · `position` — `Dialog.md` §3 ตรึงเรขาคณิตต่อ variant ไว้แล้ว (modal กลางจอ · sheet ก้นจอ · drawer ชิดขอบ) เหตุผลเดียวกับ D21 ที่ปฏิเสธ `isInline` |
 | D31 | `Token` ไม่รับ `description` · `endContent` · `isLabelHidden` | `Token.md` §1 นิยามว่าเป็น **คำกรองสั้นคำเดียว** — คำอธิบายและเนื้อหาท้ายทำให้มันกลายเป็นการ์ดเล็ก และ **token ที่ซ่อน label คือแคปซูลเปล่า** ที่ผู้ใช้เดาไม่ได้ว่ากรองอะไร (ต่างจากปุ่มไอคอนที่รูปสื่อความหมายได้เอง) |
 | D30 | `Skeleton` ไม่รับ `height` · `index` | `height` — ความสูงของเรามาจาก `lines` ที่อิง line-height ของสเกลตัวอักษร (`Skeleton.md` §3) การรับค่าดิบเปิดทาง D3 กลับมา · `index` มีไว้ทำ stagger แต่ `Skeleton.md` §4 ตรึงไว้ว่า **ปรากฏทันที ไม่ fade เข้า** และ `base.css §10` บังคับให้เป็นพื้นนิ่งใน reduced motion — การไล่ลำดับจึงไม่มีที่ยืน · ส่วนจำนวนแถบเป็นหน้าที่ของ `SkeletonGroup` |
@@ -230,10 +232,10 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | prop | สถานะ | หมายเหตุ |
 |---|---|---|
 | `IconButton`: `name` → `icon` | รับ — ยังไม่ลงมือ | rename ชุดเดียวกับ `Icon.name` → `icon` (§3) ทำพร้อมกันทีเดียว |
-| `Link.isStandalone` | รับ — ยังไม่ลงมือ | ลิงก์ที่ยืนเดี่ยวนอกย่อหน้าต้องการ hit area ของตัวเอง เป็นข้อมูลที่ call site รู้เท่านั้น |
-| `Link.isExternalLink` | รับ — ยังไม่ลงมือ | rename จาก `external` ของเรา งานเดียวกัน คนละชื่อ |
-| `Link.newTabLabel` | รับ — ยังไม่ลงมือ | คู่กับ `isExternalLink` — คำเตือน "เปิดในแท็บใหม่" ต้องแปลไทยได้ |
-| `Tooltip.content` (แทน `children` ที่เป็นเนื้อ tooltip) | รับ — ยังไม่ลงมือ | แยกเนื้อ tooltip ออกจาก trigger ชัดกว่าเดิม |
+| ~~`Link.isStandalone`~~ | ❌ **กลับคำ → ไม่รับ (D34)** | เหตุผลเดิมผิด — `.d.ts` บอกว่าเป็นเรื่องขนาดตัวอักษร ไม่ใช่ hit area และซ้ำกับ `size` ของเรา |
+| ~~`Link.isExternalLink`~~ | ❌ **กลับคำ → ไม่รับ (D34)** | เหตุผลเดิมผิด — ไม่ใช่ "งานเดียวกัน" · ของเขาบังคับ `target="_blank"` ส่วนของเราตั้งใจไม่ทำ |
+| `Link.newTabLabel` | ✅ **ลงมือแล้ว** | คู่กับ `external` ของเรา — override `s.common.opensInNewTab` ต่อ call site |
+| `Tooltip.content` (แทน `children`) | ✅ **ลงมือแล้ว** | แยกเนื้อ tooltip ออกจาก trigger — `TooltipTrigger` มี `children` ของตัวเองอยู่แล้ว |
 
 #### prop ที่เราเกิน — `propsOursOnly` รอบนี้
 
@@ -277,7 +279,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 19,
+  "maxProblems": 16,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea"
@@ -354,7 +356,8 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Banner": { "defaultIsExpanded": "D13", "container": "D13" },
     "Button": {
       "clickAction": "D8", "isInterruptible": "D8", "tooltip": "D19",
-      "href": "D20", "target": "D20", "rel": "D20"
+      "href": "D20", "target": "D20", "rel": "D20",
+      "label": "D33", "isIconOnly": "D33", "endContent": "D33"
     },
     "IconButton": {
       "tooltip": "D19", "href": "D20", "target": "D20", "rel": "D20",
@@ -362,7 +365,8 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     },
     "Link": {
       "tooltip": "D19", "label": "D20", "color": "D20", "weight": "D20",
-      "display": "D20", "type": "D20", "maxLines": "D20", "hasUnderline": "D20"
+      "display": "D20", "type": "D20", "maxLines": "D20", "hasUnderline": "D20",
+      "isExternalLink": "D34", "isStandalone": "D34"
     },
     "Tooltip": {
       "focusTrigger": "D21", "alignment": "D21",

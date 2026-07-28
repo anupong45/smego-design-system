@@ -206,7 +206,7 @@ describe('Pass A · overlay', () => {
     const { container } = render(
       <TooltipTrigger delay={0}>
         <Button variant="secondary" icon="info">วงเงินสูงสุด</Button>
-        <Tooltip>เพดานที่ขอได้ ไม่ใช่จำนวนที่ได้รับจริง</Tooltip>
+        <Tooltip content="เพดานที่ขอได้ ไม่ใช่จำนวนที่ได้รับจริง" />
       </TooltipTrigger>,
     );
     const results = await expectNoViolations(container);
