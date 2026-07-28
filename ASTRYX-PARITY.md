@@ -7,7 +7,7 @@
 | อ้างอิง Astryx | `@astryxdesign/core@0.1.8` (pinned — ไม่ใช่ canary) |
 | อ้างอิงเรา | `@smego/ui@0.1.0` · 03-components · 02-tokens |
 | วันที่ | 2026-07-27 |
-| สถานะ | **อนุมัติแล้ว 2026-07-28** — ดู §8 สำหรับคำตัดสิน 6 ข้อ — **เฟส 3 (rename ทั้งหมด) เสร็จสมบูรณ์** |
+| สถานะ | **อนุมัติแล้ว 2026-07-28** — ดู §8 สำหรับคำตัดสิน 6 ข้อ — **เฟส 3 (rename 14/14) และเฟส 5 (สร้างใหม่ 6/6) เสร็จสมบูรณ์** · เหลือเฉพาะการตัดสิน prop diff (ดู §6.4) |
 
 ---
 
@@ -59,16 +59,16 @@
 | `Alert` | `Banner` | |
 | `AppHeader` | `TopNav` | ⚠️ ดู §5.8 |
 
-### 1.3 สร้างเพิ่ม 6 ตัว
+### 1.3 สร้างเพิ่ม 6 ตัว — ✅ **ครบทั้ง 6 แล้ว (เฟส 5 · 2026-07-28)**
 
 | ตัวใหม่ | ชื่อ Astryx | เหตุผลจากโค้ดจริง |
 |---|---|---|
 | `EmptyState` | `EmptyState` | ⚠️ **แก้ตัวเลข 2026-07-28** — hand-roll จริง **3 ไฟล์** ไม่ใช่ 8: `Cart.tsx:319` · `Wishlist.tsx:148` · `SearchResult.tsx:93` (โครงเหมือนกันแทบ byte-identical) · `Compare.tsx:115` เป็น `return null` โดยเจตนา ไม่ใช่ empty state · `Checkout` `Payment` `ProductCard` `OrderTimeline` **ไม่มีสาขา empty เลย** |
 | `Pagination` | `Pagination` | มี `SearchResult` แต่ **ไม่มี pagination เลยทั้งระบบ** |
 | `Avatar` | `Avatar` | ⚠️ **แก้เหตุผล 2026-07-28** — `SellerProfile` **ไม่ได้**วาด avatar เอง (รับ `avatar?: ReactNode` เป็น slot ที่ `SellerProfile.tsx:125`) · เหตุผลจริง: ผู้เรียกต้อง hand-roll `<img className="size-12 rounded-full">` ทุกครั้ง (เห็นใน `SellerProfile.md:248`) โดยไม่มีทางถอยเมื่อรูปพัง และ**ไม่มีตัวย่อที่ถูกต้องสำหรับชื่อไทย** (ดู `Avatar.md` §6) |
-| `Spinner` | `Spinner` | ⚠️ ต้องนิยามเขตแดนกับ `Skeleton` ก่อน — ดู §5.9 |
-| `Tabs` | `TabList` | |
-| `SegmentedControl` | `SegmentedControl` | |
+| `Spinner` | `Spinner` | เขตแดนกับ `Skeleton` ตัดสินแล้วใน §8.5 · เขียนไว้ทั้ง `Spinner.md` และ `Skeleton.md` อ้างถึงกัน · **แก้บั๊กที่พบตอนสร้าง**: `TextInput` ใช้ `animate-spin` ที่ไม่อยู่ในรายการ ALLOW ของ `base.css §10` ตัวหมุนจึงค้างนิ่งใน reduced motion |
+| `Tabs` | `TabList` | สร้างบน RAC เต็มตัว (`Tabs`/`TabList`/`Tab`/`TabPanel`) ไม่ใช่แถบเปล่าแบบ Astryx → **D28** · panel ที่ไม่ได้เลือกไม่อยู่ใน DOM |
+| `SegmentedControl` | `SegmentedControl` | ทับซ้อนกับ `TabList`/`RadioList`/`Token` → เขียน **กฎแบ่งเขต 4 ทาง** ไว้ทั้ง `TabList.md` และ `SegmentedControl.md` + cross-link เข้า `RadioList.md`/`Token.md`/`Collapsible.md` |
 
 ### 1.4 ❌ ห้ามเพิ่ม — เคยถูกตัดไปแล้ว
 
@@ -419,7 +419,7 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 | 2 | token: `radius-sm` 6→4 | ✅ เสร็จ |
 | 3 | rename 14 ตัว (`SearchField`, `ImageGallery` ตัดออก) + prop rename ตาม §3 + `label: string` (§8.1) — **หักดิบ ไม่มี `@deprecated` alias** (§8 · 0.2.0) | ✅ เสร็จ 14/14 |
 | 4 | อัปเดต `.md` คู่ + gallery + e2e fixture | ✅ เสร็จควบคู่กับเฟส 3 ทีละตัว |
-| 5 | สร้าง 6 component ใหม่ + `.md` + a11y test | ⬜ |
+| 5 | สร้าง 6 component ใหม่ + `.md` + a11y test | ✅ เสร็จ 6/6 |
 | 6 | **ต่อ `lint:parity` เข้า `npm run verify`** + รัน verify ทั้งชุด | ✅ เสร็จ — เพดานนับถอยหลัง (ดู §4.1) |
 
 **เกตเดียว:** `npm run verify` (typecheck · lint · test · e2e · validate-tokens · **lint:parity ที่เพดานนับถอยหลัง**) — ผ่านทั้งหมดหลังเฟส 3/4/6
@@ -457,6 +457,30 @@ test          ✓ 207/207
 test:e2e      ✓ 40/40
 validate-tokens ✓ ทุกข้อ
 ```
+
+### 6.4 · baseline ตอนจบเฟส 5 (สร้างครบ 6/6)
+
+```
+lint:parity   ✓ คงที่ที่เพดาน 23 — เทียบกับ Astryx 0.1.8
+typecheck     ✓
+lint          ✓ error 0 · warn 1 (h-12 ใน OTPField — มีอยู่ก่อนแล้ว)
+test          ✓ 307/307  (เพิ่ม 99 ข้อจากเฟส 5)
+test:e2e      ✓ 40/40
+validate-tokens ✓ ทุกข้อ
+```
+
+component ใหม่ทั้ง 6 ตัว: `Spinner` · `Avatar` · `EmptyState` · `Pagination` ·
+`TabList` (+`Tab`/`TabPanel`) · `SegmentedControl` (+`SegmentedControlItem`)
+
+#### ⚠️ ทำไมเพดานยังลบทิ้งไม่ได้
+
+§4.1 บอกว่าพอเพดานถึง `0` ให้ลบกลไกนี้ — **ยังไม่ถึง** เพราะ 23 ข้อที่เหลือ
+**ไม่ใช่ component ที่ขาด** แต่เป็น *"ขาด prop ที่ Astryx มี"* บน component
+เดิม 23 ตัว (`Button` `Switch` `Selector` `Typeahead` …) รวมประมาณ 100 prop
+
+นั่นคือ **การตัดสินใจว่าจะรับ prop ไหนบ้าง** ไม่ใช่งานเขียนโค้ด — ต้องอ่าน
+ทีละตัวแล้วเลือกระหว่าง "รับเข้ามา" กับ "ใส่ `wontAdopt` พร้อมรหัส D"
+เป็นงานคนละก้อนกับเฟส 5 และควรทำเป็นรอบของตัวเอง
 
 ### 6.3 · baseline ตอนจบเฟส 3/4/6 (rename ครบ 14/14)
 
