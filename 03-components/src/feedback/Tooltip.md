@@ -18,11 +18,11 @@ component ที่ **ใช้ผิดบ่อยที่สุดในท�
 | ชื่อของปุ่มไอคอน | `aria-label` ผ่าน `<IconButton label>` | tooltip ไม่ใช่ชื่อ accessible |
 | ข้อความยาวกว่า 2 บรรทัด | `<Dialog>` | อ่านไม่ทันก่อนเมาส์เลื่อนออก |
 | มีลิงก์หรือปุ่มข้างใน | `<Dialog>` | ผู้ใช้คีย์บอร์ดเข้าไปถึงไม่ได้ |
+| ข้อความผิดพลาดในฟอร์ม | `status` prop ของ field | ต้องอยู่ถาวรและเชื่อม `aria-describedby` |
 
 > **ทำไมถึงเป็น `<Dialog>` ไม่ใช่ `<Popover>`** — ระบบนี้**ไม่มี** `Popover` เป็น component ของตัวเอง (`ASTRYX-PARITY.md` §1.4 ตัดออกโดยเจตนา) สิ่งที่ต้องการจริงคือ **ที่เก็บเนื้อหาที่เปิดด้วยการกดและเก็บ focus ไว้ได้** ซึ่ง `<Dialog>` ให้ครบแล้ว
 >
 > ถ้าจำเป็นต้องได้ popover ที่ลอยติดกับ trigger จริง ๆ ใช้ทางหนี `@smego/ui/primitives` ซึ่งเปิด RAC ทั้งชุด แล้วรับผิดชอบ a11y เองตามที่ §5 เขียนไว้
-| ข้อความผิดพลาดในฟอร์ม | `errorMessage` prop | ต้องอยู่ถาวรและเชื่อม `aria-describedby` |
 
 **⚠️ ในระบบนี้เนื้อหาส่วนใหญ่เป็นข้อมูลจำเป็น** — เงื่อนไขคุณสมบัติของโครงการ · สัดส่วนร่วมจ่ายของแหล่งทุน · เกณฑ์การรับรอง สิ่งเหล่านี้ **ห้ามอยู่ใน tooltip**
 
@@ -175,7 +175,7 @@ Component set **`Tooltip`**
 |---|---|
 | `Placement` | `Top` · `Bottom` · `Start` · `End` |
 
-**ไม่มี `Variant` property** — ถ้ามีคนขอ tooltip สีแดงสำหรับ error ให้ชี้ไปที่ `errorMessage` ของ field
+**ไม่มี `Variant` property** — ถ้ามีคนขอ tooltip สีแดงสำหรับ error ให้ชี้ไปที่ `status` ของ field
 
 **ต้องมีหมายเหตุใน description:**
 
@@ -230,7 +230,7 @@ Component set **`Tooltip`**
 | `data-entering:animate-[slide-up]` | fade อย่างเดียว | transform ใกล้จุดจ้อง = กระตุ้นระบบทรงตัว |
 | tooltip ยาว 4 บรรทัด | `<Dialog>` | อ่านไม่ทันก่อนเมาส์เลื่อนออก |
 | `delay={0}` | `delay={200}` ขึ้นไป | tooltip โผล่ทุกครั้งที่เมาส์ผ่านคือเสียงรบกวน |
-| tooltip แสดงข้อความ error | `errorMessage` prop | error ต้องอยู่ถาวรและเชื่อม `aria-describedby` |
+| tooltip แสดงข้อความ error | `status` prop ของ field | error ต้องอยู่ถาวรและเชื่อม `aria-describedby` |
 
 ---
 
