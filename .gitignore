@@ -1,0 +1,15 @@
+# tailwindcss ถูกติดตั้งที่ root เพราะ 02-tokens/theme.css มี
+# `@import "tailwindcss"` และ node resolve จากไฟล์ที่ import
+# จึงไล่ขึ้นจาก 02-tokens/ ซึ่งไม่เจอ node_modules ของ 03-components
+node_modules/
+package-lock.json
+
+# ผลลัพธ์ที่ generate ได้ — สร้างใหม่ได้ด้วย gallery:build / build:fixture
+03-components/gallery/gallery.js
+03-components/gallery/gallery.css
+03-components/tests/e2e/fixture/app.js
+03-components/tests/e2e/fixture/app.css
+03-components/playwright-report/
+03-components/test-results/
+
+.DS_Store

@@ -1,0 +1,266 @@
+# Checkbox · CheckboxGroup
+
+**`@smego/ui`** · ชั้น 03 · [Checkbox.tsx](./Checkbox.tsx)
+
+---
+
+## 1 · ภาพรวม
+
+เลือกได้ **หลายตัวพร้อมกัน** หรือเปิด/ปิดข้อเดียว
+
+ความต่างเชิงโครงสร้างจาก `RadioGroup` ที่สำคัญที่สุด: checkbox **ไม่ใช้ roving tabindex** — แต่ละตัวเป็น tab stop ของตัวเอง
+
+### ❌ เมื่อไรที่ไม่ควรใช้
+
+| สถานการณ์ | ใช้อะไรแทน | เหตุผล |
+|---|---|---|
+| เลือกได้ข้อเดียว | `<RadioGroup>` | checkbox บอกผู้ใช้ว่าเลือกหลายข้อได้ |
+| เปิด/ปิดที่มีผลทันที | `<Switch>` (Pass 2) | checkbox สื่อ "จะมีผลเมื่อกดบันทึก" |
+| ตัวกรองในหน้ารายการ | `<Chip>` | ตัวกรองต้องเห็นค้างและลบได้ทีละอัน |
+| เลือกจาก 20+ ตัวเลือก | `<ComboBox multiple>` (Pass 2) | รายการยาวเกินกว่าจะสแกนด้วยตา |
+
+---
+
+## 2 · React API
+
+```tsx
+import { Checkbox, CheckboxGroup } from '@smego/ui';
+
+<CheckboxGroup label="ใบรับรองที่มี" description="เลือกได้มากกว่าหนึ่ง">
+  <Checkbox value="tis">มาตรฐานผลิตภัณฑ์อุตสาหกรรม</Checkbox>
+  <Checkbox value="halal" description="สำหรับสินค้าอาหารและเครื่องดื่ม">ฮาลาล</Checkbox>
+</CheckboxGroup>
+```
+
+### Checkbox
+
+| prop | type | ค่าเริ่มต้น | หมายเหตุ |
+|---|---|---|---|
+| `children` | `ReactNode` | — | ไม่มีเมื่อใช้ `aria-label` แทน |
+| `description` | `string` | — | คำอธิบายใต้ข้อความ |
+| `value` | `string` | — | จำเป็นเมื่ออยู่ใน group |
+| `isSelected` / `defaultSelected` | `boolean` | — | จาก RAC |
+| `isIndeterminate` | `boolean` | `false` | ดู §3 |
+| `isDisabled` / `isInvalid` | `boolean` | `false` | จาก RAC |
+| `onChange` | `(isSelected: boolean) => void` | — | |
+
+### CheckboxGroup
+
+| prop | type | ค่าเริ่มต้น | หมายเหตุ |
+|---|---|---|---|
+| `label` | `string` | — | **บังคับ** |
+| `description` | `string` | — | |
+| `errorMessage` | `string` | — | มีค่า = invalid |
+| `showOptional` | `boolean` | `false` | |
+| `value` / `onChange` | `string[]` | — | จาก RAC |
+
+`validationBehavior` ถอดออกจาก type — `"aria"` ตายตัว
+
+---
+
+## 3 · Variants
+
+Checkbox ไม่มี visual variant — มีแค่ **สถานะ** ซึ่งอยู่ใน §4
+
+| ส่วน | ค่า |
+|---|---|
+| กล่อง | `size-5` (20px) · `rounded-(--radius-sm)` |
+| ขอบตอนไม่เลือก | `border-edge-strong` (4.20:1) |
+| พื้นตอนเลือก | `bg-primary-600` · `text-on-brand` |
+| ข้อความ | `text-body-sm` |
+| คำอธิบาย | `text-caption text-fg-muted` |
+
+### ★★ indeterminate ต้องมี **รูปทรง** ต่างจาก checked (SC 1.4.1)
+
+```
+checked        →  Icon "check"  (เครื่องหมายถูก)
+indeterminate  →  Icon "minus"  (ขีดกลาง)
+```
+
+**ไม่ใช่แค่สีอ่อนกว่า** — ผู้ใช้ที่แยกสีไม่ได้ต้องบอกความต่างได้
+
+---
+
+## 4 · States
+
+| state | ที่มา | กล่อง |
+|---|---|---|
+| default | — | `border-edge-strong` · `bg-surface` |
+| hover | `group-data-hovered` | `border-fg-muted` (เฉพาะตอนยังไม่เลือก) |
+| focus-visible | `data-focus-visible` | วงแหวน 2 ชั้นจาก `base.css` |
+| **selected** | `isSelected` | `bg-primary-600` + ✓ |
+| **indeterminate** | `isIndeterminate` | `bg-primary-600` + − |
+| invalid | `isInvalid` | `border-edge-danger` |
+| disabled | `isDisabled` | `border-edge` · `bg-sunken` · `text-fg-disabled` |
+
+### ★ hover เปลี่ยนเฉพาะตอนยังไม่เลือก
+
+ตอนเลือกแล้วพื้นเป็นสีแบรนด์อยู่ การเปลี่ยนขอบไม่มีใครเห็น — และการเปลี่ยนพื้นให้เข้มขึ้นจะดูเหมือนสถานะที่สามที่ไม่มีอยู่จริง
+
+---
+
+## 5 · Accessibility
+
+| เรื่อง | ข้อกำหนด |
+|---|---|
+| role | `checkbox` จาก RAC (native input ที่ visually-hidden) |
+| keyboard | **Space** สลับสถานะ · **Tab เข้าทุกตัว** ไม่ใช่ roving |
+| **SC 2.5.8** | เป้ารวม = ทั้งแถว — วัดได้ **44–68px สูง** |
+| **SC 1.4.11** | ขอบกล่อง `edge-strong` = 4.20:1 ✅ |
+| **SC 1.4.1** | indeterminate ต่างที่รูปทรง |
+| **SC 3.3.1** | error มีข้อความ ไม่ใช่แค่ขอบแดง |
+| **SC 1.3.1** | `CheckboxGroup` → `role="group"` + `aria-labelledby` จาก RAC |
+
+### ★★ เป้ากดคือ **ทั้งแถว** ไม่ใช่แค่กล่อง 20px
+
+`<label>` ครอบทั้งกล่องและข้อความ ดังนั้นพื้นที่กดคือทั้งแถว
+
+**วัดจริงในเบราว์เซอร์:** 600×44px (บรรทัดเดียว) และ 600×68px (มีคำอธิบาย) — ผ่าน SC 2.5.8 อย่างสบาย
+
+### ⚠️ checkbox โดด ๆ ไม่มีข้อความ
+
+เช่นในหัวตารางเพื่อ "เลือกทั้งหมด" เป้าจะเหลือ **20×20** ซึ่งต่ำกว่าเกณฑ์
+
+component ใส่ **`p-1` เสมอ** (ไม่ใช่เฉพาะเคสนี้) → **28×28** ✓
+
+ใส่เสมอเพราะกฎที่ต้องจำว่า "เคสไหนต้องเพิ่ม" คือกฎที่จะถูกลืม
+
+`CheckboxGroup` ชดเชยด้วย `-ms-1` เพื่อให้กล่องตรงแนวกับ label ด้านบน
+
+### ★★ checkbox ไม่ใช้ roving tabindex — ต่างจาก radio
+
+แต่ละตัวเป็น **tab stop ของตัวเอง** เพราะเลือกได้หลายตัวพร้อมกัน (ข้อ 10 §1.2)
+
+ถ้าใช้ roving ผู้ใช้คีย์บอร์ดจะเลือกตัวที่ 3 และ 5 ไม่ได้โดยไม่ผ่านตัวที่ 4
+
+RAC จัดการให้ถูกอยู่แล้ว — **ห้ามใส่ `tabIndex` เอง**
+
+---
+
+## 6 · Tailwind implementation
+
+```ts
+const boxBase = [
+  'flex shrink-0 items-center justify-center',
+  'size-5',
+  'rounded-(--radius-sm)',
+  'border',
+  'transition-colors duration-fast ease-standard',
+].join(' ');
+```
+
+```tsx
+<RACCheckbox className={cn(
+  'group flex min-w-0 items-start gap-2',
+  'p-1',                                  /* ← 20 + 8 = 28×28 แม้ไม่มีข้อความ */
+  'cursor-pointer data-disabled:cursor-not-allowed',
+)}>
+  {({ isSelected, isIndeterminate, isDisabled, isInvalid }) => (
+    <span className={cn(
+      boxBase,
+      !isSelected && !isIndeterminate && 'border-edge-strong bg-surface',
+      (isSelected || isIndeterminate) && 'border-primary-outline bg-primary-600 text-on-brand',
+      isInvalid && 'border-edge-danger',
+      isDisabled && 'border-edge bg-sunken text-fg-disabled',
+      !isSelected && !isDisabled && 'group-data-hovered:border-fg-muted',
+    )}>
+      {isIndeterminate ? <Icon name="minus" size={16} />
+        : isSelected ? <Icon name="check" size={16} /> : null}
+    </span>
+  )}
+</RACCheckbox>
+```
+
+ใช้ **render prop** ไม่ใช่ `data-*` class เพราะต้องสลับ **ไอคอน** ตามสถานะ ซึ่ง CSS ทำไม่ได้
+
+---
+
+## 7 · Figma Variant
+
+Component set **`Checkbox`**
+
+| Property | Values |
+|---|---|
+| `State` | `Default` · `Hover` · **`Focus`** · `Disabled` |
+| `Checked` | `Unchecked` · `Checked` · **`Indeterminate`** |
+| `Label` | `True` · `False` |
+| `Description` | `True` · `False` |
+| `Invalid` | `True` · `False` |
+
+**`Indeterminate` ต้องใช้ขีดกลาง ไม่ใช่เครื่องหมายถูกสีจาง** — ถ้า Figma ใช้สีจาง นักพัฒนาจะทำตามและตก SC 1.4.1
+
+**ต้องมี frame ที่แสดงพื้นที่กด** (overlay สีโปร่ง) ครอบทั้งแถว เพื่อให้เห็นว่าเป้าไม่ใช่แค่กล่อง 20px
+
+Component set **`CheckboxGroup`** แยกต่างหาก — property `Error`, `Description`, `Optional`
+
+---
+
+## 8 · Usage
+
+```tsx
+<CheckboxGroup
+  label="ใบรับรองที่มี"
+  description="เลือกได้มากกว่าหนึ่ง"
+  value={certs}
+  onChange={setCerts}
+  errorMessage={certs.length === 0 ? 'กรุณาเลือกอย่างน้อยหนึ่งรายการ — ใบรับรองเป็นข้อมูลที่ผู้ซื้อใช้ตัดสินใจ' : undefined}
+>
+  <Checkbox value="tis">มาตรฐานผลิตภัณฑ์อุตสาหกรรม (มอก.)</Checkbox>
+  <Checkbox value="halal" description="สำหรับสินค้าอาหารและเครื่องดื่ม">ฮาลาล</Checkbox>
+  <Checkbox value="gmp" isDisabled>จีเอ็มพี — ต้องยืนยันตัวตนก่อน</Checkbox>
+</CheckboxGroup>
+```
+
+```tsx
+// เลือกทั้งหมดในหัวตาราง — ไม่มีข้อความ ต้องมี aria-label
+<Checkbox
+  aria-label="เลือกสินค้าทั้งหมดในหน้านี้"
+  isSelected={allSelected}
+  isIndeterminate={someSelected && !allSelected}
+  onChange={toggleAll}
+/>
+```
+
+```tsx
+// ยอมรับเงื่อนไข — label เป็นข้อความยาวที่มีลิงก์ได้
+<Checkbox value="terms" isRequired>
+  ข้าพเจ้ายอมรับ <Link href="/terms">ข้อกำหนดการใช้งาน</Link> และ{' '}
+  <Link href="/privacy">นโยบายความเป็นส่วนตัว</Link>
+</Checkbox>
+```
+
+---
+
+## 9 · Anti-patterns
+
+| ❌ | ✅ | ทำไม |
+|---|---|---|
+| `<Checkbox>` สำหรับเลือกข้อเดียว | `<RadioGroup>` | รูปทรงสี่เหลี่ยมสื่อ "เลือกหลายข้อได้" |
+| `<Checkbox>` ที่มีผลทันที | `<Switch>` | checkbox สื่อว่าต้องกดบันทึก |
+| indeterminate = ✓ สีจาง | `Icon "minus"` | ไม่ผ่าน SC 1.4.1 |
+| `<Checkbox className="p-0">` | ปล่อยตามค่าเริ่มต้น | checkbox โดด ๆ จะเหลือ 20×20 |
+| `tabIndex={-1}` บน checkbox ในกลุ่ม | ปล่อยให้ RAC จัดการ | roving ทำให้เลือกข้ามตัวไม่ได้ |
+| `border-neutral-300` | `border-edge-strong` | 1.56:1 ไม่ผ่าน SC 1.4.11 |
+| `<Checkbox>` ไม่มีทั้ง children และ `aria-label` | ใส่อย่างใดอย่างหนึ่ง | screen reader อ่านว่า "ช่องทำเครื่องหมาย" เฉย ๆ |
+| `<Checkbox>` เป็นตัวกรองในหน้ารายการ | `<Chip>` | ตัวกรองต้องเห็นค้างและลบทีละอันได้ |
+| ขอบแดงอย่างเดียวตอน invalid | + `errorMessage` | SC 3.3.1 |
+
+---
+
+## 10 · Quality Checklist
+
+**หลักฐาน ไม่ใช่ความตั้งใจ** — ทุกแถวชี้ไปที่หัวข้อในไฟล์นี้หรือชื่อเทสที่รันได้จริง ไม่มีแถวไหนอธิบายพฤติกรรมซ้ำ (นั่นคืองานของ §4 และ §5)
+
+| รายการ | สถานะ | หลักฐาน |
+|---|---|---|
+| การเข้าถึง (Accessibility) | ✅ | §5 · axe ผ่านใน `a11y/primitives.test.tsx` และ `a11y/marketplace.test.tsx` |
+| ตอบสนอง (Responsive) | ✅ | `min-w-0` ที่ label — ข้อความยินยอมยาว ๆ ตัดบรรทัดแทนดันกล่อง · เป้ากด ≥24×24 ทุก breakpoint (SC 2.5.8) |
+| โหมดมืด (Dark Mode) | ✅ | `lint-classes.mjs` 0 จุด — ทุกสีมาจาก token ที่ override ในโหมดมืดแล้ว |
+| คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | ใช้คู่ `ms-`/`me-` อยู่แล้ว · `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
+| คีย์บอร์ด (Keyboard) | ✅ | §4 `focus-visible` · `Space` สลับค่า · `Tab` เข้า/ออกทีละช่อง |
+| กำลังโหลด (Loading) | — | ช่องติ๊กไม่รอ API · สถานะกำลังส่งอยู่ที่ปุ่มยืนยันของฟอร์ม |
+| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `errorMessage` เป็นข้อความ ไม่ใช่แค่ขอบแดง (SC 3.3.1) |
+| ว่างเปล่า (Empty) | — | ช่องติ๊กมีค่าเสมอ (ติ๊ก/ไม่ติ๊ก/indeterminate) — ไม่มีสถานะ "ไม่มีข้อมูล" |
+| Skeleton | — | กล่องติ๊ก 24px ไม่ใช่เนื้อหาที่ต้องมีตัวแทนระหว่างโหลด |
+| การเคลื่อนไหว (Animation) | ✅ | `base.css §10` ครอบ `*` ด้วย `!important` — ไม่มีการเคลื่อนไหวที่หลุดตัวกัน (`lint-quality.mjs` 0 จุด) |
+| ประสิทธิภาพ (Performance) | ✅ | animate เฉพาะสี · ไม่มีความสูงตายตัว |

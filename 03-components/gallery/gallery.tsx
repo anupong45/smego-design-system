@@ -1,0 +1,789 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   SME.GO Component Library — หน้าเดียวจบ ดู component ทุกตัวได้ในเบราว์เซอร์
+
+       npm run gallery          # build + เปิด server ที่ :4400
+       npm run gallery:build    # build อย่างเดียว
+
+   ไฟล์นี้ import จาก ../src/index โดยตรง — ไม่มี copy, ไม่มี mock
+   เห็นอะไรที่นี่ = ของจริงจาก @smego/ui
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+import { useState, type ReactNode } from 'react';
+import { createRoot } from 'react-dom/client';
+import {
+  SmeGoProvider, ToastRegion, showToast,
+  Stack, HStack, Grid, Container, Divider,
+  Icon, iconRegistry, type IconName,
+  Button, IconButton, Link, TextField, Textarea, Checkbox, CheckboxGroup,
+  Radio, RadioGroup, RangeSlider, DatePicker, OTPField, NumberField,
+  SearchField, Switch, Select, ComboBox, FileUpload,
+  Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
+  Accordion, AccordionItem, ImageGallery, DescriptionList,
+  Alert, ProgressBar, Skeleton, SkeletonText, Dialog, DialogTrigger,
+  Tooltip, TooltipTrigger,
+  AppHeader,
+  EntityCard, EntityAmount, EntityMeta, DeadlineBadge, DeadlineText,
+  ProductCard, ServiceCard, ProgramCard, GrantCard, FundingCard,
+  BusinessCard, TrainingCard, SearchResult,
+  FilterPanel, FilterChipRow, CategoryNav, CategoryBreadcrumb,
+  CheckoutSummary, CheckoutStepper, BuyBox,
+  CartList, CartSellerGroup, CartLineItem, CartDrawer,
+  PaymentMethodSelect, PromptPayQR, SlipUpload,
+  OrderTimeline, SaveButton, WishlistGrid, WishlistHeader,
+  SellerProfile, CertificationBadge, CompareBar, CompareTable,
+} from '../src/index';
+
+/* ── โครงหน้า ─────────────────────────────────────────────────────────────── */
+
+const PX = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 3"><rect width="4" height="3" fill="%23cbd5e1"/></svg>'
+);
+
+function Thumb({ ratio = 'aspect-4/3' }: { ratio?: string }) {
+  return <img src={PX} alt="" className={`${ratio} w-full object-cover`} />;
+}
+
+/** หนึ่ง component = หนึ่ง Specimen — มีหัวข้อ คำอธิบาย และตัวอย่าง */
+function Specimen({
+  name, note, children, wide = false,
+}: { name: string; note?: string; children: ReactNode; wide?: boolean }) {
+  return (
+    <section id={slug(name)} className="scroll-mt-24">
+      <div className="mb-3">
+        <h3 className="text-h4 text-fg">{name}</h3>
+        {note && <p className="text-caption text-fg-muted mt-1">{note}</p>}
+      </div>
+      <div className={`rounded-(--radius-container) border border-edge bg-surface p-4 md:p-6 ${wide ? '' : 'max-w-2xl'}`}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+/** แถวย่อยในหนึ่ง Specimen — ใช้โชว์ variant */
+function Row({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="grid gap-2 py-3 first:pt-0 last:pb-0 border-b border-edge-subtle last:border-b-0">
+      <span className="text-caption text-fg-muted font-mono">{label}</span>
+      <div className="flex flex-wrap items-start gap-3">{children}</div>
+    </div>
+  );
+}
+
+function Group({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+  return (
+    <section id={id} className="scroll-mt-24 grid gap-8">
+      <div>
+        <h2 className="text-h2 text-fg">{title}</h2>
+        <Divider />
+      </div>
+      {children}
+    </section>
+  );
+}
+
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+/* ── หมวด 1 · Foundations ─────────────────────────────────────────────────── */
+
+const ICON_NAMES = Object.keys(iconRegistry) as IconName[];
+
+function Foundations() {
+  return (
+    <Group id="foundations" title="1 · Foundations">
+      <Specimen name="Icon" note={`${ICON_NAMES.length} ตัวใน registry — ขนาด 16 / 20 / 24`} wide>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(7rem,1fr))] gap-3">
+          {ICON_NAMES.map((n) => (
+            <div key={n} className="grid justify-items-center gap-1 rounded-(--radius-control) border border-edge-subtle p-3">
+              <Icon name={n} size={24} />
+              <span className="text-caption text-fg-muted font-mono text-center break-all">{n}</span>
+            </div>
+          ))}
+        </div>
+      </Specimen>
+
+      <Specimen name="Stack / HStack" note="flex wrapper — direction · gap · align · justify · wrap">
+        <Stack gap="3">
+          <HStack gap="2"><Badge>หนึ่ง</Badge><Badge>สอง</Badge><Badge>สาม</Badge></HStack>
+          <HStack gap="6" justify="between"><span className="text-body">ซ้าย</span><span className="text-body">ขวา</span></HStack>
+        </Stack>
+      </Specimen>
+
+      <Specimen name="Grid" note="preset: product · cards · split · sidebar" wide>
+        <Grid preset="cards">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} padding="sm"><span className="text-body">การ์ด {i}</span></Card>
+          ))}
+        </Grid>
+      </Specimen>
+
+      <Specimen name="Divider" note="horizontal · vertical">
+        <Stack gap="3">
+          <Divider />
+          <HStack gap="3" align="center">
+            <span className="text-body">ก</span><Divider orientation="vertical" /><span className="text-body">ข</span>
+          </HStack>
+        </Stack>
+      </Specimen>
+    </Group>
+  );
+}
+
+/* ── หมวด 2 · Inputs ──────────────────────────────────────────────────────── */
+
+function Inputs() {
+  const [text, setText] = useState('');
+  const [checked, setChecked] = useState(true);
+  const [radio, setRadio] = useState('a');
+  const [range, setRange] = useState<[number, number]>([20000, 180000]);
+  const [otp, setOtp] = useState('');
+  const [num, setNum] = useState(3);
+  const [q, setQ] = useState('');
+  const [on, setOn] = useState(true);
+  const [sel, setSel] = useState<string | null>('bkk');
+  const [files, setFiles] = useState<{ id: string; name: string; size: number }[]>([]);
+
+  const provinces = [
+    { id: 'bkk', label: 'กรุงเทพมหานคร' },
+    { id: 'cnx', label: 'เชียงใหม่' },
+    { id: 'kkn', label: 'ขอนแก่น', description: 'ภาคตะวันออกเฉียงเหนือ' },
+    { id: 'hdy', label: 'สงขลา', isDisabled: true },
+  ];
+
+  return (
+    <Group id="inputs" title="2 · Inputs">
+      <Specimen name="Button" note="6 variant × 4 size · icon · loading · disabled">
+        <Row label="variant">
+          <Button variant="primary">หลัก</Button>
+          <Button variant="secondary">รอง</Button>
+          <Button variant="ghost">โปร่ง</Button>
+          <Button variant="danger">ลบ</Button>
+          <Button variant="success">ยืนยัน</Button>
+          <Button variant="accent">เน้น</Button>
+        </Row>
+        <Row label="size">
+          <Button size="xs">xs</Button><Button size="sm">sm</Button>
+          <Button size="md">md</Button><Button size="lg">lg</Button>
+        </Row>
+        <Row label="icon">
+          <Button icon="search">ค้นหา</Button>
+          <Button icon="chevron-right" iconPosition="end" variant="secondary">ถัดไป</Button>
+        </Row>
+        <Row label="state">
+          <Button isLoading>กำลังบันทึก</Button>
+          <Button isDisabled>ปิดใช้งาน</Button>
+          <Button fullWidth variant="secondary">เต็มความกว้าง</Button>
+        </Row>
+      </Specimen>
+
+      <Specimen name="IconButton" note="ต้องมี label เสมอ · ghost / outline / solid">
+        <Row label="variant">
+          <IconButton name="search" label="ค้นหา" />
+          <IconButton name="menu" label="เมนู" variant="outline" />
+          <IconButton name="x" label="ปิด" variant="solid" />
+        </Row>
+        <Row label="size">
+          <IconButton name="more-vertical" label="เพิ่มเติม" size="sm" />
+          <IconButton name="more-vertical" label="เพิ่มเติม" size="md" />
+          <IconButton name="more-vertical" label="เพิ่มเติม" size="lg" />
+        </Row>
+      </Specimen>
+
+      <Specimen name="Link" note="ภายใน · ภายนอก (มีไอคอน + คำเตือน) · quiet">
+        <Row label="variant">
+          <Link href="#inputs">ลิงก์ภายใน</Link>
+          <Link href="https://www.sme.go.th" external>เว็บไซต์ สสว.</Link>
+          <Link href="#inputs" quiet>แบบเงียบ</Link>
+        </Row>
+      </Specimen>
+
+      <Specimen name="TextField / Textarea" note="label · description · error · prefix · size">
+        <Stack gap="4">
+          <TextField label="ชื่อกิจการ" value={text} onChange={setText} placeholder="เช่น ร้านกาแฟดอยคำ" description="ตามที่จดทะเบียน" />
+          <TextField label="เลขนิติบุคคล" errorMessage="ต้องมี 13 หลัก" defaultValue="012" />
+          <TextField label="ราคา" prefix="฿" size="lg" defaultValue="1250000" />
+          <TextField label="อีเมล" showOptional />
+          <Textarea label="รายละเอียดสินค้า" rows={3} placeholder="อธิบายสั้น ๆ" />
+          <TextField label="ปิดใช้งาน" isDisabled defaultValue="แก้ไขไม่ได้" />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="Checkbox / CheckboxGroup">
+        <Stack gap="4">
+          <Checkbox isSelected={checked} onChange={setChecked} description="ระบบจะบันทึกไว้ในบัญชีของคุณ">
+            จดจำการค้นหานี้
+          </Checkbox>
+          <CheckboxGroup label="มาตรฐานที่ต้องการ" description="เลือกได้มากกว่าหนึ่ง">
+            <Checkbox value="gmp">GMP</Checkbox>
+            <Checkbox value="haccp">HACCP</Checkbox>
+            <Checkbox value="halal">ฮาลาล</Checkbox>
+          </CheckboxGroup>
+          <CheckboxGroup label="ประเภท" errorMessage="เลือกอย่างน้อยหนึ่งรายการ">
+            <Checkbox value="a">สินค้า</Checkbox>
+            <Checkbox value="b">บริการ</Checkbox>
+          </CheckboxGroup>
+        </Stack>
+      </Specimen>
+
+      <Specimen name="RadioGroup" note="layout inline · card · แนวนอน">
+        <Stack gap="5">
+          <RadioGroup label="รูปแบบการรับสินค้า" value={radio} onChange={setRadio}>
+            <Radio value="a" description="ส่งภายใน 3–5 วันทำการ">จัดส่ง</Radio>
+            <Radio value="b" description="รับที่โรงงาน จ.เชียงใหม่">รับเอง</Radio>
+          </RadioGroup>
+          <RadioGroup label="ขนาดกิจการ" orientation="horizontal" defaultValue="s">
+            <Radio value="s">เล็ก</Radio><Radio value="m">กลาง</Radio><Radio value="l">ใหญ่</Radio>
+          </RadioGroup>
+          <RadioGroup label="แผนการใช้งาน" defaultValue="free">
+            <Radio value="free" layout="card" description="ลงสินค้าได้ 10 รายการ" endSlot={<Badge variant="success">ฟรี</Badge>}>เริ่มต้น</Radio>
+            <Radio value="pro" layout="card" description="ไม่จำกัดรายการ + สถิติ" endSlot={<span className="text-body-strong">฿590/เดือน</span>}>มืออาชีพ</Radio>
+          </RadioGroup>
+        </Stack>
+      </Specimen>
+
+      <Specimen name="RangeSlider" note="สองหัวจับ · หน่วยไทย">
+        <RangeSlider label="ช่วงราคา" value={range} onChange={setRange} minValue={0} maxValue={500000} step={5000} unit="บาท" />
+      </Specimen>
+
+      <Specimen name="DatePicker" note="ปฏิทินพุทธศักราช (พ.ศ.)">
+        <DatePicker label="วันปิดรับสมัคร" description="เลือกจากปฏิทิน พ.ศ." />
+      </Specimen>
+
+      <Specimen name="OTPField" note="6 หลัก · วางทั้งชุดได้ (SC 3.3.8)">
+        <OTPField label="รหัสยืนยัน" value={otp} onChange={setOtp} description="ส่งไปที่เบอร์ลงท้าย 4567" />
+      </Specimen>
+
+      <Specimen name="NumberField / SearchField / Switch">
+        <Stack gap="4">
+          <NumberField label="จำนวน" value={num} onChange={setNum} minValue={1} suffix="ชิ้น" />
+          <NumberField label="ไม่มีปุ่มเพิ่ม-ลด" defaultValue={12} hideStepper suffix="กก." />
+          <SearchField label="ค้นหาสินค้า" value={q} onChange={setQ} placeholder="เครื่องคั่วกาแฟ" />
+          <Switch isSelected={on} onChange={setOn} description="แจ้งเตือนเมื่อมีคำสั่งซื้อใหม่">รับการแจ้งเตือน</Switch>
+        </Stack>
+      </Specimen>
+
+      <Specimen name="Select / ComboBox" note="Select = เลือกจากรายการ · ComboBox = พิมพ์กรองได้">
+        <Stack gap="4">
+          <Select label="จังหวัด" options={provinces} selectedKey={sel} onSelectionChange={(k) => setSel(k as string)} />
+          <Select label="หมวดหมู่" options={provinces} placeholder="เลือกหมวดหมู่" errorMessage="กรุณาเลือกหมวดหมู่" />
+          <ComboBox label="ค้นหาจังหวัด" options={provinces} description="พิมพ์เพื่อกรอง" />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="FileUpload" note="ลากวาง · จำกัดชนิดและขนาด">
+        <FileUpload
+          label="เอกสารรับรอง"
+          description="PDF หรือรูปภาพ ไม่เกิน 5 MB"
+          accept={['application/pdf', 'image/*']}
+          maxSizeMb={5}
+          multiple
+          files={files}
+          onSelect={(fs) => setFiles((p) => [...p, ...fs.map((f, i) => ({ id: `${f.name}-${i}`, name: f.name, size: f.size }))])}
+          onRemove={(id) => setFiles((p) => p.filter((f) => f.id !== id))}
+        />
+      </Specimen>
+    </Group>
+  );
+}
+
+/* ── หมวด 3 · Data display ────────────────────────────────────────────────── */
+
+function DataDisplay() {
+  const [chips, setChips] = useState(['GMP', 'ฮาลาล', 'เชียงใหม่']);
+
+  return (
+    <Group id="data-display" title="3 · Data display">
+      <Specimen name="Card" note="elevation flat · raised · floating · overlay">
+        <Row label="elevation">
+          <Card elevation="flat" padding="sm">flat</Card>
+          <Card elevation="raised" padding="sm">raised</Card>
+          <Card elevation="floating" padding="sm">floating</Card>
+        </Row>
+        <Row label="interactive / selected">
+          <Card interactive padding="sm">คลิกได้</Card>
+          <Card selected padding="sm">ถูกเลือก</Card>
+        </Row>
+        <Row label="CardMedia">
+          <Card padding="none" className="w-56">
+            <CardMedia position="top"><Thumb /></CardMedia>
+            <div className="p-4 text-body">มีภาพด้านบน</div>
+          </Card>
+        </Row>
+      </Specimen>
+
+      <Specimen name="Badge / Dot">
+        <Row label="variant">
+          <Badge variant="neutral">ทั่วไป</Badge>
+          <Badge variant="info">ข้อมูล</Badge>
+          <Badge variant="success">เปิดรับ</Badge>
+          <Badge variant="warning">ใกล้ปิด</Badge>
+          <Badge variant="danger">ปิดแล้ว</Badge>
+          <Badge variant="accent">แนะนำ</Badge>
+        </Row>
+        <Row label="showIcon">
+          <Badge variant="success" showIcon>ยืนยันตัวตนแล้ว</Badge>
+          <Badge variant="warning" showIcon>รอตรวจสอบ</Badge>
+        </Row>
+        <Row label="Dot">
+          <Dot variant="success" label="ออนไลน์" />
+          <Dot variant="warning" label="ไม่อยู่" />
+          <Dot variant="danger" label="ออฟไลน์" />
+        </Row>
+      </Specimen>
+
+      <Specimen name="Chip / RemovableChip / ChipRow">
+        <Row label="Chip">
+          <Chip>ทั้งหมด</Chip>
+          <Chip isSelected>อาหารแปรรูป</Chip>
+          <Chip icon="map-pin">ภาคเหนือ</Chip>
+        </Row>
+        <Row label="ChipRow + RemovableChip">
+          <ChipRow label="ตัวกรองที่ใช้อยู่">
+            {chips.map((c) => (
+              <RemovableChip key={c} label={`ลบตัวกรอง ${c}`} onRemove={() => setChips((p) => p.filter((x) => x !== c))}>
+                {c}
+              </RemovableChip>
+            ))}
+          </ChipRow>
+        </Row>
+      </Specimen>
+
+      <Specimen name="Accordion">
+        <Accordion>
+          <AccordionItem id="a" title="เอกสารที่ต้องเตรียม">
+            <p className="text-body">สำเนาหนังสือรับรองนิติบุคคล · ภ.พ.20 · งบการเงินปีล่าสุด</p>
+          </AccordionItem>
+          <AccordionItem id="b" title="ระยะเวลาพิจารณา">
+            <p className="text-body">ประมาณ 15 วันทำการนับจากวันที่เอกสารครบถ้วน</p>
+          </AccordionItem>
+        </Accordion>
+      </Specimen>
+
+      <Specimen name="DescriptionList" note="stacked · inline · divided · numeric">
+        <Stack gap="5">
+          <DescriptionList
+            layout="inline"
+            divided
+            items={[
+              { label: 'เลขทะเบียนนิติบุคคล', value: '0105558012345' },
+              { label: 'ทุนจดทะเบียน', value: '5,000,000 บาท', numeric: true },
+              { label: 'ที่ตั้ง', value: 'อ.สันทราย จ.เชียงใหม่' },
+            ]}
+          />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="ImageGallery" note="ภาพหลัก + thumbnail · คีย์บอร์ดใช้ได้">
+        <div className="max-w-sm">
+          <ImageGallery
+            itemName="เครื่องคั่วกาแฟ TR-500"
+            images={[
+              { src: `${PX}#1`, alt: 'เครื่องคั่วกาแฟ TR-500 ด้านหน้า' },
+              { src: `${PX}#2`, alt: 'ด้านข้าง' },
+              { src: `${PX}#3`, alt: 'แผงควบคุม' },
+            ]}
+          />
+        </div>
+      </Specimen>
+    </Group>
+  );
+}
+
+/* ── หมวด 4 · Feedback ────────────────────────────────────────────────────── */
+
+function Feedback() {
+  const [dismissed, setDismissed] = useState(false);
+
+  return (
+    <Group id="feedback" title="4 · Feedback">
+      <Specimen name="Alert" note="4 tone · action · dismiss · isLive">
+        <Stack gap="3">
+          <Alert tone="info" title="ระบบจะปิดปรับปรุง">วันอาทิตย์ที่ 3 ส.ค. เวลา 01:00–03:00 น.</Alert>
+          <Alert tone="success" title="ยืนยันตัวตนสำเร็จ" />
+          <Alert tone="warning" title="ใกล้ครบกำหนดชำระ" action={<Button size="sm" variant="secondary">ชำระเงิน</Button>}>
+            ครบกำหนดวันที่ 31 ก.ค. 2569
+          </Alert>
+          {!dismissed && (
+            <Alert tone="danger" title="อัปโหลดเอกสารไม่สำเร็จ" onDismiss={() => setDismissed(true)}>
+              ไฟล์มีขนาดเกิน 5 MB — ลองบีบอัดแล้วอัปโหลดใหม่
+            </Alert>
+          )}
+        </Stack>
+      </Specimen>
+
+      <Specimen name="ProgressBar" note="format · tone · ค่าไม่ทราบ (indeterminate)">
+        <Stack gap="4">
+          <ProgressBar label="ความคืบหน้าโปรไฟล์" value={72} />
+          <ProgressBar label="ยอดระดมทุน" value={3_200_000} maxValue={5_000_000} format="ratio" unit="บาท" tone="success" note="เหลืออีก 12 วัน" />
+          <ProgressBar label="พื้นที่ใช้งาน" value={92} tone="danger" size="sm" />
+          <ProgressBar label="กำลังอัปโหลด" value={null} />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="Skeleton" note="shape text · card · circle · media">
+        <Stack gap="3">
+          <HStack gap="3" align="center">
+            <Skeleton shape="circle" width="3rem" className="h-12" />
+            <div className="grid flex-1 gap-2">
+              <Skeleton lines="title" width="60%" />
+              <SkeletonText lines={2} />
+            </div>
+          </HStack>
+          <Skeleton shape="media" className="h-32" />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="Dialog" note="modal · sheet · drawer">
+        <Row label="variant">
+          <DialogTrigger>
+            <Button variant="secondary">เปิด modal</Button>
+            <Dialog title="ยืนยันการลบรายการ" footer={<HStack gap="2" justify="end"><Button variant="ghost" slot="close">ยกเลิก</Button><Button variant="danger">ลบ</Button></HStack>}>
+              <p className="text-body">รายการนี้จะถูกลบถาวรและกู้คืนไม่ได้</p>
+            </Dialog>
+          </DialogTrigger>
+        </Row>
+      </Specimen>
+
+      <Specimen name="Tooltip">
+        <Row label="hover / focus">
+          <TooltipTrigger>
+            <IconButton name="more-vertical" label="ตัวเลือกเพิ่มเติม" />
+            <Tooltip>ตัวเลือกเพิ่มเติม</Tooltip>
+          </TooltipTrigger>
+        </Row>
+      </Specimen>
+
+      <Specimen name="Toast" note="ToastRegion อยู่ท้ายหน้า · เคารพ --bottom-inset">
+        <Row label="tone">
+          <Button variant="secondary" onPress={() => showToast({ title: 'เพิ่มลงตะกร้าแล้ว', tone: 'success' })}>success</Button>
+          <Button variant="secondary" onPress={() => showToast({ title: 'บันทึกฉบับร่างแล้ว', tone: 'info' })}>info</Button>
+        </Row>
+      </Specimen>
+    </Group>
+  );
+}
+
+/* ── หมวด 5 · Marketplace ─────────────────────────────────────────────────── */
+
+const CERTS = [
+  { id: 'gmp', name: 'GMP', isVerified: true, expiresAt: '2027-03-31' },
+  { id: 'halal', name: 'ฮาลาล', isVerified: true },
+  { id: 'iso', name: 'ISO 9001', isVerified: false },
+];
+
+function Marketplace() {
+  const [compare, setCompare] = useState([
+    { id: '1', name: 'เครื่องคั่วกาแฟ TR-500' },
+    { id: '2', name: 'เครื่องคั่วกาแฟ HB-200' },
+  ]);
+  const [pay, setPay] = useState<'promptpay' | 'transfer' | 'credit-term' | 'card'>('promptpay');
+  const [cartOpen, setCartOpen] = useState(false);
+  const [showBar, setShowBar] = useState(false);
+  const [qty, setQty] = useState(2);
+
+  return (
+    <Group id="marketplace" title="5 · Marketplace">
+      <Specimen name="EntityCard" note="ฐานร่วมของการ์ดทุกใบ — media · eyebrow · meta · amount · footer · actions">
+        <div className="max-w-sm">
+          <EntityCard
+            href="#"
+            title="เครื่องคั่วกาแฟ TR-500"
+            media={<Thumb />}
+            eyebrow={<Badge variant="accent">แนะนำ</Badge>}
+            meta={<EntityMeta items={[{ label: 'ผู้ขาย', value: 'ดอยคำโรสเตอร์' }, { label: 'จังหวัด', value: 'เชียงใหม่' }]} />}
+            amount={<EntityAmount label="ราคา" value={1_250_000} unit="เครื่อง" />}
+            footer={<span className="text-caption text-fg-muted">พร้อมส่ง 4 เครื่อง</span>}
+          />
+        </div>
+      </Specimen>
+
+      <Specimen name="การ์ด 7 ชนิด" note="ProductCard · ServiceCard · ProgramCard · GrantCard · FundingCard · TrainingCard · BusinessCard" wide>
+        <Grid preset="cards">
+          <ProductCard href="#" name="เครื่องคั่วกาแฟ TR-500" price={1_250_000} unit="เครื่อง" moq={1}
+            sellerName="ดอยคำโรสเตอร์" inStock certifications={['GMP']} media={<Thumb />} />
+          <ServiceCard href="#" name="ออกแบบบรรจุภัณฑ์อาหารส่งออก" pricingModel="quote"
+            leadTime="14 วัน" sellerName="สตูดิโอกล่องดี" media={<Thumb />} />
+          <ProgramCard href="#" name="โครงการยกระดับ SME สู่ตลาดสากล" agency="สสว."
+            eligibility="นิติบุคคลจดทะเบียนไม่น้อยกว่า 1 ปี" deadline="2026-09-30" status="open" daysLeft={64} />
+          <GrantCard href="#" name="ทุนพัฒนาผลิตภัณฑ์ใหม่" agency="สสว." fundingCeiling={500_000}
+            coPaymentPercent={50} deadline="2026-08-15" status="closing-soon" daysLeft={19} />
+          <FundingCard href="#" name="สินเชื่อ SME เสริมสภาพคล่อง" agency="ธพว." loanCeiling={5_000_000}
+            interestRate={4.5} termMonths={84} collateral="bsy" gracePeriodMonths={12}
+            deadline="2026-12-31" status="open" />
+          <TrainingCard href="#" name="อบรมมาตรฐาน GMP สำหรับโรงงานอาหาร" organizer="สถาบันอาหาร"
+            format="hybrid" startDate="2026-08-20" endDate="2026-08-21" fee={3_500} seatsLeft={6} seatsLow />
+          <BusinessCard href="#" name="ดอยคำโรสเตอร์ จำกัด" isVerified category="อาหารและเครื่องดื่ม"
+            province="เชียงใหม่" employeeRange="10–49 คน" certifications={['GMP', 'ฮาลาล']}
+            isRecommended matchReason="ตรงกับหมวดที่คุณดูบ่อย" media={<Thumb />} />
+        </Grid>
+      </Specimen>
+
+      <Specimen name="Deadline" note="DeadlineBadge · DeadlineText">
+        <Row label="status">
+          <DeadlineBadge status="open" />
+          <DeadlineBadge status="closing-soon" daysLeft={5} />
+          <DeadlineBadge status="closed" />
+        </Row>
+        <Row label="DeadlineText">
+          <DeadlineText date="2026-09-30" />
+          <DeadlineText date="2026-09-30" format="long" />
+        </Row>
+      </Specimen>
+
+      <Specimen name="CategoryNav / CategoryBreadcrumb" wide>
+        <Stack gap="4">
+          <CategoryBreadcrumb items={[{ name: 'หน้าแรก', href: '#' }, { name: 'อาหารแปรรูป', href: '#' }, { name: 'เครื่องคั่วกาแฟ' }]} />
+          <CategoryNav
+            currentId="c2"
+            items={[
+              { id: 'c1', name: 'เกษตรแปรรูป', href: '#', count: 128 },
+              { id: 'c2', name: 'อาหารและเครื่องดื่ม', href: '#', count: 342 },
+              { id: 'c3', name: 'สิ่งทอ', href: '#', count: 87 },
+              { id: 'c4', name: 'เครื่องจักร', href: '#', count: 54 },
+            ]}
+          />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="FilterPanel / FilterChipRow" note="accordion ต่อกลุ่ม + แถบตัวกรองที่ใช้อยู่">
+        <Stack gap="4">
+          <FilterChipRow
+            filters={[{ id: 'f1', label: 'GMP' }, { id: 'f2', label: 'เชียงใหม่' }]}
+            onRemove={() => {}}
+            onClearAll={() => {}}
+          />
+          <FilterPanel
+            onClearAll={() => {}}
+            defaultExpandedKeys={['g1']}
+            groups={[
+              { id: 'g1', title: 'มาตรฐาน', children: (
+                <CheckboxGroup label="มาตรฐาน" className="[&>*:first-child]:sr-only">
+                  <Checkbox value="gmp">GMP</Checkbox><Checkbox value="haccp">HACCP</Checkbox>
+                </CheckboxGroup>
+              ) },
+              { id: 'g2', title: 'ราคา', children: <span className="text-body">ช่วงราคา…</span> },
+            ]}
+          />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="SearchResult" note="ครอบผลลัพธ์ — นับจำนวน · loading · ว่างเปล่า" wide>
+        <Stack gap="6">
+          <SearchResult count={2} query="เครื่องคั่วกาแฟ" toolbar={<Select label="เรียงตาม" options={[{ id: 'rel', label: 'ตรงที่สุด' }, { id: 'new', label: 'ใหม่ล่าสุด' }]} defaultSelectedKey="rel" />}>
+            <Grid preset="cards">
+              <ProductCard href="#" name="เครื่องคั่วกาแฟ TR-500" price={1_250_000} sellerName="ดอยคำ" as="li" media={<Thumb />} />
+              <ProductCard href="#" name="เครื่องคั่วกาแฟ HB-200" price={880_000} sellerName="ฮิลล์บีน" as="li" media={<Thumb />} />
+            </Grid>
+          </SearchResult>
+          <SearchResult count={0} query="เครื่องอัดเม็ดพลาสติก" emptyAction={<Button variant="secondary">ล้างตัวกรอง</Button>} />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="BuyBox" note="สินค้า (มีจำนวน + ตะกร้า) · บริการ (ขอใบเสนอราคา)">
+        <Stack gap="4">
+          <BuyBox kind="product" name="เครื่องคั่วกาแฟ TR-500" price={1_250_000} unit="เครื่อง" stock={4} moq={1}
+            onAddToCart={() => { showToast({ title: 'เพิ่มลงตะกร้าแล้ว', tone: 'success' }); setCartOpen(true); }} />
+          <BuyBox kind="service" name="ออกแบบบรรจุภัณฑ์" price={null} priceNote="ประเมินตามขอบเขตงาน" onContact={() => {}} />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="Cart" note="CartList › CartSellerGroup › CartLineItem · CartDrawer">
+        <Stack gap="4">
+          <CartList itemCount={2} sellerCount={1}>
+            <CartSellerGroup sellerName="ดอยคำโรสเตอร์" subtotal={2_500_000} onCheckout={() => {}}>
+              <CartLineItem href="#" name="เครื่องคั่วกาแฟ TR-500" unitPrice={1_250_000} unit="เครื่อง"
+                quantity={qty} onQuantityChange={setQty} onRemove={() => {}} media={<Thumb />} />
+            </CartSellerGroup>
+          </CartList>
+          <Button variant="secondary" onPress={() => setCartOpen(true)}>เปิด CartDrawer</Button>
+          <CartDrawer isOpen={cartOpen} onOpenChange={setCartOpen} fullCartHref="#">
+            <CartList itemCount={1} sellerCount={1}>
+              <CartSellerGroup sellerName="ดอยคำโรสเตอร์" subtotal={1_250_000}>
+                <CartLineItem href="#" name="เครื่องคั่วกาแฟ TR-500" unitPrice={1_250_000}
+                  quantity={1} onQuantityChange={() => {}} onRemove={() => {}} compact />
+              </CartSellerGroup>
+            </CartList>
+          </CartDrawer>
+        </Stack>
+      </Specimen>
+
+      <Specimen name="Checkout" note="CheckoutStepper · CheckoutSummary">
+        <Stack gap="5">
+          <CheckoutStepper currentIndex={1} steps={[{ id: '1', label: 'ตะกร้า' }, { id: '2', label: 'ที่อยู่จัดส่ง' }, { id: '3', label: 'ชำระเงิน' }]} />
+          <CheckoutSummary itemCount={2} subtotal={2_500_000} vat={175_000} shipping={0} total={2_675_000}
+            onSubmit={() => {}} submitLabel="ไปหน้าชำระเงิน" />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="Payment" note="PaymentMethodSelect · PromptPayQR · SlipUpload">
+        <Stack gap="5">
+          <PaymentMethodSelect value={pay} onChange={setPay} disabledMethods={['credit-term']} />
+          <PromptPayQR qrSrc={PX} amount={2_675_000} reference="SMEGO-2026-000481" />
+          <SlipUpload onSelect={() => {}} />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="OrderTimeline">
+        <OrderTimeline steps={[
+          { id: '1', label: 'รับคำสั่งซื้อ', date: '2026-07-20', status: 'done' },
+          { id: '2', label: 'ชำระเงินแล้ว', date: '2026-07-21', status: 'done', documentHref: '#', documentName: 'ใบเสร็จรับเงิน' },
+          { id: '3', label: 'กำลังจัดส่ง', date: '2026-07-25', status: 'current', note: 'เลขพัสดุ TH1234567890' },
+          { id: '4', label: 'ได้รับสินค้า', status: 'pending' },
+        ]} />
+      </Specimen>
+
+      <Specimen name="Wishlist" note="SaveButton · WishlistHeader · WishlistGrid" wide>
+        <Stack gap="4">
+          <Row label="SaveButton">
+            <SaveButton itemName="เครื่องคั่วกาแฟ TR-500" />
+            <SaveButton itemName="เครื่องคั่วกาแฟ TR-500" variant="full" defaultSaved />
+          </Row>
+          <WishlistHeader count={2} onClearAll={() => {}} />
+          <WishlistGrid count={2}>
+            <ProductCard href="#" name="เครื่องคั่วกาแฟ TR-500" price={1_250_000} sellerName="ดอยคำ" as="li" media={<Thumb />} />
+            <ProductCard href="#" name="เครื่องบดกาแฟ G-90" price={62_000} sellerName="ฮิลล์บีน" as="li" media={<Thumb />} />
+          </WishlistGrid>
+        </Stack>
+      </Specimen>
+
+      <Specimen name="SellerProfile / CertificationBadge">
+        <Stack gap="4">
+          <Row label="CertificationBadge">
+            {CERTS.map((c) => <CertificationBadge key={c.id} certification={c} />)}
+          </Row>
+          <SellerProfile
+            name="ดอยคำโรสเตอร์ จำกัด"
+            registrationNumber="0505558001234"
+            isVerified
+            isVatRegistered
+            taxId="0505558001234"
+            canIssueETax
+            location="อ.สันทราย จ.เชียงใหม่"
+            memberSinceYear={2562}
+            responseTime="ตอบกลับภายใน 2 ชั่วโมง"
+            certifications={CERTS}
+            actions={<Button size="sm" variant="secondary">ติดต่อผู้ขาย</Button>}
+          />
+        </Stack>
+      </Specimen>
+
+      <Specimen name="Compare" note="CompareBar ยึดล่างจอ (ใช้ --bottom-inset) · CompareTable" wide>
+        <Stack gap="5">
+          <CompareTable
+            items={compare}
+            onRemove={(id) => setCompare((p) => p.filter((i) => i.id !== id))}
+            rows={[
+              { label: 'ราคา', values: ['฿1,250,000', '฿880,000'] },
+              { label: 'กำลังผลิต', values: ['5 กก./ชม.', '2 กก./ชม.'] },
+              { label: 'รับประกัน', values: ['2 ปี', '1 ปี'] },
+            ]}
+          />
+          {/* CompareBar ยึดล่างจอจริง — ให้กดเปิด/ปิดเอง จะได้ไม่บังหน้าอื่นตลอดเวลา */}
+          <Switch isSelected={showBar} onChange={setShowBar}>แสดง CompareBar (ยึดล่างจอ)</Switch>
+          {showBar && (
+            <CompareBar
+              items={compare}
+              onRemove={(id) => setCompare((p) => p.filter((i) => i.id !== id))}
+              onClearAll={() => { setCompare([]); setShowBar(false); }}
+              onOpen={() => {}}
+            />
+          )}
+        </Stack>
+      </Specimen>
+    </Group>
+  );
+}
+
+/* ── หมวด 6 · Navigation ──────────────────────────────────────────────────── */
+
+function Navigation() {
+  return (
+    <Group id="navigation" title="6 · Navigation">
+      <Specimen name="AppHeader" note="sticky จริงอยู่บนสุดของหน้านี้แล้ว — นี่คือสำเนาแบบอยู่กับที่" wide>
+        <div className="relative">
+          <AppHeader
+            homeHref="#"
+            cartCount={3}
+            onOpenCart={() => {}}
+            signInHref="#"
+            search={<SearchField label="ค้นหาสินค้าและบริการ" labelHidden placeholder="ค้นหาสินค้าและบริการ" />}
+            className="!static"
+          />
+        </div>
+      </Specimen>
+    </Group>
+  );
+}
+
+/* ── สารบัญ + สลับธีม ─────────────────────────────────────────────────────── */
+
+const NAV: { id: string; label: string }[] = [
+  { id: 'foundations', label: '1 · Foundations' },
+  { id: 'inputs', label: '2 · Inputs' },
+  { id: 'data-display', label: '3 · Data display' },
+  { id: 'feedback', label: '4 · Feedback' },
+  { id: 'marketplace', label: '5 · Marketplace' },
+  { id: 'navigation', label: '6 · Navigation' },
+];
+
+function ThemeToggle() {
+  const [dark, setDark] = useState(false);
+  return (
+    <Switch
+      isSelected={dark}
+      onChange={(v) => {
+        setDark(v);
+        document.documentElement.dataset.theme = v ? 'dark' : 'light';
+      }}
+    >
+      โหมดมืด
+    </Switch>
+  );
+}
+
+function App() {
+  return (
+    <SmeGoProvider>
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:z-(--z-modal) focus:m-2 focus:rounded-(--radius-control) focus:bg-surface focus:p-3">
+        ข้ามไปเนื้อหาหลัก
+      </a>
+
+      <header className="sticky top-0 z-(--z-sticky) border-b border-edge bg-surface/95 backdrop-blur">
+        <Container size="wide">
+          <div className="flex flex-wrap items-center justify-between gap-3 py-3">
+            <div>
+              <p className="text-h4 text-fg">SME.GO Component Library</p>
+              <p className="text-caption text-fg-muted">@smego/ui · React Aria + Tailwind v4 · WCAG 2.2 AA</p>
+            </div>
+            <ThemeToggle />
+          </div>
+          <nav aria-label="สารบัญ" className="flex flex-wrap gap-2 pb-3">
+            {NAV.map((n) => (
+              <a key={n.id} href={`#${n.id}`}
+                className="rounded-(--radius-control) border border-edge px-3 py-1.5 text-caption text-fg-secondary hover:bg-sunken">
+                {n.label}
+              </a>
+            ))}
+          </nav>
+        </Container>
+      </header>
+
+      <main id="main" className="py-8">
+        <Container size="wide">
+          <Stack gap="10">
+            <Foundations />
+            <Inputs />
+            <DataDisplay />
+            <Feedback />
+            <Marketplace />
+            <Navigation />
+          </Stack>
+        </Container>
+      </main>
+
+      <ToastRegion />
+    </SmeGoProvider>
+  );
+}
+
+createRoot(document.getElementById('root')!).render(<App />);

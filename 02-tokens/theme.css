@@ -1,0 +1,84 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   SME.GO Design System · จุดเข้าเดียวของระบบ
+   ───────────────────────────────────────────────────────────────────────────
+   นำเข้าไฟล์เดียวนี้ในแอป:
+
+       @import "@smego/tokens/theme.css";
+
+   Tailwind v4 เป็น CSS-first — ไม่มี `tailwind.config.ts`
+   บล็อก `@theme` ใน semantic.css ทำหน้าที่เป็น config เอง
+   และสร้าง utility ทั้งหมดให้อัตโนมัติจากชื่อ CSS variable
+
+   ลำดับการ import มีความหมาย — ห้ามสลับ
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import "tailwindcss";
+
+/* tier 1 — ค่าดิบ ชื่อบอกสี · :root ธรรมดา ไม่เกี่ยวกับ Tailwind */
+@import "./src/primitives.css";
+
+/* tier 2 — บทบาท ชื่อบอกหน้าที่ · @theme สร้าง utility */
+@import "./src/semantic.css";
+
+/* tier 2 dark — override เฉพาะค่าที่เปลี่ยน · primitives ไม่แตะ
+   ⚠️ ต้องอยู่หลัง semantic.css และอยู่นอก @layer เพื่อให้ชนะ @layer theme */
+@import "./src/dark.css";
+
+/* tier 3 — by exception only · ว่างตั้งแต่ต้น */
+@import "./src/components.css";
+
+/* กฎระดับระบบที่บังคับ token ให้ทำงาน — focus ring · reduced motion · reset */
+@import "./src/base.css";
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK VARIANT
+   ───────────────────────────────────────────────────────────────────────────
+   ใช้ attribute ไม่ใช่ class เพื่อให้เพิ่ม theme ในอนาคต
+   (high-contrast · co-branding ต่อหน่วยงาน) ได้โดยไม่ต้องเขียน variant ใหม่
+
+   ค่าที่เก็บคือ light | dark เท่านั้น — ค่า "system" ถูก resolve เป็นค่าใด
+   ค่าหนึ่งโดย theme-init.js ก่อน first paint
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ⚠️ กฎที่ lint ต้องบังคับ — ไม่มีทางบังคับด้วย CSS
+   ───────────────────────────────────────────────────────────────────────────
+   1  ห้าม `shadow-{xs,sm,md,lg,xl,2xl}` ใน component
+      ใช้ `shadow-(--elevation-raised)` ฯลฯ
+      เพราะ shadow-* ติดไปในโหมดมืดด้วย และ component นั้นจะไม่มีกลไก
+      แยกตัวเองจากพื้นหลังในโหมดมืดเลย
+
+   2  ห้าม `border-neutral-*` บน input/select/textarea/checkbox/radio
+      ใช้ `border-edge-strong` — neutral-300 ได้ 1.56:1 ไม่ผ่าน SC 1.4.11
+
+   3  ห้าม `text-white` บนพื้นทองหรือพื้นเหลือง
+      ใช้ `text-on-accent` — ตัวอักษรขาวได้ 2.37 และ 1.66 ✗
+
+   4  ห้าม spacing/radius นอกชุดที่อนุมัติ และห้าม arbitrary value
+      space: 0 0.5 1 2 3 4 5 6 8 10 12 16 20 24 32
+      radius: none xs sm md lg xl 2xl full
+
+   5  ห้าม `p-0.5` / `gap-0.5` — 2px ใช้ได้เฉพาะ outline-offset
+      และ text-underline-offset
+
+   6  ห้าม `import` จาก `lucide-react` โดยตรง
+      ใช้ `<Icon name size />` — stroke ต้องผูกกับขนาด
+
+   7  ห้าม `overflow-hidden` บน element ที่มี focusable เป็นลูก
+      วงแหวน focus ล้น 4px จะถูกตัด = ไม่ผ่าน SC 2.4.7
+
+   8  ห้าม `italic` · `uppercase` · `capitalize` · `tracking-*`
+      บน element ที่มีข้อความไทย
+
+   9  ห้าม `!important` — ยกเว้น block `prefers-reduced-motion` ใน base.css
+
+   10 ห้าม `rounded-full` บนปุ่ม — เฉพาะ chip badge avatar dot
+      ข้อความปุ่มไทยยาวกว่าอังกฤษ 20–40% และปุ่มแคปซูลพังที่ 360px
+
+   11 ห้ามอักขระเลขไทย U+0E50–U+0E59 ในข้อมูลที่เข้า component ตาราง/ราคา
+      กว้างต่างกันถึง 36.6% em
+   ═══════════════════════════════════════════════════════════════════════════ */

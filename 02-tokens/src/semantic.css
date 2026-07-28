@@ -1,0 +1,538 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   SME.GO · tier 2 · SEMANTIC (โหมดสว่าง)
+   ───────────────────────────────────────────────────────────────────────────
+   ชื่อบอก "หน้าที่" ไม่บอก "สี" — นี่คือชั้นเดียวที่ component อ้างได้
+
+   กฎของชั้นนี้
+   • ทุกค่าเป็น var() ชี้ไปที่ tier 1 — ค่า HEX ตายตัวที่นี่คือข้อบกพร่อง
+   • ชื่อต้องอยู่ใน namespace ของ Tailwind v4 เพื่อให้สร้าง utility อัตโนมัติ
+   • ห้ามใส่ชื่อสีในชื่อ token — ไม่มี --color-blue-600
+
+   ⚠️⚠️ กฎการตั้งชื่อที่ยืนยันแล้วด้วยการ build จริง (Tailwind v4.3.3)
+   ───────────────────────────────────────────────────────────────────────────
+   namespace `--color-*` เป็น "แบน" และใช้ร่วมกันระหว่าง bg / text / border
+   ชื่อ token คือ suffix ของ utility ตรง ๆ ไม่มีการตัดคำ
+
+       --color-canvas       →  bg-canvas       ✅
+       --color-fg-muted     →  text-fg-muted   ✅
+       --color-edge-strong  →  border-edge-strong  ✅
+
+   ดังนั้น **ห้ามใส่ชื่อ property ในชื่อ token**
+
+       --color-text-primary   →  text-text-primary    ✗ ไม่ใช่ text-primary
+       --color-border-strong  →  border-border-strong ✗ ไม่ใช่ border-strong
+
+   ชื่อทั้งหมดข้างล่างนี้จึงถูกออกแบบจาก "utility ที่ต้องการอ่านใน markup"
+   ย้อนกลับมาเป็นชื่อ variable ไม่ใช่ทางกลับกัน
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ═══════════════════════════════════════════════════════════════════════════
+     ★★★ ลบ palette เริ่มต้นของ Tailwind ทิ้งทั้งชุด
+     ─────────────────────────────────────────────────────────────────────────
+     `bg-red-500` · `text-white` · `border-neutral-300` จะ **ไม่ถูกสร้าง**
+     สีเดียวที่ใช้ได้คือสีที่ประกาศไว้ในไฟล์นี้
+
+     ═══ วัดผลจริงแล้วก่อนใส่ ═══
+     build ทั้งระบบเทียบกัน: **534 → 528 utility** · หายไป 6 ตัว ได้แก่
+       bg-red-500 · bg-white · bg-white/50 · border-neutral-300
+       · text-black · text-white
+     ทั้งหกคือสิ่งที่ไม่ต้องการทั้งหมด
+
+     token ของเราครบทั้ง 15 ตัวที่สุ่มตรวจ และ **keyword สีรอดทั้งหมด**:
+       bg-transparent · border-transparent · fill-current · fill-none
+       · text-current · text-inherit
+     (ใช้อยู่จริง 17 ที่ในโค้ด — ไม่กระทบเลย)
+
+     ⚠️⚠️ **สิ่งนี้ไม่ใช่ compile error** — วัดแล้ว build ยัง `exit 0`
+     ไม่มี warning · `text-white` จะกลายเป็น class ที่ไม่มี CSS เงียบ ๆ
+
+     ดังนั้นตัวที่ให้ feedback จริงคือ `lint-classes.js` ซึ่งฟ้องเป็น error
+     พร้อม file:line และชื่อ token ที่ควรใช้แทน · บรรทัดนี้เป็น **ตาข่ายกันพลาด**
+     ไม่ใช่ตัวแจ้งเตือน — ต้องมีทั้งคู่
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --color-*: initial;
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     PRIMARY ramp — เปิดให้ใช้เป็นขั้น เพราะปุ่มและสถานะต้องเลือกขั้นได้
+     ★ 600 คือสีแบรนด์ ไม่ใช่ 500
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-primary-50:  var(--sme-blue-50);
+  --color-primary-100: var(--sme-blue-100);
+  --color-primary-200: var(--sme-blue-200);
+  --color-primary-300: var(--sme-blue-300);
+  --color-primary-400: var(--sme-blue-400);
+  --color-primary-500: var(--sme-blue-500);
+  --color-primary-600: var(--sme-blue-600);
+  --color-primary-700: var(--sme-blue-700);
+  --color-primary-800: var(--sme-blue-800);
+  --color-primary-900: var(--sme-blue-900);
+  --color-primary-950: var(--sme-blue-950);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     พื้นผิว →  bg-canvas · bg-surface · bg-sunken · bg-inverse
+     ─────────────────────────────────────────────────────────────────────────
+     ⚠️ **ไม่มี `--color-raised`** — ถอดออกแล้ว
+
+     เคยมี แต่ซ้อนกับ `--elevation-surface-*` ที่ทำงานเดียวกันและทำได้ครบกว่า
+     (มัดพื้น + ขอบ + เงา ต่อธีมไว้ด้วยกันตามข้อ 9) · component ทุกตัวใช้
+     `--elevation-*` อยู่แล้ว ไม่มีใครอ่าน `--color-raised` เลย
+
+     การมี API สองชุดสำหรับเรื่องเดียวกันคือที่มาของ drift — ใช้
+     `bg-(--elevation-surface-raised)` เท่านั้น
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-canvas:  var(--sme-neutral-50);
+  --color-surface: var(--sme-neutral-0);
+  --color-sunken:  var(--sme-neutral-100);
+  --color-inverse: var(--sme-neutral-900);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     SELECTED →  bg-selected-surface · text-selected-fg
+     ─────────────────────────────────────────────────────────────────────────
+     ★★★ พื้นของสถานะ "เลือกอยู่" — **ต้องเป็น token ไม่ใช่ `primary-50`**
+
+     เดิม 6 จุดใช้ `bg-primary-50` ตรง ๆ ซึ่งพังในโหมดมืด เพราะ ramp primary
+     **ไม่ถูก override ในโหมดมืดโดยตั้งใจ** (ปุ่มเปลี่ยนสีไม่ได้ · ดู dark.css)
+     `primary-50` = #F0F9FE จึงยังขาวจัด ขณะที่ `--color-fg` = #F1F3F6
+
+     วัดจริงในเบราว์เซอร์: `Radio layout="card"` ที่เลือกอยู่ได้ **1.04:1**
+     ซึ่งใช้ใน `PaymentMethodSelect` → ผู้ใช้โหมดมืดเลือกวิธีชำระเงินแล้ว
+     อ่านไม่ออกเลย
+
+     ★ พื้นไม่ใช่ตัวแยกหลัก — วัดแล้ว tint vs surface ได้เพียง 1.07 (สว่าง)
+     และ 1.42 (มืด) · **ขอบ `edge-brand` รับน้ำหนักการแยก** ตามหลักข้อ 06
+     พื้นเป็นตัวเสริมที่ช่วยให้กวาดตาเจอเร็วขึ้นเท่านั้น
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-selected-surface: var(--sme-blue-50);
+  --color-selected-fg:      var(--sme-blue-800);   /* 8.26:1 บน blue-50 ✅ */
+  /* hover ของสิ่งที่เลือกอยู่ · และพื้นของปุ่มย่อยในนั้น (ปุ่มลบใน chip)
+     ต้องเป็น token ด้วยเหตุผลเดียวกัน — `primary-100/200` ก็ไม่ถูก
+     override ในโหมดมืด (linter จับได้หลังเพิ่มกฎ ผมพลาดสองจุดนี้ตอนแก้รอบแรก) */
+  --color-selected-hover:   var(--sme-blue-100);   /* 7.58:1 กับ selected-fg ✅ */
+  --color-selected-strong:  var(--sme-blue-200);   /* 6.32:1 · ปุ่มย่อยในพื้นที่เลือก */
+
+  /* ⚠️ `bg-sunken` เป็นค่าที่ **สัมพันธ์กับ surface** ไม่ใช่กับ canvas
+     ต้องอยู่บน `bg-surface` เท่านั้น — วางบน `bg-canvas` จะไม่เห็นความต่าง
+
+       โหมดสว่าง  sunken #F1F3F6 vs canvas #F8F9FB = 1.055  (แทบไม่ต่าง)
+       โหมดมืด    sunken #12141A vs canvas #12141A = 1.000  (เหมือนกันเป๊ะ)
+
+     ที่มา: พบตอน render เอกสารยาวที่วางตารางและ inline code ไว้บน canvas ตรง ๆ
+     หัวตารางและพื้น code หายไปทั้งหมดในโหมดมืด
+
+     กฎ: เนื้อหาที่ต้องมี sunken ข้างในต้องห่อด้วย `bg-surface` ก่อน */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     ตัวอักษร →  text-fg · text-fg-muted · text-link · text-on-accent
+     ⚠️ text-fg-muted = neutral-600 ไม่ใช่ 500
+        neutral-500 ได้ 4.20:1 ซึ่งไม่ผ่าน AA — ความผิดพลาดที่พบบ่อยที่สุด
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-fg:           var(--sme-neutral-900);  /* 16.15:1  AAA */
+  --color-fg-secondary: var(--sme-neutral-700);  /*  8.62:1  AAA */
+  --color-fg-muted:     var(--sme-neutral-600);  /*  6.05:1  AA  */
+  --color-fg-disabled:  var(--sme-neutral-400);  /*  2.53:1  ยกเว้น SC 1.4.3 */
+  --color-link:         var(--sme-blue-700);     /*  6.56:1  ต้องมีขีดใต้    */
+  --color-on-brand:     var(--sme-neutral-0);    /*  4.76:1 บน primary-600  */
+
+  /* ★ มีอยู่เพื่อป้องกัน bug เฉพาะจุด
+     ใช้บนพื้นทองและพื้นเหลือง — ตัวอักษรขาวบนสองสีนั้นได้ 2.37 และ 1.66 ✗ */
+  --color-on-accent:    var(--sme-neutral-950);  /* 7.78 บนทอง · 11.11 บนเหลือง */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     เส้นขอบ →  border-edge-subtle · border-edge · border-edge-strong
+     ⚠️ ขอบ input ต้องใช้ border-edge-strong ไม่ใช่ border-edge
+        neutral-300 ได้ 1.56:1 ซึ่งไม่ผ่าน SC 1.4.11 — ระบบส่วนใหญ่พลาดข้อนี้
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-edge-subtle: var(--sme-neutral-200);  /* 1.27 · ตกแต่ง ยกเว้น     */
+  --color-edge:        var(--sme-neutral-300);  /* 1.56 · ตกแต่ง ยกเว้น     */
+  --color-edge-strong: var(--sme-neutral-500);  /* ★ 4.20 · input/checkbox  */
+  --color-edge-brand:  var(--sme-blue-600);
+  --color-edge-danger: var(--sme-red-500);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     FOCUS →  outline-focus-ring · ring-focus-ring
+     วงแหวน 2 ชั้นแบบไม่มีเงื่อนไข
+     ชั้นในทำให้เห็นวงแหวนบนพื้นสีอิ่มตัว ที่ชั้นนอกอย่างเดียวจะหายไป
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-focus-ring:     var(--sme-blue-600);
+  --color-focus-contrast: var(--sme-neutral-0);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     STATUS →  bg-success-surface · text-success-icon · bg-success-fill
+     ⚠️ แต่ละสถานะต้องต่างกันที่ "รูปทรง" ด้วย ไม่ใช่แค่สี (SC 1.4.1)
+        เพราะทองกับเหลืองห่างกันเพียง 1.43:1
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-success-surface: var(--sme-green-50);
+  --color-success-edge:    var(--sme-green-300);
+  --color-success-icon:    var(--sme-green-700);
+  --color-success-fill:    var(--sme-green-700);   /* 700 ไม่ใช่ 600 — 600 ได้ 4.11 ✗ */
+
+  --color-warning-surface: var(--sme-yellow-50);
+  --color-warning-edge:    var(--sme-yellow-300);
+  --color-warning-icon:    var(--sme-yellow-800);  /* 800 ไม่ใช่ 500 — 500 ได้ 1.66 ✗ */
+  --color-warning-fill:    var(--sme-yellow-500);  /* พื้นเท่านั้น + text-on-accent    */
+
+  --color-danger-surface:  var(--sme-red-50);
+  --color-danger-edge:     var(--sme-red-300);
+  --color-danger-icon:     var(--sme-red-600);
+  --color-danger-fill:     var(--sme-red-600);
+
+  /* ── สถานะของพื้นทึบ · เพิ่มเข้ามาในชั้น 03 ─────────────────────────────
+     ชั้น 02 เดิมมีแต่ `*-fill` และ `--color-accent-hover` ตัวเดียว ทำให้
+     ปุ่มลบและปุ่มยืนยันไม่มี hover/active ที่ token กำหนด
+     ทุกค่าวัดแล้วว่าตัวอักษรยังผ่าน AA ทั้งสามสถานะ (ดู $description ใน tokens.json)
+     ───────────────────────────────────────────────────────────────────── */
+  --color-danger-hover:    var(--sme-red-700);     /* ขาวบนนี้  8.10 */
+  --color-danger-active:   var(--sme-red-800);     /* ขาวบนนี้ 10.60 */
+  --color-success-hover:   var(--sme-green-800);   /* ขาวบนนี้  8.05 */
+  --color-success-active:  var(--sme-green-900);   /* ขาวบนนี้ 11.04 */
+  --color-accent-active:   var(--sme-gold-600);    /* ★ หยุดที่ 600 — ดูหมายเหตุ */
+
+  /* ── ★ ขอบเขตของพื้นทึบ (SC 1.4.11) ──────────────────────────────────────
+     พื้นปุ่มต้องต่างจากพื้นหลังอย่างน้อย 3:1 เพราะเป็นขอบเขตของ UI component
+
+     วัดกับ canvas โหมดสว่าง (#F8F9FB):
+       primary-600  4.52 ✅   danger-600  5.66 ✅   success-700  5.66 ✅
+       gold-500     2.25 ❌  ← ปุ่มทองไม่มีขอบเขตที่มองเห็น
+
+     ทองจึงเป็น **ตัวเดียวที่ต้องมีขอบในโหมดสว่าง** — gold-600 ให้ 3.14 ✅
+     ───────────────────────────────────────────────────────────────────── */
+  --color-primary-outline: transparent;
+  --color-danger-outline:  transparent;
+  --color-success-outline: transparent;
+  --color-accent-outline:  var(--sme-gold-600);    /* ★ 3.14 — จำเป็น ไม่ใช่การตกแต่ง */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     INFO · alias ทับ Primary — ไม่มี ramp ของตัวเอง
+     ⚠️ กฎ tint-only ต้องเป็นจริง 100%
+        Info ปรากฏได้แบบเดียว: พื้น + ขอบ + ไอคอน — ห้ามเป็นพื้นทึบ
+        เพื่อให้ "น้ำเงินทึบ = กดได้" เป็นจริงทุกที่
+        สังเกตว่าไม่มี --color-info-fill โดยตั้งใจ
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-info-surface: var(--sme-blue-50);
+  --color-info-edge:    var(--sme-blue-300);  /* เดิม 200 · 1.39:1 จางเกินไป */
+  /* ★ เดิมเป็น blue-600 ซึ่งได้ **4.47:1** และคอมเมนต์เดิมเขียนว่า ✅ ผิด
+     — 4.47 < 4.5 จึงไม่ผ่าน AA · `Badge variant="info"` ใช้ token นี้เป็น
+     **ตัวอักษร** ไม่ใช่แค่ไอคอน จึงต้องใช้เกณฑ์ 4.5 ไม่ใช่ 3.0
+     blue-700 ได้ 6.15:1 — วัดด้วยสูตร relative luminance จริง */
+  --color-info-icon:    var(--sme-blue-700);  /* 6.15:1 บน blue-50 ✅ */
+  --color-info-fg:      var(--sme-neutral-900);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     ACCENT · ทอง — จุดเน้นแบรนด์เท่านั้น ห้ามเป็นสถานะ
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-accent-fill:    var(--sme-gold-500);
+  --color-accent-hover:   var(--sme-gold-600);
+  --color-accent-fg:      var(--sme-gold-800);  /* 6.74:1 · 700 ก็ผ่านที่ 4.75 */
+  --color-accent-surface: var(--sme-gold-50);
+  --color-accent-edge:    var(--sme-gold-300);
+
+  --color-backdrop: var(--sme-shadow-50);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     SCANNABLE →  bg-scannable
+     ─────────────────────────────────────────────────────────────────────────
+     ★★ พื้นสำหรับสิ่งที่ **กล้องต้องอ่าน** — QR พร้อมเพย์ · บาร์โค้ด
+
+     ⚠️ **ต้องเป็นขาวจริงทั้งสองธีม ห้าม override ใน `dark.css`**
+     เครื่องอ่าน QR จำนวนมากอ่านรหัสที่กลับสีไม่ได้ · นี่ไม่ใช่เรื่อง
+     ความสวยงามแต่เป็นเรื่องว่าผู้ใช้จ่ายเงินได้หรือไม่
+
+     มีอยู่เพราะ `--color-*: initial` ลบ `bg-white` ไปแล้ว — และนั่นถูกต้อง
+     การมี token ชื่อนี้ทำให้ข้อยกเว้นนี้ **ถูกตั้งชื่อและรีวิวได้**
+     แทนที่จะเป็น `bg-white` ลอย ๆ ที่แยกไม่ออกจากความพลาด
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-scannable: #ffffff;
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     FONT →  font-sans · font-mono · font-numeric
+     ───────────────────────────────────────────────────────────────────────── */
+  --font-sans: var(--sme-font-anuphan);
+  --font-mono: var(--sme-font-plexmono);
+
+  /* ตัวเลขในตาราง/ราคา — Anuphan ไม่ต้องใช้ tabular-nums
+     แต่คงไว้เพื่อฟอนต์สำรองที่ตัวเลขกว้างไม่เท่ากัน (ดู base.css) */
+  --font-numeric: var(--sme-font-anuphan);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     TYPOGRAPHY · composite →  text-body · text-title · text-label
+     ทุก ratio ≥ 1.333 · ทุก line-height อยู่บน 4px grid
+     ⚠️ tracking ติดลบใช้ได้เฉพาะข้อความ "ละตินล้วน" ห้ามใช้กับไทย
+     ───────────────────────────────────────────────────────────────────────── */
+  --text-display-lg:                 3rem;      /* 48px */
+  --text-display-lg--line-height:    4rem;      /* 64px · 1.333 */
+  --text-display-lg--font-weight:    var(--sme-weight-bold);
+  --text-display-lg--letter-spacing: -0.02em;   /* ⚠️ ละตินล้วน */
+
+  --text-display-sm:                 2.25rem;   /* 36px */
+  --text-display-sm--line-height:    3rem;      /* 48px · 1.333 */
+  --text-display-sm--font-weight:    var(--sme-weight-bold);
+  --text-display-sm--letter-spacing: -0.01em;   /* ⚠️ ละตินล้วน */
+
+  --text-heading-lg:              2rem;         /* 32px */
+  --text-heading-lg--line-height: 2.75rem;      /* 44px · 1.375 */
+  --text-heading-lg--font-weight: var(--sme-weight-bold);
+
+  --text-heading-sm:              1.75rem;      /* 28px */
+  --text-heading-sm--line-height: 2.5rem;       /* 40px · 1.429 */
+  --text-heading-sm--font-weight: var(--sme-weight-bold);
+
+  --text-title:              1.5rem;            /* 24px */
+  --text-title--line-height: 2rem;              /* 32px · 1.333 */
+  --text-title--font-weight: var(--sme-weight-semibold);
+
+  --text-subtitle:              1.25rem;        /* 20px */
+  --text-subtitle--line-height: 1.75rem;        /* 28px · 1.400 */
+  --text-subtitle--font-weight: var(--sme-weight-semibold);
+
+  --text-body-lg:              1.125rem;        /* 18px */
+  --text-body-lg--line-height: 2rem;            /* 32px · 1.778 */
+  --text-body-lg--font-weight: var(--sme-weight-regular);
+
+  --text-body:              1rem;               /* 16px ★ ฐานของระบบ */
+  --text-body--line-height: 1.75rem;            /* 28px · 1.750       */
+  --text-body--font-weight: var(--sme-weight-regular);
+
+  --text-body-sm:              0.875rem;        /* 14px */
+  --text-body-sm--line-height: 1.5rem;          /* 24px · 1.714 */
+  --text-body-sm--font-weight: var(--sme-weight-regular);
+
+  --text-caption:              0.8125rem;       /* 13px ★ พื้นของระบบ */
+  --text-caption--line-height: 1.25rem;         /* 20px · 1.538        */
+  --text-caption--font-weight: var(--sme-weight-regular);
+
+  --text-label:              0.8125rem;         /* 13px ★ พื้นของระบบ */
+  --text-label--line-height: 1.25rem;           /* 20px · 1.538        */
+  --text-label--font-weight: var(--sme-weight-medium);
+
+  --text-button-lg:              1rem;          /* 16px */
+  --text-button-lg--line-height: 1.5rem;        /* 24px · 1.500 */
+  --text-button-lg--font-weight: var(--sme-weight-semibold);
+
+  --text-button:              0.875rem;         /* 14px */
+  --text-button--line-height: 1.25rem;          /* 20px · 1.429 */
+  --text-button--font-weight: var(--sme-weight-semibold);
+
+  --text-code:              0.875rem;           /* 14px */
+  --text-code--line-height: 1.5rem;             /* 24px · 1.714 */
+  --text-code--font-weight: var(--sme-weight-regular);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     SPACE · บรรทัดเดียวสร้าง utility ทั้งหมด
+     ค่าที่อนุมัติ: 0 0.5 1 2 3 4 5 6 8 10 12 16 20 24 32
+     ห้าม p-7 p-9 p-11 p-14 p-18 p-28 และห้าม arbitrary value
+     ───────────────────────────────────────────────────────────────────────── */
+  --spacing: var(--sme-space-unit);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     RADIUS →  rounded-md · rounded-lg · rounded-xl · rounded-full
+     ───────────────────────────────────────────────────────────────────────── */
+  --radius-none: var(--sme-radius-0);
+  --radius-xs:   var(--sme-radius-4);
+  /* 4px ไม่ใช่ 6px — ตรงกับ Astryx `inner` (ASTRYX-PARITY.md §2.1)
+     ใช้กับของที่อยู่ *ใน* control: กล่อง Checkbox · Tooltip · กรอบ QR */
+  --radius-sm:   var(--sme-radius-4);
+  --radius-md:   var(--sme-radius-8);
+  --radius-lg:   var(--sme-radius-12);
+  --radius-xl:   var(--sme-radius-16);
+  --radius-2xl:  var(--sme-radius-24);
+  --radius-full: var(--sme-radius-pill);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     SHADOW · โหมดสว่างเท่านั้น
+     ⚠️ component ห้ามอ้าง shadow-* โดยตรง — ต้องใช้
+        shadow-(--elevation-raised) เพราะ shadow-md จะติดไปในโหมดมืดด้วย
+        และ component นั้นจะไม่มีกลไกแยกตัวเองจากพื้นหลังในโหมดมืดเลย
+     ───────────────────────────────────────────────────────────────────────── */
+  --shadow-xs:  0 1px 2px 0 var(--sme-shadow-05);
+  --shadow-sm:  0 1px 2px 0 var(--sme-shadow-06),
+                0 1px 3px 0 var(--sme-shadow-10);
+  --shadow-md:  0 2px 4px -1px var(--sme-shadow-06),
+                0 4px 8px -2px var(--sme-shadow-10);
+  --shadow-lg:  0 4px 8px -2px var(--sme-shadow-08),
+                0 12px 20px -4px var(--sme-shadow-12);
+  --shadow-xl:  0 8px 16px -4px var(--sme-shadow-10),
+                0 20px 32px -8px var(--sme-shadow-14);
+  --shadow-2xl: 0 16px 32px -8px var(--sme-shadow-12),
+                0 32px 64px -16px var(--sme-shadow-18);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     MOTION →  duration-fast · ease-emphasized
+     ⚠️ namespace ของ duration คือ `--transition-duration-*` ไม่ใช่ `--duration-*`
+        ยืนยันด้วยการ build จริง — `--duration-fast` ไม่สร้าง utility ใด ๆ
+        ใช้ชื่อนี้ชื่อเดียวทั้งระบบ ไม่มี alias เพื่อไม่ให้มีสองชื่อของสิ่งเดียว
+     ───────────────────────────────────────────────────────────────────────── */
+  --transition-duration-instant: var(--sme-ms-0);
+  --transition-duration-fast:    var(--sme-ms-150);
+  --transition-duration-medium:  var(--sme-ms-250);
+  --transition-duration-slow:    var(--sme-ms-400);
+  --transition-duration-slower:  var(--sme-ms-600);
+
+  --ease-standard:   var(--sme-curve-standard);
+  --ease-entering:   var(--sme-curve-decelerate);
+  --ease-exiting:    var(--sme-curve-accelerate);
+  --ease-emphasized: var(--sme-curve-emphasized);
+  --ease-linear:     linear;   /* ตัวบ่งชี้ความคืบหน้าจริงและ spinner เท่านั้น */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     BREAKPOINT & CONTAINER
+     ⚠️ ข้อยกเว้นเดียวของสถาปัตยกรรม 2 ชั้น — ค่าเหล่านี้ต้อง "ตายตัว"
+        Tailwind อ่านค่าไปสร้าง media query ตอน build และ
+        `@media (width >= var(--x))` เป็น CSS ที่ใช้ไม่ได้
+        การชี้ไปที่ var(--sme-bp-*) จะทำให้ทุก responsive utility พังเงียบ ๆ
+
+     ค่าเป็น rem เพื่อให้ขยายตามการตั้งค่าขนาดตัวอักษรของผู้ใช้ —
+     ผู้ใช้ที่ตั้งฟอนต์ระบบใหญ่ขึ้นจะได้ layout มือถือบนจอที่กว้างขึ้น ซึ่งถูก
+     ───────────────────────────────────────────────────────────────────────── */
+  --breakpoint-sm:  40rem;   /*  640px — ข้ามในกรณีส่วนใหญ่ */
+  --breakpoint-md:  48rem;   /*  768px */
+  --breakpoint-lg:  64rem;   /* 1024px */
+  --breakpoint-xl:  80rem;   /* 1280px */
+  --breakpoint-2xl: 96rem;   /* 1536px */
+
+  --container-form:    35rem;   /*  560px */
+  --container-narrow:  48rem;   /*  768px */
+  --container-content: 80rem;   /* 1280px ★ ค่าเริ่มต้น */
+  --container-wide:    90rem;   /* 1440px — dashboard/ตารางหนาแน่นเท่านั้น */
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ROLE TOKENS · อยู่นอก @theme เพราะไม่ตรงกับ namespace ของ Tailwind
+   เข้าถึงด้วย arbitrary-var syntax เช่น shadow-(--elevation-raised)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* บอก browser ให้ scrollbar และ native form control เป็นโหมดสว่าง
+     คู่กับ [data-theme="dark"] { color-scheme: dark } ใน dark.css */
+  color-scheme: light;
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     ELEVATION · API เดียวที่ component ใช้ได้
+     โหมดสว่าง: เงารับหน้าที่ · โหมดมืด: ขอบรับหน้าที่ (ดู dark.css)
+     ───────────────────────────────────────────────────────────────────────── */
+  --elevation-flat:     none;
+  --elevation-raised:   var(--shadow-sm);
+  --elevation-floating: var(--shadow-md);
+  --elevation-overlay:  var(--shadow-lg);
+  --elevation-modal:    var(--shadow-xl);
+
+  --elevation-surface-raised:   var(--color-surface);
+  --elevation-surface-floating: var(--color-surface);
+  --elevation-surface-overlay:  var(--color-surface);
+  --elevation-surface-modal:    var(--color-surface);
+
+  --elevation-edge-raised:   var(--color-edge-subtle);
+  --elevation-edge-floating: var(--color-edge-subtle);
+  --elevation-edge-overlay:  var(--color-edge-subtle);
+  --elevation-edge-modal:    var(--color-edge-subtle);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     MOTION เชิงบทบาท · การปิดเร็วกว่าการเปิดเสมอ
+     ───────────────────────────────────────────────────────────────────────── */
+  --motion-state:   var(--transition-duration-fast)   var(--ease-standard);
+  --motion-enter:   var(--transition-duration-medium) var(--ease-entering);
+  --motion-exit:    var(--transition-duration-fast)   var(--ease-exiting);
+  --motion-overlay: var(--transition-duration-medium) var(--ease-emphasized);
+  --motion-sheet:   var(--transition-duration-slow)   var(--ease-emphasized);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     RADIUS เชิงบทบาท
+     component ควรอ้างพวกนี้ ไม่ใช่ --radius-md
+     เพื่อให้การเปลี่ยนปุ่มทั้งระบบเป็น 6px แก้ที่เดียว
+     ───────────────────────────────────────────────────────────────────────── */
+  --radius-control:   var(--radius-md);
+  --radius-container: var(--radius-lg);
+  --radius-overlay:   var(--radius-xl);
+  --radius-pill-role: var(--radius-full);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     LAYOUT · ★ รับน้ำหนัก conformance
+     scroll-margin ของทุก focusable อ้างค่าเหล่านี้เพื่อผ่าน SC 2.4.11
+     ถ้าใครแก้ความสูง header ใน component โดยไม่แก้ที่นี่
+     ระบบจะไม่ผ่านทันทีทั้งระบบ และเป็นความล้มเหลวที่มองไม่เห็นด้วยตา
+     ───────────────────────────────────────────────────────────────────────── */
+  --header-height:     3.5rem;    /* 56px */
+  --sidebar-width:     17.5rem;   /* 280px — เป็น drawer จนถึง lg (1024px) */
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     แถบที่ยึดก้นจอ — **แต่ละแถบประกาศเฉพาะความสูงตัวเอง**
+     ───────────────────────────────────────────────────────────────────────────
+     ★★★ ทำไมต้องแยกตัวแปรแล้วรวมด้วย `calc()`
+
+     เดิม `CompareBar` เขียนทับ `--bottom-nav-height` และ `body.paddingBottom`
+     ตรง ๆ ซึ่งพังทันทีที่มีแถบที่สอง:
+
+       BottomNav 56px + CompareBar 77px  → ต้องจอง 133px
+       แต่ตัวที่ render ทีหลังเขียนทับตัวแรก → จองแค่ 77px
+       = ปุ่มท้ายหน้าจมใต้แถบ = ไม่ผ่าน SC 2.4.11
+
+     เป็นบั๊กแบบ **last-writer-wins ที่มองไม่เห็นจนกว่าทั้งคู่จะอยู่บนจอพร้อมกัน**
+
+     ★ กฎ: component ที่ยึดก้นจอ **เขียนได้เฉพาะตัวแปรของตัวเอง**
+       ห้ามแตะ `--bottom-inset` · ห้ามแตะ `body`
+       ตัวที่รวมคือ `calc()` ข้างล่างนี้ที่เดียว
+
+     ⚠️ Toast **ไม่จองพื้นที่** — เป็นของชั่วคราวที่ลอยทับ
+       ถ้าจองจะทำให้หน้าขยับทุกครั้งที่มี toast
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --bottom-nav-height:   0px;   /* BottomNav ประกาศเอง (Pass 4) */
+  --compare-bar-height:  0px;   /* CompareBar ประกาศเอง */
+  --action-bar-height:   0px;   /* แถบปุ่มท้ายหน้าในฟอร์ม (Pass 4/05) */
+
+  /** พื้นที่ก้นจอที่ถูกยึดทั้งหมด — อ่านที่เดียว เขียนไม่ได้ */
+  --bottom-inset: calc(
+    var(--bottom-nav-height) + var(--compare-bar-height) + var(--action-bar-height)
+  );
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Z-INDEX — บันไดเดียวของระบบ
+     ───────────────────────────────────────────────────────────────────────────
+     ก่อนมีสิ่งนี้ระบบใช้ `z-10` `z-40` `z-50` แบบกระจัดกระจาย ไม่มีใครรู้ว่า
+     ตัวเลขไหนหมายถึงอะไร และการเพิ่มของใหม่ต้องเดา
+
+     ★ ห้ามใช้ `z-[0-9]+` ตรง ๆ ใน component — ใช้ `z-(--z-*)` เท่านั้น
+
+     ★ ทำไม toast อยู่เหนือ modal
+       error ที่เกิดตอน modal เปิดต้องมองเห็น · RAC `ToastRegion` เป็น landmark
+       ที่เข้าถึงด้วย F6 ได้ จึงไม่ถูก focus trap ของ modal กัก
+
+     ★ ทำไม overlay กับ modal ห่างกันชั้นเดียว
+       `Popover`/`Select` ที่เปิดจากใน modal ต้องอยู่เหนือ modal · RAC portal
+       ไป `body` ทั้งคู่ จึงชนะด้วย **ลำดับใน DOM** (เปิดหลังอยู่บน) โดยไม่ต้อง
+       ไล่ z-index ขึ้นไปเรื่อย ๆ
+     ═══════════════════════════════════════════════════════════════════════════ */
+  --z-raised:   10;   /* ปุ่มในการ์ดที่ต้องอยู่เหนือ link overlay */
+  --z-sticky:   20;   /* AppHeader */
+  --z-bar:      30;   /* BottomNav · CompareBar · action bar */
+  --z-overlay:  40;   /* Popover · Select · Tooltip · Drawer */
+  --z-modal:    50;   /* Modal + backdrop */
+  --z-toast:    60;   /* เหนือ modal โดยตั้งใจ */
+
+  /* ระยะ section · ค่าเดียวในระบบที่เปลี่ยนตาม breakpoint */
+  --space-section: calc(var(--sme-space-unit) * 12);   /* 48px */
+
+  /* ความยาวบรรทัด */
+  --measure-narrow: 48ch;
+  --measure-body:   68ch;   /* ≈ 45–55 อักขระไทยที่ 16px */
+  --measure-wide:   80ch;
+
+  /* ICON · stroke ผูกกับขนาด — Icon wrapper อ่านค่าจากที่นี่ */
+  --icon-stroke-16: var(--sme-stroke-16);
+  --icon-stroke-20: var(--sme-stroke-20);
+  --icon-stroke-24: var(--sme-stroke-24);
+  --icon-stroke-32: var(--sme-stroke-32);
+  --icon-stroke-48: var(--sme-stroke-48);
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --header-height: 4rem;                                /* 64px */
+    --space-section: calc(var(--sme-space-unit) * 16);     /* 64px */
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --space-section: calc(var(--sme-space-unit) * 20);     /* 80px */
+  }
+}

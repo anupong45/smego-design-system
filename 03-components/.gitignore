@@ -1,0 +1,9 @@
+node_modules/
+tests/e2e/fixture/app.js
+tests/e2e/fixture/app.css
+test-results/
+playwright-report/
+
+# gallery build output
+gallery/gallery.js
+gallery/gallery.css

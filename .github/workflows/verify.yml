@@ -1,0 +1,89 @@
+name: verify
+
+# ═══════════════════════════════════════════════════════════════════════════
+# ชุดตรวจของ SME.GO Design System
+# ───────────────────────────────────────────────────────────────────────────
+# `npm run verify` ครบอยู่แล้วแต่ก่อนหน้านี้ **ไม่มีอะไรรันให้** — เอกสาร
+# 40 ไฟล์ระบุค่าพิกเซลและ contrast ไว้ชัดเจน ถ้าไม่มีใครตรวจก็ drift เงียบ ๆ
+#
+# ห้าขั้นเรียงตามต้นทุน ถูกสุดก่อน:
+#   lint      → grep · วินาที
+#   typecheck → tsc
+#   tokens    → validator 11 ข้อ
+#   test      → vitest + jest-axe (112)
+#   e2e       → playwright (16) · ต้องมี browser จึงอยู่ท้ายสุด
+#
+# ⚠️ `tailwindcss` ต้องติดตั้งที่ **root ของ repo** ไม่ใช่ใน 03-components
+#    เพราะ `02-tokens/theme.css` มี `@import "tailwindcss"` และ node
+#    resolve จากไฟล์ที่ import จึงไล่ขึ้นจาก 02-tokens/ ซึ่งไม่เจอ
+#    node_modules ของ 03-components เลย
+# ═══════════════════════════════════════════════════════════════════════════
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+# ยกเลิก run เก่าของ branch เดียวกันเมื่อ push ใหม่
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: 03-components/package-lock.json
+
+      # ─── dependencies ───────────────────────────────────────────────────
+      - name: ติดตั้ง dependencies ของ 03-components
+        working-directory: 03-components
+        run: npm ci
+
+      - name: ติดตั้ง tailwindcss ที่ root (ให้ 02-tokens/theme.css resolve ได้)
+        run: npm i -D tailwindcss@^4 --no-save
+
+      # ─── ขั้นที่ถูก รันก่อน ─────────────────────────────────────────────
+      - name: lint · ห้ามใช้สีนอกระบบ · z-index ดิบ · เขียนตัวแปรแถบอื่น
+        run: node 02-tokens/lint-classes.mjs
+
+      - name: typecheck
+        working-directory: 03-components
+        run: npm run typecheck
+
+      - name: token integrity · 11 ข้อ
+        run: node 02-tokens/validate-tokens.js
+
+      # ─── unit + a11y ────────────────────────────────────────────────────
+      - name: vitest + jest-axe
+        working-directory: 03-components
+        run: npm run test
+
+      # ─── e2e · แพงที่สุด ────────────────────────────────────────────────
+      - name: ติดตั้ง Chromium ของ Playwright
+        working-directory: 03-components
+        run: npx playwright install --with-deps chromium
+
+      - name: playwright · 4 เคส WCAG 2.2 + regression
+        working-directory: 03-components
+        run: npm run test:e2e
+
+      - name: เก็บผลเมื่อ e2e ล้ม
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            03-components/playwright-report/
+            03-components/test-results/
+          retention-days: 7
+          if-no-files-found: ignore

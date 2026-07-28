@@ -1,0 +1,154 @@
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
+import { I18nProvider } from 'react-aria-components';
+import { stringsTh, type Strings, type PartialStrings } from '../lib/strings.th';
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SME.GO · Provider
+   ───────────────────────────────────────────────────────────────────────────
+   ทำ 3 อย่าง
+
+   1. ตั้ง locale ให้ React Aria เป็น `th-TH-u-ca-buddhist`
+      → DateFormatter ทุกตัวใน RAC จะให้ **พ.ศ.** โดยอัตโนมัติ
+        ยืนยันแล้ว: today('Asia/Bangkok') 2026 → 2569 · "25 กรกฎาคม 2569"
+
+   2. ให้ dictionary ข้อความไทยของเราเองผ่าน context
+      → component อ่านด้วย useStrings()
+
+   3. ตั้ง timezone เริ่มต้นเป็น Asia/Bangkok
+      → กำหนดปิดรับสมัครของ Grant/Program คำนวณตามเวลาไทย ไม่ใช่ UTC
+        ซึ่งต่างกัน 7 ชั่วโมง และทำให้ "เหลือ 1 วัน" ผิดได้จริง
+
+   ⚠️ Provider **ไม่** ตั้ง data-theme — theme-init.js ในชั้น 02 ทำก่อน first paint
+      ถ้า Provider ทำ จะเกิดการกระพริบเพราะ React hydrate ทีหลัง
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/** locale ที่ทำให้ RAC ให้ พ.ศ. — ยืนยันด้วย @internationalized/date 3.12.2 */
+export const SMEGO_LOCALE = 'th-TH-u-ca-buddhist';
+
+/** เขตเวลาที่ใช้คำนวณกำหนดปิดรับสมัครและกำหนดการอบรม */
+export const SMEGO_TIMEZONE = 'Asia/Bangkok';
+
+interface SmeGoContextValue {
+  strings: Strings;
+  locale: string;
+  timeZone: string;
+}
+
+const SmeGoContext = createContext<SmeGoContextValue | null>(null);
+
+export interface SmeGoProviderProps {
+  children: ReactNode;
+
+  /**
+   * override ข้อความเป็นบางส่วน — ไม่ต้องส่งครบทุกคำ
+   * merge ระดับหมวด (shallow ต่อกลุ่ม) กับ stringsTh
+   */
+  strings?: PartialStrings;
+
+  /**
+   * locale · ค่าเริ่มต้น `th-TH-u-ca-buddhist`
+   *
+   * 📌 **แก้ความแม่นยำ** — ฉบับแรกของคอมเมนต์นี้เขียนว่า "ถ้าใช้ `th-TH` เฉย ๆ
+   *    จะได้ ค.ศ." ซึ่ง **ผิด** ทดสอบใน browser จริงแล้วพบว่า
+   *
+   *      th-TH               → calendar 'buddhist' → "25 กรกฎาคม 2569"
+   *      th-TH-u-ca-buddhist → calendar 'buddhist' → "25 กรกฎาคม 2569"
+   *      th-TH-u-ca-gregory  → calendar 'gregory'  → "25 กรกฎาคม ค.ศ. 2026"
+   *
+   *    **CLDR กำหนดให้ปฏิทินเริ่มต้นของภาษาไทยเป็นพุทธศักราชอยู่แล้ว**
+   *    ดังนั้น `-u-ca-buddhist` **ไม่จำเป็น** สำหรับการจัดรูปแบบ
+   *
+   *    เหตุผลที่ยังคงไว้: **เขียนเจตนาให้เห็นในโค้ด** — คนที่อ่าน
+   *    `th-TH-u-ca-buddhist` รู้ทันทีว่า พ.ศ. เป็นข้อกำหนด ไม่ใช่ผลข้างเคียง
+   *    และกันไว้ถ้าค่าเริ่มต้นของ CLDR เปลี่ยนในอนาคต
+   *
+   *    ⚠️ ถ้าต้องการ ค.ศ. จริง ๆ (เช่นสัญญาระหว่างประเทศ) ต้องระบุ
+   *    `th-TH-u-ca-gregory` — ไม่ใช่ `th-TH`
+   */
+  locale?: string;
+
+  /** เขตเวลา · ค่าเริ่มต้น `Asia/Bangkok` */
+  timeZone?: string;
+}
+
+export function SmeGoProvider({
+  children,
+  strings,
+  locale = SMEGO_LOCALE,
+  timeZone = SMEGO_TIMEZONE,
+}: SmeGoProviderProps) {
+  const value = useMemo<SmeGoContextValue>(() => {
+    if (!strings) return { strings: stringsTh, locale, timeZone };
+
+    /* merge ทีละหมวด เพื่อให้ override บางคำได้โดยไม่ต้องส่งหมวดมาครบ */
+    const merged = { ...stringsTh } as Record<string, unknown>;
+    for (const [group, overrides] of Object.entries(strings)) {
+      if (!overrides) continue;
+      merged[group] = {
+        ...(stringsTh as Record<string, Record<string, unknown>>)[group],
+        ...overrides,
+      };
+    }
+    return { strings: merged as Strings, locale, timeZone };
+  }, [strings, locale, timeZone]);
+
+  return (
+    <SmeGoContext.Provider value={value}>
+      <I18nProvider locale={locale}>{children}</I18nProvider>
+    </SmeGoContext.Provider>
+  );
+}
+
+/**
+ * อ่าน dictionary ข้อความไทย
+ *
+ * เรียกใช้นอก SmeGoProvider จะได้ค่าเริ่มต้นภาษาไทย — ไม่ throw
+ * เพื่อให้ component ทำงานได้ใน unit test ที่ไม่ได้ครอบ Provider
+ */
+export function useStrings(): Strings {
+  return useContext(SmeGoContext)?.strings ?? stringsTh;
+}
+
+/** อ่าน locale และ timezone ที่ตั้งไว้ — ใช้กับการจัดรูปแบบวันที่และจำนวนเงิน */
+export function useSmeGoLocale(): { locale: string; timeZone: string } {
+  const ctx = useContext(SmeGoContext);
+  return {
+    locale: ctx?.locale ?? SMEGO_LOCALE,
+    timeZone: ctx?.timeZone ?? SMEGO_TIMEZONE,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ข้อความภายในของ React Aria — ต่อเข้าไทยแล้ว แต่ **ต้องเรียกเอง**
+   ───────────────────────────────────────────────────────────────────────────
+   `I18nProvider locale="th-TH-u-ca-buddhist"` ทำให้ **การจัดรูปแบบวันที่และ
+   ตัวเลข** เป็นไทยและเป็น พ.ศ. ถูกต้อง
+
+   แต่ **ข้อความที่ RAC พูดกับ screen reader เอง** ไม่ได้มาจาก `I18nProvider`
+   React Aria ส่งชุดแปลมา 34 locale และ **ไม่มี th-TH**
+   (ภาษาเอเชียมีแค่ ja-JP · ko-KR · zh-CN · zh-TW)
+
+   ═══ วิธีเปิดใช้ ═══
+
+   เรียก **ครั้งเดียวที่ระดับ module ก่อน render ครั้งแรก** — ไม่ใช่ใน effect
+   เพราะ `@internationalized/string` อ่าน global แล้ว cache ทันที
+
+       // src/main.tsx — บรรทัดบนสุด ก่อน createRoot
+       import { dictionary } from 'react-aria-components/i18n';
+       import { installRacThaiStrings } from '@smego/ui';
+
+       installRacThaiStrings(dictionary.strings['en-US']);
+
+   ⚠️ **ไม่ได้เรียกให้อัตโนมัติใน Provider ตัวนี้โดยตั้งใจ** เพราะ
+   `react-aria-components/i18n` ดึงชุดแปลทั้ง 34 locale เข้า bundle
+   ซึ่งขัดกับเกณฑ์อุปกรณ์ในข้อ 01 (Android ระดับล่าง 4G)
+
+   แอปที่ต้องการให้ TalkBack ไทยได้ยินภาษาไทยต้อง **เลือกจ่าย bundle นั้นเอง**
+   และแอปที่ไม่ต้องการก็ไม่ต้องจ่าย — ถ้า library เรียกให้เอง จะไม่มีทางเลือก
+
+   ทางเลือกที่ไม่กิน bundle: ส่ง object `en-US` ที่ hardcode ไว้เองเข้ามาแทน
+   (`installRacThaiStrings` รับ reference อะไรก็ได้ที่มีรูปร่างถูก)
+
+   สถานะ: **ทดสอบแล้วใช้ได้จริง** — `tests/a11y/rac-i18n.test.tsx`
+   ยืนยันว่าปุ่มล้างค่าใน `SearchField` ประกาศว่า "ล้างคำค้นหา"
+   ═══════════════════════════════════════════════════════════════════════════ */
