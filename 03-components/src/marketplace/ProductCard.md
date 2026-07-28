@@ -113,11 +113,9 @@ ProductCard ไม่มี CVA ของตัวเอง — ประกอ�
 ```tsx
 eyebrow={
   <>
-    <Badge variant={inStock ? 'success' : 'neutral'}>
-      {inStock ? s.card.inStock : s.card.outOfStock}
-    </Badge>
+    <Badge variant={inStock ? 'success' : 'neutral'} label={inStock ? s.card.inStock : s.card.outOfStock} />
     {certifications?.map((c) => (
-      <Badge key={c} variant="neutral" showIcon={false}>{c}</Badge>
+      <Badge key={c} variant="neutral" showIcon={false} label={c} />
     ))}
   </>
 }

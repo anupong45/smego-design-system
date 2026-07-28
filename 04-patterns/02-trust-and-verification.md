@@ -66,7 +66,7 @@
 
 ```tsx
 /* ✅ ใบรับรองบนการ์ด — ข้อความล้วน */
-<Badge variant="neutral" showIcon={false}>มอก. 2456-2562</Badge>
+<Badge variant="neutral" showIcon={false} label="มอก. 2456-2562" />
 ```
 
 ---

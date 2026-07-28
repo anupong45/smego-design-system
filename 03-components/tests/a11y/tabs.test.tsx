@@ -31,7 +31,7 @@ function TabHarness() {
     <TabList value={tab} onChange={setTab} label="ข้อมูลสินค้า">
       <Tab value="detail" label="รายละเอียด" />
       <Tab value="spec" label="สเปก" />
-      <Tab value="review" label="รีวิว" endContent={<Badge>12</Badge>} />
+      <Tab value="review" label="รีวิว" endContent={<Badge label="12" />} />
       <TabPanel value="detail">เครื่องคั่วกาแฟขนาด 5 กิโลกรัม</TabPanel>
       <TabPanel value="spec">กำลังไฟ 3,500 วัตต์</TabPanel>
       <TabPanel value="review">ยังไม่มีรีวิว</TabPanel>

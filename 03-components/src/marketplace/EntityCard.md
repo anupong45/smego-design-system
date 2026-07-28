@@ -252,7 +252,7 @@ export function SupplierCard({ href, name, province, categoryCount, ...rest }: P
     <EntityCard
       href={href}
       title={name}
-      eyebrow={<Badge variant="success">{s.seller.verified}</Badge>}
+      eyebrow={<Badge variant="success" label={s.seller.verified} />}
       meta={
         <EntityMeta
           items={[

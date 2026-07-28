@@ -40,8 +40,8 @@ const cases: [string, React.ReactElement][] = [
     </Card>,
   ],
 
-  ['Badge · success', <Badge variant="success">อนุมัติแล้ว</Badge>],
-  ['Badge · warning', <Badge variant="warning">ใกล้ปิดรับ</Badge>],
+  ['Badge · success', <Badge variant="success" label="อนุมัติแล้ว" />],
+  ['Badge · warning', <Badge variant="warning" label="ใกล้ปิดรับ" />],
   ['Dot', <Dot variant="success" label="ตอบกลับภายใน 1 ชั่วโมง" />],
 
   ['Token', <Token label="มีใบรับรอง" defaultSelected icon="check" />],

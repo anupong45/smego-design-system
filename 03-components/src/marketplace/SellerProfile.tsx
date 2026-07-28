@@ -197,13 +197,13 @@ export function SellerProfile({
               ป้าย VAT แสดง**ทุกกรณี** รวมทั้งตอนไม่ได้จด เพราะ
               "ไม่แสดง" ผู้ซื้อจะสมมติว่าจดแล้ว ซึ่งเป็นสมมติฐานที่แพง 7% */}
           <span className="flex min-w-0 flex-wrap justify-self-start gap-2">
-            {isVerified && <Badge variant="success">{s.seller.verified}</Badge>}
+            {isVerified && <Badge variant="success" label={s.seller.verified} />}
             {isVatRegistered === null ? (
-              <Badge variant="neutral">{`${s.seller.vatStatus} · ${s.seller.vatUnknown}`}</Badge>
+              <Badge variant="neutral" label={<>{`${s.seller.vatStatus} · ${s.seller.vatUnknown}`}</>} />
             ) : isVatRegistered ? (
-              <Badge variant="success">{s.seller.vatRegistered}</Badge>
+              <Badge variant="success" label={s.seller.vatRegistered} />
             ) : (
-              <Badge variant="warning">{s.seller.vatNotRegistered}</Badge>
+              <Badge variant="warning" label={s.seller.vatNotRegistered} />
             )}
           </span>
 

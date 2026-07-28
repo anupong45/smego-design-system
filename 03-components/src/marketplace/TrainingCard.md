@@ -126,11 +126,11 @@ const formatLabel = {
 eyebrow={
   <>
     {isFull ? (
-      <Badge variant="danger">{s.card.seatsFull}</Badge>
+      <Badge variant="danger" label={s.card.seatsFull} />
     ) : seatsLeft !== undefined ? (
-      <Badge variant={seatsLow ? 'warning' : 'success'}>{s.card.seatsLeft(seatsLeft)}</Badge>
+      <Badge variant={seatsLow ? 'warning' : 'success'} label={s.card.seatsLeft(seatsLeft)} />
     ) : null}
-    <Badge variant="neutral" showIcon={false}>{formatLabel}</Badge>
+    <Badge variant="neutral" showIcon={false} label={formatLabel} />
   </>
 }
 amount={

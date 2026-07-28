@@ -367,55 +367,23 @@ if (ts && axDist) {
 
 for (const n of notes) console.log(`  · ${n}`);
 
-/* ── เพดานนับถอยหลัง ────────────────────────────────────────────────────────
+/* ── ตัดสิน ─────────────────────────────────────────────────────────────────
 
-   งาน parity รอบนี้เปิดค้างไว้หลายสัปดาห์ (rename 15 ชื่อ · label: string
-   ทั้งระบบ · สร้างเพิ่ม 6) ถ้าเกตนี้ fail ทันทีที่มี problem ข้อเดียว
-   `npm run verify` จะแดงยาวตลอดทาง แล้วเกตเขียวเดียวของโปรเจกต์จะหมด
-   ความหมาย — ทีมจะชินกับแดงแล้วมองข้ามของจริงที่พังปนมา
+   เคยมี **เพดานนับถอยหลัง** (`maxProblems`) อยู่ที่นี่ เพราะงาน parity เปิด
+   ค้างไว้หลายสัปดาห์ ถ้า fail ทันทีที่มี problem ข้อเดียว `npm run verify`
+   จะแดงยาวตลอดทางแล้วเกตเขียวเดียวของโปรเจกต์จะหมดความหมาย
 
-   จึงเทียบกับ `maxProblems` ใน §4.1 แทน:
-
-     เกินเพดาน  → แดง  drift ใหม่ถูกจับทันที ซึ่งคือเหตุผลที่ไฟล์นี้มีอยู่
-     ต่ำกว่า    → แดง  บังคับให้ลดเพดานลง ไม่งั้นเพดานจะค้างสูงแล้วเปิดช่อง
-                       ให้ drift ใหม่แอบเข้ามาแทนที่ปัญหาเก่าที่เพิ่งปิดไป
-     เท่ากัน    → เขียว
-
-   พอถึง 0 ให้ลบบล็อกนี้ทิ้งแล้วกลับไปเป็น `if (problems.length) exit(1)`
+   เพดานเดินจาก 53 → 0 แล้ว (2026-07-28) จึงลบทิ้งตามที่ §4.1 กำหนดไว้
+   `maxProblems` ในบล็อก json ไม่ถูกอ่านอีก — ปล่อยให้เกตเป็นแบบตรงไปตรงมา
+   ★ ถ้าจะเปิดงาน parity ก้อนใหญ่รอบใหม่ ให้เอากลไกนี้กลับมา ไม่ใช่ปล่อยแดง
    ───────────────────────────────────────────────────────────────────────── */
 
-const ceiling = cfg.maxProblems;
-if (typeof ceiling !== 'number') {
-  console.error('✗ ไม่พบ "maxProblems" ในบล็อก json parity — ดู §4.1');
-  process.exit(1);
-}
-
-/* อยู่ที่เพดานพอดี = ผ่าน จึงไม่ถ่ม 51 บรรทัดใส่ `npm run verify` ทุกครั้ง
-   ที่มันเขียว — ใช้ `npm run lint:parity -- --list` เพื่อดูรายการเต็ม */
-const wantList = process.argv.includes('--list') || problems.length !== ceiling;
-
-if (problems.length && wantList) {
-  console.error(`\n✗ parity: ${problems.length} ข้อ (เพดาน ${ceiling})\n`);
+if (problems.length) {
+  console.error(`\n✗ parity: ${problems.length} ข้อ\n`);
   for (const p of problems) console.error(`  ✗ ${p}`);
   console.error(`\nแก้โค้ด หรือถ้าเป็นการต่างโดยตั้งใจ บันทึกลง ASTRYX-PARITY.md §4`);
   console.error(`อ้างอิง Astryx ${cfg.astryxVersion}\n`);
-}
-
-if (problems.length > ceiling) {
-  console.error(`✗ เกินเพดาน ${problems.length} > ${ceiling} — มี drift ใหม่เข้ามา\n`);
   process.exit(1);
 }
 
-if (problems.length < ceiling) {
-  console.error(
-    `✗ ต่ำกว่าเพดาน ${problems.length} < ${ceiling} — ปิดงานได้แล้ว ` +
-      `ให้แก้ "maxProblems" ใน ASTRYX-PARITY.md §4.1 เป็น ${problems.length}\n`,
-  );
-  process.exit(1);
-}
-
-if (ceiling > 0) {
-  console.log(`✓ parity คงที่ที่เพดาน ${ceiling} — เทียบกับ Astryx ${cfg.astryxVersion}`);
-} else {
-  console.log(`✓ parity ผ่าน — เทียบกับ Astryx ${cfg.astryxVersion}`);
-}
+console.log(`✓ parity ผ่าน — เทียบกับ Astryx ${cfg.astryxVersion}`);

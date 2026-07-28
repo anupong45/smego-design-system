@@ -211,7 +211,7 @@ Component set **`Card`**
   </CardMedia>
   <VStack gap="3" className="mt-4">
     <HStack gap="2">
-      <Badge variant="success">มีสินค้า</Badge>
+      <Badge variant="success" label="มีสินค้า" />
     </HStack>
     <h3 className="text-subtitle text-fg">เครื่องคั่วกาแฟ 5 กก.</h3>
     <p className="text-body-sm text-fg-muted">ผู้ผลิต บจก. ไทยโรสเตอร์</p>

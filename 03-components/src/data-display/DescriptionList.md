@@ -163,7 +163,7 @@ Component set `DescriptionList`
     { label: 'เลขประจำตัวผู้เสียภาษี', value: '0105558012345', numeric: true },
     {
       label: 'สถานะภาษีมูลค่าเพิ่ม',
-      value: <Badge variant="success">จดทะเบียนแล้ว</Badge>,
+      value: <Badge variant="success" label="จดทะเบียนแล้ว" />,
     },
     { label: 'ออกใบกำกับภาษีอิเล็กทรอนิกส์', value: 'ได้' },
     { label: 'หน่วยงานที่รับรอง', value: 'กรมพัฒนาธุรกิจการค้า (DBD)' },

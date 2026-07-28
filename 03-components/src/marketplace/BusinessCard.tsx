@@ -128,15 +128,11 @@ export function BusinessCard({
       className={className}
       eyebrow={
         <>
-          {isRecommended && <Badge variant="accent">{s.card.recommended}</Badge>}
+          {isRecommended && <Badge variant="accent" label={s.card.recommended} />}
           {/* ยืนยันแล้ว vs ยังไม่ยืนยัน — ทั้งสองสถานะแสดง ไม่ใช่ซ่อนอันหลัง */}
-          <Badge variant={isVerified ? 'success' : 'neutral'}>
-            {isVerified ? s.seller.verified : s.seller.unverified}
-          </Badge>
+          <Badge variant={isVerified ? 'success' : 'neutral'} label={isVerified ? s.seller.verified : s.seller.unverified} />
           {certifications?.map((c) => (
-            <Badge key={c} variant="neutral" showIcon={false}>
-              {c}
-            </Badge>
+            <Badge key={c} variant="neutral" showIcon={false} label={c} />
           ))}
         </>
       }

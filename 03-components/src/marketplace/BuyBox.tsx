@@ -137,9 +137,7 @@ export function BuyBox({
       {/* ★ สถานะสต็อกมีทั้งรูปแบบและข้อความ ไม่ใช่สีอย่างเดียว (SC 1.4.1) */}
       {isProduct && stock !== undefined && (
         <p className="min-w-0">
-          <Badge variant={isOutOfStock ? 'neutral' : 'success'}>
-            {isOutOfStock ? s.card.outOfStock : s.card.inStock}
-          </Badge>
+          <Badge variant={isOutOfStock ? 'neutral' : 'success'} label={isOutOfStock ? s.card.outOfStock : s.card.inStock} />
         </p>
       )}
 

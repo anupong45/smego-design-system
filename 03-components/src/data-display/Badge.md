@@ -26,7 +26,7 @@ Badge เป็นข้อมูลอ่านอย่างเดียว �
 ```tsx
 import { Badge, Dot } from '@smego/ui';
 
-<Badge variant="success">อนุมัติแล้ว</Badge>
+<Badge variant="success" label="อนุมัติแล้ว" />
 <Dot variant="success" label="ออนไลน์" />
 ```
 
@@ -34,7 +34,8 @@ import { Badge, Dot } from '@smego/ui';
 
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
-| `children` | `ReactNode` | — | ข้อความสั้น — ไม่ใช่ประโยค |
+| `label` | `ReactNode` | — | **บังคับ** — เดิมชื่อ `children` (§1.3) · เป็น `ReactNode` ไม่ใช่ `string` ตามของ Astryx เพราะ badge ไม่ใช่ control ที่ต้องมี accessible name เอง |
+| ~~`children`~~ | — | — | ข้อความสั้น — ไม่ใช่ประโยค |
 | `variant` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger' \| 'accent'` | `'neutral'` | |
 | `showIcon` | `boolean` | `true` | ⚠️ ตั้ง `false` ได้เฉพาะเมื่อมีตัวชี้ที่ไม่ใช่สีอย่างอื่นแล้ว |
 | `icon` | `IconName` | ตาม variant | ทับตัวที่ผูกกับ variant |
@@ -176,14 +177,14 @@ Badge **ไม่มี** `State` property เพราะไม่มี state 
 
 ```tsx
 // สถานะโครงการรัฐ — ต้องมีทั้งรูปทรงและข้อความ
-<Badge variant="success">เปิดรับสมัคร</Badge>
-<Badge variant="warning">ใกล้ปิดรับ · เหลือ 5 วัน</Badge>
-<Badge variant="danger">ปิดรับแล้ว</Badge>
+<Badge variant="success" label="เปิดรับสมัคร" />
+<Badge variant="warning" label="ใกล้ปิดรับ · เหลือ 5 วัน" />
+<Badge variant="danger" label="ปิดรับแล้ว" />
 ```
 
 ```tsx
 // ป้ายแบรนด์ — ทองใช้ได้เฉพาะกรณีนี้
-<Badge variant="accent">แนะนำ</Badge>
+<Badge variant="accent" label="แนะนำ" />
 ```
 
 ```tsx
@@ -194,7 +195,7 @@ Badge **ไม่มี** `State` property เพราะไม่มี state 
 
 ```tsx
 // ใบรับรอง — ไม่มีไอคอนโดเมนไทย จึงใช้ข้อความล้วน (ข้อ 09)
-<Badge variant="neutral" showIcon={false}>มอก. 2456-2562</Badge>
+<Badge variant="neutral" showIcon={false} label="มอก. 2456-2562" />
 ```
 
 ---
@@ -204,12 +205,12 @@ Badge **ไม่มี** `State` property เพราะไม่มี state 
 | ❌ | ✅ | ทำไม |
 |---|---|---|
 | `<Badge onClick={filter}>` | `<Token>` | Badge ไม่มี focus ring และไม่รับประกัน 24×24 |
-| `<Badge variant="accent">ใกล้ปิดรับ</Badge>` | `variant="warning"` | ทองห้ามเป็นสถานะ (ข้อ 02 §9) |
+| `<Badge variant="accent" label="ใกล้ปิดรับ" />` | `variant="warning"` | ทองห้ามเป็นสถานะ (ข้อ 02 §9) |
 | `<Badge variant="warning" showIcon={false}>` | ปล่อย `showIcon` | ทองกับเหลืองห่างกัน 1.43:1 — สีอย่างเดียวแยกไม่ออก |
 | `<span className="text-warning-500">` | `text-warning-icon` | yellow-500 บนขาวได้ **1.66:1** |
 | `<span className="size-2 rounded-full bg-success-icon" />` ลอย ๆ | `<Dot label="…">` | จุดสีล้วนไม่มีความหมายสำหรับ screen reader |
 | `<Badge className="truncate">` | ปล่อยให้ยืด | ตัดข้อความทิ้ง = ไม่ผ่าน SC 1.4.12 |
-| `<Badge>สินค้านี้ผ่านการรับรองมาตรฐาน…</Badge>` | ข้อความในหน้า | Badge เป็นคำ ไม่ใช่ประโยค |
+| `<Badge label="สินค้านี้ผ่านการรับรองมาตรฐาน…" />` | ข้อความในหน้า | Badge เป็นคำ ไม่ใช่ประโยค |
 | `<Badge className="bg-primary-600 text-on-brand">` | `variant="info"` | พื้นทึบ = กดได้ ในระบบนี้ ผู้ใช้จะพยายามกด |
 
 ---

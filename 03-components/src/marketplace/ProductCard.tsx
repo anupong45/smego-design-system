@@ -82,14 +82,10 @@ export function ProductCard({
       className={className}
       eyebrow={
         <>
-          <Badge variant={inStock ? 'success' : 'neutral'}>
-            {inStock ? s.card.inStock : s.card.outOfStock}
-          </Badge>
+          <Badge variant={inStock ? 'success' : 'neutral'} label={inStock ? s.card.inStock : s.card.outOfStock} />
           {/* ใบรับรอง — ข้อความล้วน ไม่มีไอคอนที่สื่อความหมายผิด */}
           {certifications?.map((c) => (
-            <Badge key={c} variant="neutral" showIcon={false}>
-              {c}
-            </Badge>
+            <Badge key={c} variant="neutral" showIcon={false} label={c} />
           ))}
         </>
       }

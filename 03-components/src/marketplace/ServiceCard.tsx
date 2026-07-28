@@ -127,13 +127,9 @@ export function ServiceCard({
       className={className}
       eyebrow={
         <>
-          <Badge variant="info" showIcon={false}>
-            บริการ
-          </Badge>
+          <Badge variant="info" showIcon={false} label="บริการ" />
           {certifications?.map((c) => (
-            <Badge key={c} variant="neutral" showIcon={false}>
-              {c}
-            </Badge>
+            <Badge key={c} variant="neutral" showIcon={false} label={c} />
           ))}
         </>
       }

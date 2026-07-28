@@ -105,7 +105,7 @@ function Foundations() {
 
       <Specimen name="Stack / HStack" note="flex wrapper — direction · gap · align · justify · wrap">
         <Stack gap="3">
-          <HStack gap="2"><Badge>หนึ่ง</Badge><Badge>สอง</Badge><Badge>สาม</Badge></HStack>
+          <HStack gap="2"><Badge label="หนึ่ง" /><Badge label="สอง" /><Badge label="สาม" /></HStack>
           <HStack gap="6" justify="between"><span className="text-body">ซ้าย</span><span className="text-body">ขวา</span></HStack>
         </Stack>
       </Specimen>
@@ -239,7 +239,7 @@ function Inputs() {
             <Radio value="s">เล็ก</Radio><Radio value="m">กลาง</Radio><Radio value="l">ใหญ่</Radio>
           </RadioList>
           <RadioList label="แผนการใช้งาน" defaultValue="free">
-            <Radio value="free" layout="card" description="ลงสินค้าได้ 10 รายการ" endSlot={<Badge variant="success">ฟรี</Badge>}>เริ่มต้น</Radio>
+            <Radio value="free" layout="card" description="ลงสินค้าได้ 10 รายการ" endSlot={<Badge variant="success" label="ฟรี" />}>เริ่มต้น</Radio>
             <Radio value="pro" layout="card" description="ไม่จำกัดรายการ + สถิติ" endSlot={<span className="text-body-strong">฿590/เดือน</span>}>มืออาชีพ</Radio>
           </RadioList>
         </Stack>
@@ -317,16 +317,16 @@ function DataDisplay() {
 
       <Specimen name="Badge / Dot">
         <Row label="variant">
-          <Badge variant="neutral">ทั่วไป</Badge>
-          <Badge variant="info">ข้อมูล</Badge>
-          <Badge variant="success">เปิดรับ</Badge>
-          <Badge variant="warning">ใกล้ปิด</Badge>
-          <Badge variant="danger">ปิดแล้ว</Badge>
-          <Badge variant="accent">แนะนำ</Badge>
+          <Badge variant="neutral" label="ทั่วไป" />
+          <Badge variant="info" label="ข้อมูล" />
+          <Badge variant="success" label="เปิดรับ" />
+          <Badge variant="warning" label="ใกล้ปิด" />
+          <Badge variant="danger" label="ปิดแล้ว" />
+          <Badge variant="accent" label="แนะนำ" />
         </Row>
         <Row label="showIcon">
-          <Badge variant="success" showIcon>ยืนยันตัวตนแล้ว</Badge>
-          <Badge variant="warning" showIcon>รอตรวจสอบ</Badge>
+          <Badge variant="success" showIcon label="ยืนยันตัวตนแล้ว" />
+          <Badge variant="warning" showIcon label="รอตรวจสอบ" />
         </Row>
         <Row label="Dot">
           <Dot variant="success" label="ออนไลน์" />
@@ -543,7 +543,7 @@ function Marketplace() {
             href="#"
             title="เครื่องคั่วกาแฟ TR-500"
             media={<Thumb />}
-            eyebrow={<Badge variant="accent">แนะนำ</Badge>}
+            eyebrow={<Badge variant="accent" label="แนะนำ" />}
             meta={<EntityMeta items={[{ label: 'ผู้ขาย', value: 'ดอยคำโรสเตอร์' }, { label: 'จังหวัด', value: 'เชียงใหม่' }]} />}
             amount={<EntityAmount label="ราคา" value={1_250_000} unit="เครื่อง" />}
             footer={<span className="text-caption text-fg-muted">พร้อมส่ง 4 เครื่อง</span>}
@@ -761,7 +761,7 @@ function Navigation() {
         <TabList value={tab} onChange={setTab} label="ข้อมูลสินค้า" hasDivider>
           <Tab value="detail" label="รายละเอียด" />
           <Tab value="spec" label="สเปก" />
-          <Tab value="review" label="รีวิว" endContent={<Badge>12</Badge>} />
+          <Tab value="review" label="รีวิว" endContent={<Badge label="12" />} />
           <TabPanel value="detail">เครื่องคั่วกาแฟขนาด 5 กิโลกรัม สำหรับร้านกาแฟขนาดกลาง</TabPanel>
           <TabPanel value="spec">กำลังไฟ 3,500 วัตต์ · ความจุถัง 5 กก. · ใช้ไฟ 220V</TabPanel>
           <TabPanel value="review">ยังไม่มีรีวิวสำหรับสินค้านี้</TabPanel>

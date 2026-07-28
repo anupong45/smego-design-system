@@ -71,7 +71,15 @@ const ICON_FOR_VARIANT: Partial<Record<BadgeVariant, IconName>> = {
 };
 
 export interface BadgeProps extends VariantProps<typeof badgeStyles> {
-  children: ReactNode;
+  /**
+   * ข้อความบน badge (เดิมรับ `children` — ดู ASTRYX-PARITY.md §1.3)
+   *
+   * ★ เป็น `ReactNode` **ไม่ใช่ `string`** ตามของ Astryx — ต่างจาก input
+   * ทุกตัวที่ §8.1 บังคับ `label: string` เพราะ badge ไม่ใช่ control ที่ต้อง
+   * มี accessible name ของตัวเอง ข้อความคือเนื้อหาในกระแสอ่านปกติ
+   * (ดังนั้น §8.1 จึงไม่ได้อะไรเพิ่มที่นี่ — รับชื่อเพราะความสม่ำเสมอ)
+   */
+  label: ReactNode;
 
   /**
    * แสดงไอคอนตาม variant · ค่าเริ่มต้น `true` สำหรับ status variant
@@ -87,13 +95,13 @@ export interface BadgeProps extends VariantProps<typeof badgeStyles> {
   className?: string;
 }
 
-export function Badge({ children, variant, showIcon = true, icon, className }: BadgeProps) {
+export function Badge({ label, variant, showIcon = true, icon, className }: BadgeProps) {
   const resolved = icon ?? ICON_FOR_VARIANT[variant ?? 'neutral'];
 
   return (
     <span className={cn(badgeStyles({ variant }), className)}>
       {showIcon && resolved && <Icon name={resolved} size={16} />}
-      {children}
+      {label}
     </span>
   );
 }

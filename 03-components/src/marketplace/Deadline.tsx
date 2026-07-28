@@ -59,9 +59,7 @@ export function DeadlineBadge({ status, daysLeft, className }: DeadlineBadgeProp
           : `${s.card.statusClosingSoon} · ${s.card.daysLeft(daysLeft)}`;
 
   return (
-    <Badge variant={VARIANT_FOR_STATUS[status]} className={className}>
-      {text}
-    </Badge>
+    <Badge variant={VARIANT_FOR_STATUS[status]} className={className} label={text} />
   );
 }
 

@@ -78,9 +78,7 @@ export function ProgramCard({
       eyebrow={
         <>
           <DeadlineBadge status={status} daysLeft={daysLeft} />
-          <Badge variant="neutral" showIcon={false}>
-            โครงการรัฐ
-          </Badge>
+          <Badge variant="neutral" showIcon={false} label="โครงการรัฐ" />
         </>
       }
       meta={

@@ -68,7 +68,7 @@ describe('Avatar · a11y', () => {
         <Avatar src="/logo.png" alt="โลโก้ บริษัท ไทยโรสเตอร์" />
         <Avatar name="บริษัท ไทยโรสเตอร์ จำกัด" />
         <Avatar />
-        <Avatar name="ไทยโรสเตอร์" status={<Badge variant="success">ยืนยันแล้ว</Badge>} />
+        <Avatar name="ไทยโรสเตอร์" status={<Badge variant="success" label="ยืนยันแล้ว" />} />
       </>,
     );
     const results = await expectNoViolations(container);
@@ -148,7 +148,7 @@ describe('Avatar · ทางถอยเมื่อรูปพัง', () => 
 describe('Avatar · status', () => {
   it('★★ status ต้องไม่ถูกตัด — overflow-hidden อยู่ชั้นในไม่ใช่ชั้นนอก', () => {
     const { container } = render(
-      <Avatar name="ไทยโรสเตอร์" status={<Badge variant="success">ยืนยันแล้ว</Badge>} />,
+      <Avatar name="ไทยโรสเตอร์" status={<Badge variant="success" label="ยืนยันแล้ว" />} />,
     );
     const root = container.firstElementChild as HTMLElement;
     /* ถ้า overflow-hidden ขึ้นมาอยู่ชั้นนอก ป้ายที่วางล้นขอบจะหายทั้งอัน */

@@ -51,7 +51,7 @@ import { TabList, Tab, TabPanel } from '@smego/ui';
 <TabList value={tab} onChange={setTab} label="ข้อมูลสินค้า">
   <Tab value="detail" label="รายละเอียด" />
   <Tab value="spec" label="สเปก" />
-  <Tab value="review" label="รีวิว" endContent={<Badge>12</Badge>} />
+  <Tab value="review" label="รีวิว" endContent={<Badge label="12" />} />
 
   <TabPanel value="detail">…</TabPanel>
   <TabPanel value="spec">…</TabPanel>

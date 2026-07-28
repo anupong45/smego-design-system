@@ -213,6 +213,8 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | D19 | ไม่รับ `tooltip` บน `Button` `IconButton` `Link` | `IconButton.md` §5 และ `Tooltip.md` §5 เขียนตรงกันว่า `aria-describedby` **ไม่ใช่** accessible name — prop ชื่อ `tooltip` บนปุ่มเชิญให้ทำ anti-pattern ที่สองไฟล์นั้นกันไว้เอง (ใช้ `label` ตั้งชื่อ แล้วครอบด้วย `TooltipTrigger` ถ้าต้องการคำอธิบายเสริม) |
 | D20 | เส้นแบ่ง link/button — ไม่รับ `Button.href/target/rel` (และ `IconButton.href/target/rel` ด้วยเหตุผลเดียวกัน) และไม่รับ `Link.label/color/weight/display/type/maxLines/hasUnderline` | `Link.md` §1 ตั้งกฎไว้ว่า "เปลี่ยน URL = ลิงก์ · เปลี่ยนข้อมูล = ปุ่ม" · `Button.href` ลบเส้นนั้นทิ้ง ส่วน `Link.color/weight/display/type/maxLines` เปิดทางให้ลิงก์แต่งตัวเป็นปุ่ม · `hasUnderline` คือปุ่มปิด SC 1.4.1 (สีอย่างเดียวไม่พอ) ที่ `base.css` บังคับขีดเส้นใต้ด้วย `:where(a[href])` อยู่แล้ว |
 | D21 | props ที่ขัด SC หรือขัดคำตัดสินเดิม — `IconButton.isLoading/clickAction/isInterruptible` · `Tooltip.focusTrigger/alignment/anchorRef/hasHoverIndication` · `ProgressBar.isIndeterminate` · `Dialog.isInline` | `IconButton` เป็นไอคอนล้วน ไม่มีที่ให้ spinner โดยไม่บังไอคอน — `IconButton.md` §10 สั่งให้ใช้ `Button isLoading` แทนอยู่แล้ว · `clickAction`/`isInterruptible` เป็น event model ของ Astryx (เหตุผลเดียวกับ D8) · `focusTrigger` เปิดช่องปิดการแสดงตอน focus = ตก SC 1.4.13 · `alignment`/`anchorRef`/`hasHoverIndication` ขัด offset 8px ที่ตรึงไว้โดยเจตนา · `isIndeterminate` ทับเขต `Spinner` ตามกฎ §8.5 · `Dialog.isInline` คือ dialog ที่ไม่ใช่ overlay ซึ่งเป็นงานของ `Card`/`Section` |
+| D37 | `Icon` ไม่รับชื่อ `icon` ของ Astryx — คง `name` | ของ Astryx รับ **`ReactNode`** ส่วนของเรารับ **key ของ registry** (`IconName`) ซึ่งเป็นสิ่งที่ทำให้การันตีชุดไอคอนที่ผ่านการตรวจ stroke/ขนาดได้ · `name` สื่อ "อ้างถึงรายการในทะเบียน" ตรงกว่า `icon` ที่สื่อ "ยัดอะไรก็ได้" · รับชื่อเขาแต่คงชนิดเราจะได้ชื่อเดียวกันชนิดต่างกัน (กับดักเดียวกับ D34) และจ่าย **247 call site** เพื่อความสับสน (ยืนยันคำตัดสิน 2026-07-28) |
+| D36 | `Banner` ไม่รับ `status` — คง `tone` | ⚠️ **ชื่อชนกันแต่รูปร่างคนละอย่าง** · `status` ของ Astryx คือ `BannerStatus` (string enum ที่ theme ขยายได้) ส่วน `status` ในระบบนี้คือ `InputStatus` = `{ type, message }` ที่ใช้เหมือนกันทั้ง 13 input · รับชื่อเขาจะทำให้ prop ชื่อเดียวกันมีสองรูปร่างในระบบเดียว ซึ่งเป็นกับดักที่ **D34 ปฏิเสธไปแล้วตรง ๆ** · `tone` เป็นชื่อที่ถูกของแกนนี้ และ §8.4/D13 ตัดสินไว้แล้วว่า `Alert`→`Banner` รับแค่ชื่อ component ไม่รับ API |
 | D35 | ไม่รับ `labelIcon` ทุกตัว (`CheckboxInput` `NumberInput` `Switch` ฯลฯ) | ไอคอนข้างป้ายเป็นการตกแต่งที่ไม่มีทางประกาศความหมายให้ screen reader ได้ — ถ้าไอคอนสื่อความหมายจริง ข้อความต้องพูดสิ่งนั้นออกมา และถ้าไม่สื่อ ก็เป็น noise ที่กินพื้นที่ป้ายซึ่งข้อความไทยยาวกว่าอังกฤษ 20–40% อยู่แล้ว · เคสที่อ้างกันบ่อยคือ "ไอคอนช่วยอธิบาย" ซึ่งระบบนี้ตอบด้วย `description` (มีทุกตัว) ไม่ใช่ภาพ · หลักเดียวกับ D16 แต่แยกรหัสเพราะ D16 แจกแจง prop ไว้ตายตัวแล้ว |
 | D34 | `Link` ไม่รับ `isExternalLink` / `isStandalone` — **รับ `newTabLabel`** | ⚠️ **§4 เดิมเขียนผิดทั้งสองข้อ** (ตรวจกับ `Link.d.ts` แล้ว) · **`isExternalLink`**: เอกสารเดิมว่า "rename จาก `external` งานเดียวกัน" — **ไม่จริง** · ของ Astryx **ตั้ง `target="_blank"` + `rel="noopener noreferrer"` ให้อัตโนมัติ** ส่วน `external` ของเราตั้งใจไม่ตั้ง (คอมเมนต์ใน `Link.tsx` ระบุว่า "การเปิดแท็บใหม่เป็นการตัดสินใจระดับผลิตภัณฑ์ ไม่ใช่ผลข้างเคียงของการมีไอคอน" — สอดคล้อง WCAG G200) · ถ้ารับชื่อเขาแต่คงพฤติกรรมเราจะได้ **ชื่อเดียวกันพฤติกรรมต่างกัน** ซึ่งเป็นกับดักที่แย่กว่าการต่างชื่อ · **`isStandalone`**: เอกสารเดิมว่า "ต้องการ hit area ของตัวเอง" — **ไม่จริง** · `.d.ts` ระบุว่า "Applies base font sizing" คือเรื่อง**ขนาดตัวอักษร** ซึ่งซ้ำกับ `size` ของเราที่มี `inherit`/`body` อยู่แล้ว (หลักเดียวกับ D22: ไม่มีสองวิธีทำสิ่งเดียวกัน) · **`newTabLabel` รับเข้ามาแล้ว** — ข้อความ SR ต้องแปลไทยได้ต่อ call site |
 | D33 | `Button` ไม่รับ `label` · `isIconOnly` · `endContent` | **`label`**: §8.1 จำกัดขอบเขต `label: string` ไว้ที่ input + `Badge` + `Chip` และ**จงใจไม่รวม `Button`** — ปุ่มต้องรับ `ReactNode` เพราะมี composition จริงในระบบ (ไอคอน + ข้อความ + จำนวน) และมี 71 call site (ยืนยันคำตัดสิน 2026-07-28) · **`isIconOnly`**: เรามี `IconButton` เป็น component แยกอยู่แล้ว — เอกสารของ Astryx เองก็บอกให้ใช้ `IconButton` แทน `<Button isIconOnly>` การมีทั้งสองทางคือสองวิธีทำสิ่งเดียวกัน (หลักเดียวกับ D15) · **`endContent`**: ซ้ำกับ `icon` + `iconPosition="end"` ที่อยู่ใน `propsOursOnly` แล้ว |
@@ -281,7 +283,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 3,
+  "maxProblems": 0,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea"
@@ -305,6 +307,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "FilterPanel", "Cart", "Wishlist", "Container", "SmeGoProvider"
   ],
   "propsSkipAll": ["className", "as", "children"],
+  "// parityScope": "ขอบเขตที่ gate บังคับ = ชื่อ component + prop สี่ตัวนี้เท่านั้น · ชื่อ prop นอกชุดนี้อยู่นอกขอบเขต (Icon.name vs icon → D37) — ถ้อยคำคำตัดสินข้อ 1 แก้ให้ตรงกับที่ทำจริงแล้ว",
   "parityScope": ["label", "isLabelHidden", "status", "isOptional"],
   "layerDiff": {
     "Tooltip": {
@@ -331,6 +334,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "TabList": ["label", "isDisabled"],
     "Card": ["selected", "elevation", "interactive"],
     "Badge": ["showIcon"],
+    "Icon": ["name"],
     "Banner": ["isLive", "titleAs", "action", "tone"],
     "Dialog": ["footer", "size", "title", "hideClose"],
     "ProgressBar": ["note", "size", "unit", "unknownLabel", "format", "maxValue", "tone"],
@@ -355,7 +359,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "CheckboxInput": { "size": "D1", "isLoading": "D8" },
     "RadioList": { "size": "D1" },
     "TextArea": { "startIcon": "D17", "isLoading": "D17", "hasSpellCheck": "D17" },
-    "Banner": { "defaultIsExpanded": "D13", "container": "D13" },
+    "Banner": { "defaultIsExpanded": "D13", "container": "D13", "status": "D36" },
     "Button": {
       "clickAction": "D8", "isInterruptible": "D8", "tooltip": "D19",
       "href": "D20", "target": "D20", "rel": "D20",
