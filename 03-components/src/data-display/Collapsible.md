@@ -240,7 +240,7 @@ Component set **`AccordionItem`**
 // กลุ่มตัวกรอง — ต้องเปิดหลายกลุ่มพร้อมกันได้
 <Collapsible allowsMultipleExpanded defaultExpandedKeys={['category', 'price']}>
   <AccordionItem id="category" title="หมวดหมู่" headingLevel={3}>
-    <CheckboxGroup label="หมวดหมู่" aria-label="หมวดหมู่">…</CheckboxGroup>
+    <CheckboxList label="หมวดหมู่" aria-label="หมวดหมู่">…</CheckboxList>
   </AccordionItem>
   <AccordionItem id="price" title="ช่วงราคา" headingLevel={3}>
     <Slider label="ช่วงราคา" … />

@@ -14,7 +14,7 @@ import {
   SmeGoProvider, ToastRegion, showToast,
   Stack, HStack, Grid, Container, Divider,
   Icon, iconRegistry, type IconName,
-  Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
+  Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxList,
   Radio, RadioList, Slider, DateInput, OTPField, NumberInput,
   SearchField, Switch, Selector, Typeahead, FileInput,
   Card, CardMedia, Badge, Dot, Token, RemovableChip, ChipRow, Avatar,
@@ -211,7 +211,7 @@ function Inputs() {
         </Stack>
       </Specimen>
 
-      <Specimen name="CheckboxInput / CheckboxGroup">
+      <Specimen name="CheckboxInput / CheckboxList">
         <Stack gap="4">
           <CheckboxInput
             label="จดจำการค้นหานี้"
@@ -219,15 +219,15 @@ function Inputs() {
             onChange={setChecked}
             description="ระบบจะบันทึกไว้ในบัญชีของคุณ"
           />
-          <CheckboxGroup label="มาตรฐานที่ต้องการ" description="เลือกได้มากกว่าหนึ่ง">
+          <CheckboxList label="มาตรฐานที่ต้องการ" description="เลือกได้มากกว่าหนึ่ง">
             <CheckboxInput value="gmp" label="GMP" />
             <CheckboxInput value="haccp" label="HACCP" />
             <CheckboxInput value="halal" label="ฮาลาล" />
-          </CheckboxGroup>
-          <CheckboxGroup label="ประเภท" status={{ type: 'error', message: 'เลือกอย่างน้อยหนึ่งรายการ' }}>
+          </CheckboxList>
+          <CheckboxList label="ประเภท" status={{ type: 'error', message: 'เลือกอย่างน้อยหนึ่งรายการ' }}>
             <CheckboxInput value="a" label="สินค้า" />
             <CheckboxInput value="b" label="บริการ" />
-          </CheckboxGroup>
+          </CheckboxList>
         </Stack>
       </Specimen>
 
@@ -613,9 +613,9 @@ function Marketplace() {
             defaultExpandedKeys={['g1']}
             groups={[
               { id: 'g1', title: 'มาตรฐาน', children: (
-                <CheckboxGroup label="มาตรฐาน" className="[&>*:first-child]:sr-only">
+                <CheckboxList label="มาตรฐาน" className="[&>*:first-child]:sr-only">
                   <CheckboxInput value="gmp" label="GMP" /><CheckboxInput value="haccp" label="HACCP" />
-                </CheckboxGroup>
+                </CheckboxList>
               ) },
               { id: 'g2', title: 'ราคา', children: <span className="text-body">ช่วงราคา…</span> },
             ]}

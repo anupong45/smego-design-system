@@ -188,6 +188,69 @@ if (axDist) {
   }
 }
 
+/* ── 3d · component ของ Astryx **ทุกตัว** ต้องถูกตัดสิน ────────────────────
+
+   ★★★ รูที่เกตนี้เคยมองไม่เห็นเลย
+
+   ข้อ 3c ตรวจทางเดียว: ชื่อที่ **เราอ้าง** ว่าตรงกับเขา ต้องมีจริงฝั่งเขา
+   แต่ไม่มีอะไรตรวจทางกลับ — **component ที่เขามีแต่เราไม่เคยเอ่ยถึง**
+
+   วัดเมื่อ 2026-07-29: Astryx 0.1.9 มี component dir 105 ตัว ในนั้น
+   **49 ตัวไม่เคยถูกเอ่ยถึงเลย** ทั้งในบล็อกคอนฟิกและในเนื้อ ASTRYX-PARITY.md
+   เกตจึงเป็น opt-in ทั้งสองทิศ ซึ่งขัดกับคำตัดสินข้อ 1 ที่ว่า **ชื่อ
+   component อยู่ในขอบเขต parity**
+
+   ของที่หลุดไม่ใช่เรื่องเล็ก: `CheckboxList` หลุดไปหลายวันจนระบบมี
+   `RadioList` คู่กับ `CheckboxGroup` — คู่ Group→List ที่ทำไปครึ่งเดียว
+   และตอนที่ rename แล้วเกตเริ่มมองเห็น มันฟ้องทันทีว่า `isLabelHidden`
+   หายไปด้วย (§8.1 ที่ทำไม่ครบอีกจุด)
+
+   ตอนนี้ทุกชื่อต้องอยู่ในลิสต์ใดลิสต์หนึ่ง — รวม `notOurConcern` ที่ต้องมี
+   เหตุผลกำกับเป็นข้อความ ไม่ใช่แค่ชื่อลอย ๆ
+   ───────────────────────────────────────────────────────────────────────── */
+
+if (axDist) {
+  /* โฟลเดอร์ที่ไม่ใช่ component — โครงสร้างภายในของ Astryx */
+  const NOT_A_COMPONENT = /^(authoring|hooks|i18n|theme|utils|BaseProps|.*Context|Layer|Item|Overlay|Layout)$/;
+
+  const axComponents = fs
+    .readdirSync(axDist, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && !NOT_A_COMPONENT.test(e.name))
+    .map((e) => e.name)
+    .filter((n) => axHas(n));
+
+  /* ทุกที่ที่ถือว่า "ตัดสินแล้ว" */
+  const decided = new Set([
+    ...targets,
+    ...Object.keys(cfg.rename || {}),
+    ...Object.values(cfg.rename || {}),
+    ...Object.keys(cfg.wontAdopt || {}),
+    ...Object.keys(cfg.propsOursOnly || {}),
+    ...Object.keys(cfg.layerDiff || {}),
+    ...Object.keys(cfg.notOurConcern || {}),
+  ]);
+
+  const undecided = axComponents.filter((n) => !decided.has(n));
+  if (undecided.length) {
+    fail(
+      `Astryx มี ${undecided.length} component ที่ยังไม่ถูกตัดสินเลย:\n` +
+        `    ${undecided.join(' ')}\n` +
+        `    ใส่ใน "same" (รับชื่อ) · "wontAdopt" (มีแล้วไม่เอา) หรือ\n` +
+        `    "notOurConcern" พร้อม**เหตุผล** ว่าทำไมไม่เกี่ยวกับ marketplace`,
+    );
+  }
+
+  /* เหตุผลต้องเป็นข้อความจริง ไม่ใช่ค่าว่างเพื่อผ่านเกต */
+  for (const [name, why] of Object.entries(cfg.notOurConcern || {})) {
+    if (typeof why !== 'string' || why.trim().length < 10) {
+      fail(`notOurConcern.${name}: ต้องมีเหตุผลเป็นข้อความ ไม่ใช่ค่าว่าง`);
+    }
+    if (axDist && !axHas(name)) {
+      fail(`notOurConcern.${name}: Astryx ${cfg.astryxVersion} ไม่มีตัวนี้แล้ว — ลบออก`);
+    }
+  }
+}
+
 /* ── 4 · ชื่อ prop ──────────────────────────────────────────────────────── */
 
 let ts = null;

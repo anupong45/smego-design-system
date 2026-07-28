@@ -59,11 +59,11 @@ const PAGES = [
        ซึ่งเป็นงานที่กระทบผู้เรียก จึงบันทึกเป็นหนี้ใน QUALITY.md */
     budget: 148,
     imports: `
-      import { SmeGoProvider, TextInput, TextArea, CheckboxInput, CheckboxGroup,
+      import { SmeGoProvider, TextInput, TextArea, CheckboxInput, CheckboxList,
         RadioList, Radio, Selector, NumberInput, DateInput, FileInput, Switch,
         Slider, Button, Banner } from './src/index';
       export const use = [SmeGoProvider, TextInput, TextArea, CheckboxInput,
-        CheckboxGroup, RadioList, Radio, Selector, NumberInput, DateInput,
+        CheckboxList, RadioList, Radio, Selector, NumberInput, DateInput,
         FileInput, Switch, Slider, Button, Banner];
     `,
   },

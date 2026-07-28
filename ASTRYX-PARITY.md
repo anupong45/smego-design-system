@@ -46,6 +46,7 @@
 | `Textarea` | `TextArea` | ต่างแค่ตัว A ใหญ่ — เสี่ยงพลาดที่สุดในลิสต์ |
 | `Checkbox` | `CheckboxInput` | |
 | `RadioGroup` | `RadioList` | |
+| `CheckboxGroup` | `CheckboxList` | ⚠️ **ทำทีหลัง 2026-07-29** — คู่ Group→List เคยทำแค่ฝั่ง radio เพราะ `CheckboxGroup` เป็น companion ที่คอนฟิกไม่ครอบ ทำให้ระบบมี `RadioList` คู่กับ `CheckboxGroup` อยู่หลายวัน · ความไม่สม่ำเสมอนี้เราสร้างเอง ไม่ใช่ของที่ติดมา |
 | `Select` | `Selector` | |
 | `ComboBox` | `Typeahead` | |
 | `NumberField` | `NumberInput` | |
@@ -283,7 +284,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 
 ```json parity
 {
-  "astryxVersion": "0.1.8",
+  "astryxVersion": "0.1.9",
   "maxProblems": 0,
   "rename": {
     "TextField": "TextInput",
@@ -293,7 +294,8 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Button", "IconButton", "Link", "Switch", "Card", "Badge", "Dialog",
     "Tooltip", "Skeleton", "ProgressBar", "Icon", "Grid", "Stack",
     "Section", "Divider", "EmptyState", "Pagination", "Avatar", "Spinner",
-    "SegmentedControl", "DropdownMenu", "Table",
+    "SegmentedControl", "DropdownMenu", "Table", "CheckboxList",
+    "HStack", "VStack",
     "CheckboxInput", "RadioList", "Selector", "Typeahead",
     "NumberInput", "DateInput", "FileInput", "Slider", "Token", "Collapsible",
     "Banner", "TopNav"
@@ -308,6 +310,63 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "FundingCard", "BusinessCard", "EntityCard", "SearchResult",
     "FilterPanel", "Cart", "Wishlist", "Container", "SmeGoProvider"
   ],
+  "notOurConcern": {
+      "Chat": "ไม่มี use case — marketplace ไม่มีแชทในผลิตภัณฑ์ (§1.4)",
+      "TreeList": "ไม่มีข้อมูลเชิงลำดับชั้นในระบบ — หมวดสินค้าใช้ CategoryNav (§1.4)",
+      "CommandPalette": "เครื่องมือสำหรับ power user ของแอปเครื่องมือ ไม่ใช่ผู้ซื้อ SME (§1.4)",
+      "Markdown": "เนื้อหาในระบบมาจาก CMS ที่ส่ง HTML แล้ว ไม่ใช่ markdown (§1.4)",
+      "CodeBlock": "ไม่มีโค้ดให้แสดงในผลิตภัณฑ์ marketplace (§1.4)",
+      "Citation": "ไม่มีการอ้างอิงแหล่งข้อมูลแบบวิชาการ (§1.4)",
+      "Kbd": "ไม่มีคีย์ลัดที่ต้องสอนผู้ใช้ (§1.4)",
+      "Blockquote": "ไม่มีการยกคำพูด — รีวิวผู้ซื้อใช้การ์ดของตัวเอง (§1.4)",
+      "Carousel": "เลื่อนอัตโนมัติขัดกับ SC 2.2.2 · แกลเลอรีสินค้าใช้ ImageGallery (§1.4)",
+      "HoverCard": "hover-only ใช้บนมือถือไม่ได้ ซึ่งเป็นอุปกรณ์หลักของระบบ (§1.4)",
+      "Toolbar": "ไม่มีแถบเครื่องมือแบบแอปเครื่องมือ — คำสั่งอยู่ในการ์ดหรือเมนู (§1.4)",
+      "MoreMenu": "ซ้ำกับ DropdownMenu + IconButton ที่มีอยู่ (§1.4)",
+      "Outline": "สารบัญของเอกสารยาว ไม่มีในผลิตภัณฑ์ (§1.4)",
+      "Resizable": "ไม่มีแผงที่ผู้ใช้ปรับขนาดได้ (§1.4)",
+      "AppShell": "โครงหน้าเป็นหน้าที่ของแอป — ชั้น 05 Templates ไม่ทำ (คำตัดสิน 2026-07-29)",
+      "Popover": "ตัดโดยเจตนา — Dialog ให้ที่เก็บเนื้อหาที่เปิดด้วยการกดและคุม focus ครบแล้ว (Tooltip.md §1)",
+      "PowerSearch": "query builder แบบมี operator คนละอย่างกับช่องค้นหาของเรา — คง SearchField (D11)",
+      "Lightbox": "overlay คนละอย่างกับ ImageGallery ที่ฝังในหน้า — ตัดแล้ว (§8.6)",
+      "Toast": "ของเขาเป็นตัวข้อความ ส่วนของเราคุมที่ระดับ ToastRegion + 6 วินาทีที่ตรึงไว้ (D14)",
+      "Text": "ข้อความในระบบใช้ utility `text-*` จากสเกลในชั้น 02 — การห่อเป็น component เพิ่มชั้นที่ไม่ตัดสินอะไร",
+      "Heading": "หัวข้อใช้ `<h1>`–`<h6>` จริงพร้อม utility — component ที่รับ level เปิดทางให้ลำดับหัวข้อผิดง่ายกว่าเดิม",
+      "Code": "ไม่มีโค้ดในผลิตภัณฑ์ (ดู CodeBlock)",
+      "List": "รายการใช้ `<ul>`/`<ol>` จริง — ไม่มีการตัดสินใจเชิงออกแบบให้ห่อ",
+      "Center": "จัดกึ่งกลางทำด้วย Stack/Grid ที่มีอยู่ — D22 ระบุว่าชั้น layout เป็นของเรา",
+      "AspectRatio": "สัดส่วนภาพผูกกับ CardMedia และ utility `aspect-*` แล้ว (D22)",
+      "Layout": "โครงหน้าเป็นหน้าที่ของแอป (ดู AppShell)",
+      "Field": "สัญญาของช่องกรอกอยู่ใน LabelledFieldProps ที่ input ทุกตัว extend — ไม่ต้องมี wrapper",
+      "FieldStatus": "สถานะเป็น prop `status` บนตัว input เอง ไม่ใช่ component แยก (§3.1)",
+      "FormLayout": "การจัดวางฟอร์มใช้ Stack/Grid — ฟอร์มในระบบมีสองรูปแบบเท่านั้นและอยู่ใน 04-patterns",
+      "InputGroup": "การรวมช่องกรอกทำด้วย Stack — ของเขาผูกกับ addon แบบที่ระบบนี้ไม่มี",
+      "MultiSelector": "ยังไม่มี use case — ตัวกรองใช้ Token หลายตัว ซึ่งเห็นสิ่งที่เลือกทั้งหมดพร้อมกัน",
+      "Tokenizer": "ช่องกรอกที่แปลงข้อความเป็น token ยังไม่มีที่ใช้ — ตัวกรองมาจากรายการที่กำหนดไว้",
+      "ToggleButton": "สลับสองสถานะใช้ Switch (มีผลทันที) หรือ Token (ตัวกรอง) ตามเส้นแบ่งใน Switch.md",
+      "SelectableCard": "การ์ดที่เลือกได้ทำด้วย Card `selected` + RadioList layout=card ที่มีอยู่",
+      "ClickableCard": "การ์ดที่กดได้ทำด้วย Card `interactive` ที่มีอยู่",
+      "Calendar": "ปฏิทินเปล่าไม่มีที่ใช้ — DateInput ใช้ BuddhistCalendar ของ RAC อยู่ข้างในแล้ว",
+      "DateRangeInput": "ยังไม่มี use case — ตัวกรองวันใช้ค่าเดียว (วันปิดรับสมัคร)",
+      "DateTimeInput": "ยังไม่มี use case — เวลาไม่มีผลกับกำหนดการรับสมัคร",
+      "TimeInput": "ยังไม่มี use case (ดู DateTimeInput)",
+      "Timestamp": "วันเวลาในระบบต้องเป็น พ.ศ. และมีความหมายเชิงกำหนดการ — DeadlineText คุมทั้งรูปแบบและสถานะ",
+      "MobileNav": "drawer เลื่อนออกข้างคู่กับ SideNav — ของเราใช้แถบแท็บก้นจอ (BottomNav) ซึ่ง Astryx ไม่มี",
+      "SideNav": "แถบข้างถาวรเป็นรูปแบบของแอปเครื่องมือ — marketplace ใช้ TopNav + CategoryNav",
+      "NavItem": "ส่วนประกอบภายในของ SideNav/MobileNav ที่ไม่รับ",
+      "NavIcon": "ส่วนประกอบภายในของ SideNav/MobileNav ที่ไม่รับ",
+      "NavMenu": "ส่วนประกอบภายในของ SideNav/MobileNav ที่ไม่รับ",
+      "Breadcrumbs": "รอบ grill 2026-07-26 ตัดออกเพราะซ้ำกับ CategoryBreadcrumb ที่ต่างกันแค่ aria-label",
+      "OverflowList": "รายการที่ยุบเมื่อไม่พอที่ — ChipRow กับ CategoryNav จัดการกรณีของตัวเองอยู่แล้ว",
+      "StatusDot": "ของเราคือ Dot ซึ่งบังคับ `label` เพราะจุดสีเดียวสื่อความหมายไม่ได้ (SC 1.4.1) — ชื่อเขาสื่อว่าสถานะอยู่ที่จุด",
+      "Thumbnail": "ภาพย่อผูกกับ CardMedia และ Avatar ที่คุมสัดส่วนและ fallback ไว้แล้ว",
+      "MetadataList": "ของเราแยกเป็น EntityMeta (ในการ์ด) กับ DescriptionList (ระดับหน้า) ตามคำตัดสิน 2026-07-26",
+      "AvatarGroup": "ยังไม่มี use case — ผู้ขายแสดงทีละราย ไม่มีการซ้อนรูปหลายคน",
+      "AlertDialog": "Dialog + footer ที่กำหนดปุ่มเองครอบคลุมแล้ว · การแยกชนิดเปิดทางให้ปุ่มยืนยันไม่สม่ำเสมอ",
+      "ContextMenu": "เมนูคลิกขวาใช้บนมือถือไม่ได้ — คำสั่งต่อแถวใช้ DropdownMenu ที่กดได้จริง (Table.md §6)",
+      "ButtonGroup": "ปุ่มที่อยู่ด้วยกันใช้ Stack — ของเขาผูกขอบปุ่มติดกันซึ่งลดเป้ากดที่ระบบนี้ตรึงไว้ (D1)",
+      "VisuallyHidden": "ซ่อนด้วยตาแต่ให้ SR อ่านทำด้วยคลาส `sr-only` ที่ base.css คุมไว้ — และทุก component ที่ต้องใช้มี prop `isLabelHidden` ของตัวเองแล้ว (§8.1)"
+  },
   "propsSkipAll": ["className", "as", "children"],
   "// parityScope": "ขอบเขตที่ gate บังคับ = ชื่อ component + prop สี่ตัวนี้เท่านั้น · ชื่อ prop นอกชุดนี้อยู่นอกขอบเขต (Icon.name vs icon → D37) — ถ้อยคำคำตัดสินข้อ 1 แก้ให้ตรงกับที่ทำจริงแล้ว",
   "parityScope": ["label", "isLabelHidden", "status", "isOptional"],
@@ -339,6 +398,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "EmptyState": ["isLive"],
     "TabList": ["label", "isDisabled"],
     "DropdownMenu": ["width"],
+    "CheckboxList": ["isOptional"],
     "Table": [
       "label", "rows", "rowKey", "columns", "sortBy", "sortDirection",
       "onSortChange", "rowAction", "rowActionLabel", "emptyState"
@@ -473,7 +533,7 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 |---|---|---|---|
 | 1 | `TextField` → `TextInput` | ✅ | + `status` · `isLabelHidden` · `startIcon` · `isLoading` · `hasClear` |
 | 2 | `Textarea` → `TextArea` | ✅ | แยกเป็นไฟล์ของตัวเอง + `TextArea.md` ใหม่ |
-| 3 | `Checkbox` → `CheckboxInput` | ✅ | `children` → `label: string` บังคับ + `isLabelHidden` (§8.1) — `CheckboxGroup` คงเดิม (มี `label` อยู่แล้ว) |
+| 3 | `Checkbox` → `CheckboxInput` | ✅ | `children` → `label: string` บังคับ + `isLabelHidden` (§8.1) — `CheckboxList` คงเดิม (มี `label` อยู่แล้ว) |
 | 4 | `RadioGroup` → `RadioList` | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` — `Radio` (item) คงเดิม `children` ไม่เปลี่ยน · `Payment.tsx` ตามไปแก้ internal call site |
 | 5 | `Select` → `Selector` | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` — `SelectItem`/`SelectOption` คงชื่อเดิม (ใช้ร่วมกับ `Typeahead`) |
 | 6 | `ComboBox` → `Typeahead` | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` — `options` คงเป็น ours-only (ไม่รับ `searchSource` async ของ Astryx) |

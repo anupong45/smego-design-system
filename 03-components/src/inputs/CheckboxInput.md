@@ -1,4 +1,4 @@
-# CheckboxInput · CheckboxGroup
+# CheckboxInput · CheckboxList
 
 **`@smego/ui`** · ชั้น 03 · [CheckboxInput.tsx](./CheckboxInput.tsx)
 
@@ -26,12 +26,12 @@
 ## 2 · React API
 
 ```tsx
-import { CheckboxInput, CheckboxGroup } from '@smego/ui';
+import { CheckboxInput, CheckboxList } from '@smego/ui';
 
-<CheckboxGroup label="ใบรับรองที่มี" description="เลือกได้มากกว่าหนึ่ง">
+<CheckboxList label="ใบรับรองที่มี" description="เลือกได้มากกว่าหนึ่ง">
   <CheckboxInput value="tis" label="มาตรฐานผลิตภัณฑ์อุตสาหกรรม" />
   <CheckboxInput value="halal" label="ฮาลาล" description="สำหรับสินค้าอาหารและเครื่องดื่ม" />
-</CheckboxGroup>
+</CheckboxList>
 ```
 
 ### CheckboxInput
@@ -49,7 +49,7 @@ import { CheckboxInput, CheckboxGroup } from '@smego/ui';
 | `isOptional` | `boolean` | `false` | ต่อท้าย label ว่า "(ไม่บังคับ)" |
 | `onChange` | `(isSelected: boolean) => void` | — | |
 
-### CheckboxGroup
+### CheckboxList
 
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
@@ -114,7 +114,7 @@ indeterminate  →  Icon "minus"  (ขีดกลาง)
 | **SC 1.4.11** | ขอบกล่อง `edge-strong` = 4.20:1 ✅ |
 | **SC 1.4.1** | indeterminate ต่างที่รูปทรง |
 | **SC 3.3.1** | error มีข้อความ ไม่ใช่แค่ขอบแดง |
-| **SC 1.3.1** | `CheckboxGroup` → `role="group"` + `aria-labelledby` จาก RAC |
+| **SC 1.3.1** | `CheckboxList` → `role="group"` + `aria-labelledby` จาก RAC |
 
 ### ★★ เป้ากดคือ **ทั้งแถว** ไม่ใช่แค่กล่อง 20px
 
@@ -130,7 +130,7 @@ component ใส่ **`p-1` เสมอ** (ไม่ใช่เฉพาะเ
 
 ใส่เสมอเพราะกฎที่ต้องจำว่า "เคสไหนต้องเพิ่ม" คือกฎที่จะถูกลืม
 
-`CheckboxGroup` ชดเชยด้วย `-ms-1` เพื่อให้กล่องตรงแนวกับ label ด้านบน
+`CheckboxList` ชดเชยด้วย `-ms-1` เพื่อให้กล่องตรงแนวกับ label ด้านบน
 
 ### ★★ checkbox ไม่ใช้ roving tabindex — ต่างจาก radio
 
@@ -196,14 +196,14 @@ Component set **`CheckboxInput`**
 
 **ต้องมี frame ที่แสดงพื้นที่กด** (overlay สีโปร่ง) ครอบทั้งแถว เพื่อให้เห็นว่าเป้าไม่ใช่แค่กล่อง 20px
 
-Component set **`CheckboxGroup`** แยกต่างหาก — property `Error`, `Description`, `Optional`
+Component set **`CheckboxList`** แยกต่างหาก — property `Error`, `Description`, `Optional`
 
 ---
 
 ## 8 · Usage
 
 ```tsx
-<CheckboxGroup
+<CheckboxList
   label="ใบรับรองที่มี"
   description="เลือกได้มากกว่าหนึ่ง"
   value={certs}
@@ -213,7 +213,7 @@ Component set **`CheckboxGroup`** แยกต่างหาก — property `E
   <CheckboxInput value="tis" label="มาตรฐานผลิตภัณฑ์อุตสาหกรรม (มอก.)" />
   <CheckboxInput value="halal" label="ฮาลาล" description="สำหรับสินค้าอาหารและเครื่องดื่ม" />
   <CheckboxInput value="gmp" label="จีเอ็มพี — ต้องยืนยันตัวตนก่อน" isDisabled />
-</CheckboxGroup>
+</CheckboxList>
 ```
 
 ```tsx

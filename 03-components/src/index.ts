@@ -116,9 +116,9 @@ export {
 
 export {
   CheckboxInput,
-  CheckboxGroup,
+  CheckboxList,
   type CheckboxInputProps,
-  type CheckboxGroupProps,
+  type CheckboxListProps,
 } from './inputs/CheckboxInput';
 export {
   Radio,

@@ -40,7 +40,7 @@ Widget ที่มีลูกหลายตัวต้องกิน **ห�
 | Toolbar ปุ่มไอคอน | ปุ่มแรก | เลื่อนระหว่างปุ่ม |
 | Token ตัวกรอง | chip แรก | เลื่อนระหว่าง chip |
 
-**`CheckboxGroup` ไม่ใช้ roving tabindex** — checkbox แต่ละตัวเป็น tab stop ของตัวเอง เพราะเลือกได้หลายตัวพร้อมกัน
+**`CheckboxList` ไม่ใช้ roving tabindex** — checkbox แต่ละตัวเป็น tab stop ของตัวเอง เพราะเลือกได้หลายตัวพร้อมกัน
 
 ### 1.3 ⚠️ ห้าม single-character shortcut — เหตุผลเฉพาะภาษาไทย
 

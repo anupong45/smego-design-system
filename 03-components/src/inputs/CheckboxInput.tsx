@@ -1,8 +1,10 @@
 import {
   Checkbox as RACCheckbox,
   type CheckboxProps as RACCheckboxProps,
-  CheckboxGroup as RACCheckboxGroup,
-  type CheckboxGroupProps as RACCheckboxGroupProps,
+  /* ★ RAC ยังเรียก `CheckboxGroup` — ชื่อ `CheckboxList` เป็นของ Astryx
+     ที่เรารับมา (คู่กับ `RadioList`) จึง alias ตรงนี้ที่เดียว */
+  CheckboxGroup as RACCheckboxList,
+  type CheckboxGroupProps as RACCheckboxListProps,
   Label,
   Text,
   FieldError,
@@ -18,7 +20,7 @@ import {
 } from './fieldStyles';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · CheckboxInput / CheckboxGroup   (เดิมชื่อ Checkbox — ดู ASTRYX-PARITY.md §1.2)
+   SME.GO · CheckboxInput / CheckboxList   (เดิมชื่อ Checkbox — ดู ASTRYX-PARITY.md §1.2)
    ───────────────────────────────────────────────────────────────────────────
    ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
    รับ    `label` บังคับ (เดิมรับ `children`) · `isLabelHidden` (§8.1) ·
@@ -68,7 +70,7 @@ export interface CheckboxInputProps
   /**
    * สถานะของช่อง — ใช้กับ checkbox เดี่ยวที่ต้องติ๊ก เช่นการยอมรับเงื่อนไข
    *
-   * ⚠️ ถ้าอยู่ใน `<CheckboxGroup>` ให้ใส่ `status` ที่**กลุ่ม** ไม่ใช่รายตัว —
+   * ⚠️ ถ้าอยู่ใน `<CheckboxList>` ให้ใส่ `status` ที่**กลุ่ม** ไม่ใช่รายตัว —
    * การตรวจความถูกต้องเป็นเรื่องของกลุ่ม (SC 3.3.1)
    */
   status?: InputStatus;
@@ -173,35 +175,55 @@ export function CheckboxInput({
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   CheckboxGroup
+   CheckboxList
    ───────────────────────────────────────────────────────────────────────────── */
 
-export interface CheckboxGroupProps
+export interface CheckboxListProps
   extends Omit<
-    RACCheckboxGroupProps,
+    RACCheckboxListProps,
     'children' | 'className' | 'style' | 'validationBehavior'
   > {
   label: string;
   children: ReactNode;
   description?: string;
   status?: InputStatus;
+
+  /**
+   * ซ่อน label ของกลุ่มด้วยตา แต่ยังประกาศให้ screen reader (§8.1)
+   *
+   * ⚠️ เพิ่มทีหลัง 2026-07-29 — sweep §8.1 รอบแรกไล่ตาม 13 ตัวที่หัวข้อนั้น
+   * ระบุไว้ ซึ่ง **ไม่รวมกลุ่ม checkbox** จึงได้ `isLabelHidden` บน `RadioList`
+   * แต่ไม่ได้บนตัวนี้ · เจอเพราะ rename เป็น `CheckboxList` แล้ว gate เริ่ม
+   * เทียบ prop กับ Astryx ได้ — ก่อนหน้านั้นมันอยู่นอกสายตาของเกตทั้งหมด
+   */
+  isLabelHidden?: boolean;
+
+  /**
+   * ต่อท้าย label ว่า "(ไม่บังคับ)"
+   *
+   * ★ Astryx มี `isOptional` บน `RadioList` แต่ **ไม่มี** บน `CheckboxList`
+   * ซึ่งเป็นความไม่สม่ำเสมอของเขา · §3.1 ของเราบังคับว่าทุกกลุ่มต้องมี
+   * จึงคงไว้และประกาศใน `propsOursOnly`
+   */
   isOptional?: boolean;
+
   className?: string;
 }
 
-export function CheckboxGroup({
+export function CheckboxList({
   label,
   children,
   description,
   status,
+  isLabelHidden,
   isOptional,
   className,
   ...rest
-}: CheckboxGroupProps) {
+}: CheckboxListProps) {
   const s = useStrings();
 
   return (
-    <RACCheckboxGroup
+    <RACCheckboxList
       /* aria ไม่ใช่ native — ข้อความ validation ต้องเป็นภาษาไทยที่เราคุม */
       validationBehavior="aria"
       isInvalid={isErrorStatus(status)}
@@ -210,7 +232,9 @@ export function CheckboxGroup({
     >
       {/* RAC ต่อ Label เข้ากับ group ด้วย aria-labelledby ให้เอง
          ทำให้ screen reader ประกาศชื่อกลุ่มก่อนอ่านตัวเลือกแต่ละตัว */}
-      <Label className="text-label text-fg-secondary">
+      <Label
+        className={cn('text-label text-fg-secondary', isLabelHidden && 'sr-only')}
+      >
         {label}
         {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>
@@ -233,6 +257,6 @@ export function CheckboxGroup({
           </Text>
         )
       )}
-    </RACCheckboxGroup>
+    </RACCheckboxList>
   );
 }

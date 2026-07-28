@@ -32,7 +32,7 @@
 <FilterPanel
   onClearAll={clearAll}
   groups={[
-    { id: 'cat',   title: 'หมวดหมู่ย่อย', children: <CheckboxGroup …/> },
+    { id: 'cat',   title: 'หมวดหมู่ย่อย', children: <CheckboxList …/> },
     { id: 'price', title: 'ช่วงราคา',     children: <Slider …/> },
   ]}
 />
@@ -209,10 +209,10 @@ Component set **`FilterChipRow`** — property `Count` = `1` · `3` · `6 (scrol
       onClearAll={active.length ? clearAll : undefined}
       groups={[
         { id: 'cat', title: 'หมวดหมู่ย่อย', children: (
-          <CheckboxGroup label="หมวดหมู่ย่อย" value={cats} onChange={setCats}>
+          <CheckboxList label="หมวดหมู่ย่อย" value={cats} onChange={setCats}>
             <CheckboxInput value="roaster" label="เครื่องคั่วกาแฟ" />
             <CheckboxInput value="oven" label="เตาอบลมร้อน" />
-          </CheckboxGroup>
+          </CheckboxList>
         )},
         { id: 'price', title: 'ช่วงราคา', children: (
           <Slider label="ช่วงราคา" value={price} onChange={setPrice}

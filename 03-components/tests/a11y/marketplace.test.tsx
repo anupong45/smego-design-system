@@ -10,7 +10,7 @@ import {
   PaymentMethodSelect, PromptPayQR, SlipUpload,
   OrderTimeline, SaveButton, WishlistGrid, WishlistHeader,
   SellerProfile, CertificationBadge,
-  Grid, Button, CheckboxGroup, CheckboxInput,
+  Grid, Button, CheckboxList, CheckboxInput,
 } from '../../src/index';
 
 const compareItems = [
@@ -128,10 +128,10 @@ const cases: [string, React.ReactElement][] = [
           id: 'cat',
           title: 'หมวดหมู่ย่อย',
           children: (
-            <CheckboxGroup label="หมวดหมู่ย่อย">
+            <CheckboxList label="หมวดหมู่ย่อย">
               <CheckboxInput value="roaster" label="เครื่องคั่วกาแฟ" />
               <CheckboxInput value="oven" label="เตาอบลมร้อน" />
-            </CheckboxGroup>
+            </CheckboxList>
           ),
         },
       ]}

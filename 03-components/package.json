@@ -46,9 +46,9 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
-    "@astryxdesign/cli": "0.1.8",
-    "@astryxdesign/core": "0.1.8",
-    "@astryxdesign/theme-neutral": "0.1.8",
+    "@astryxdesign/cli": "0.1.9",
+    "@astryxdesign/core": "0.1.9",
+    "@astryxdesign/theme-neutral": "0.1.9",
     "@playwright/test": "^1.62.0",
     "@tailwindcss/cli": "^4.3.3",
     "@testing-library/react": "^16.3.2",
