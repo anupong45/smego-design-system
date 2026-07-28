@@ -157,7 +157,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | DatePicker→DateInput | 6 | `errorMessage`→`status` · `showOptional`→`isOptional` | — | `min` `max` `dateConstraints` `numberOfMonths` `hasClear` `placeholder` + 7 |
 | FileUpload→FileInput | 4 | `files`→`value` · `onSelect`→`onChange` · `multiple`→`isMultiple` · `maxSizeMb`→`maxSize` | `onRemove` | `maxFiles` `mode` `status` `isLoading` + 8 |
 | RangeSlider→Slider | 5 | `minValue`→`min` · `maxValue`→`max` | `minLabel` `maxLabel` `unit` | `marks` `valueDisplay` `formatValue` `onChangeEnd` `minStepsBetweenThumbs` `orientation` + 9 |
-| Card | 3 | `elevation`+`interactive`→`variant` | `as` `selected` | `width` `height` `maxWidth` `minHeight` |
+| Card | 3 | ~~`elevation`+`interactive`→`variant`~~ ❌ **mapping ผิด — ดู D29** | `as` `selected` `elevation` `interactive` | `variant` (แกนสีพื้น · D29) `width` `height` `maxWidth` `minHeight` |
 | Badge | 2 | — | `children` `showIcon` | `label` |
 | Chip→Token | 3 | — | `children` | `label` `size` `color` `onRemove` `href` `endContent` `description` `isLabelHidden` |
 | Accordion→Collapsible | 2 | — | — | `trigger` `isOpen` `defaultIsOpen` `onOpenChange` `value` |
@@ -212,6 +212,10 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | D19 | ไม่รับ `tooltip` บน `Button` `IconButton` `Link` | `IconButton.md` §5 และ `Tooltip.md` §5 เขียนตรงกันว่า `aria-describedby` **ไม่ใช่** accessible name — prop ชื่อ `tooltip` บนปุ่มเชิญให้ทำ anti-pattern ที่สองไฟล์นั้นกันไว้เอง (ใช้ `label` ตั้งชื่อ แล้วครอบด้วย `TooltipTrigger` ถ้าต้องการคำอธิบายเสริม) |
 | D20 | เส้นแบ่ง link/button — ไม่รับ `Button.href/target/rel` (และ `IconButton.href/target/rel` ด้วยเหตุผลเดียวกัน) และไม่รับ `Link.label/color/weight/display/type/maxLines/hasUnderline` | `Link.md` §1 ตั้งกฎไว้ว่า "เปลี่ยน URL = ลิงก์ · เปลี่ยนข้อมูล = ปุ่ม" · `Button.href` ลบเส้นนั้นทิ้ง ส่วน `Link.color/weight/display/type/maxLines` เปิดทางให้ลิงก์แต่งตัวเป็นปุ่ม · `hasUnderline` คือปุ่มปิด SC 1.4.1 (สีอย่างเดียวไม่พอ) ที่ `base.css` บังคับขีดเส้นใต้ด้วย `:where(a[href])` อยู่แล้ว |
 | D21 | props ที่ขัด SC หรือขัดคำตัดสินเดิม — `IconButton.isLoading/clickAction/isInterruptible` · `Tooltip.focusTrigger/alignment/anchorRef/hasHoverIndication` · `ProgressBar.isIndeterminate` · `Dialog.isInline` | `IconButton` เป็นไอคอนล้วน ไม่มีที่ให้ spinner โดยไม่บังไอคอน — `IconButton.md` §10 สั่งให้ใช้ `Button isLoading` แทนอยู่แล้ว · `clickAction`/`isInterruptible` เป็น event model ของ Astryx (เหตุผลเดียวกับ D8) · `focusTrigger` เปิดช่องปิดการแสดงตอน focus = ตก SC 1.4.13 · `alignment`/`anchorRef`/`hasHoverIndication` ขัด offset 8px ที่ตรึงไว้โดยเจตนา · `isIndeterminate` ทับเขต `Spinner` ตามกฎ §8.5 · `Dialog.isInline` คือ dialog ที่ไม่ใช่ overlay ซึ่งเป็นงานของ `Card`/`Section` |
+| D32 | `Dialog` ไม่รับ `purpose` · `padding` · `maxHeight` · `position` | `purpose` ของ Astryx พ่วงความหมายอื่นมาด้วย ส่วนของเราคุมแค่ปุ่มปิด (`hideClose` — เขียนไว้ใน propsOursOnly อยู่แล้ว) · `padding`/`maxHeight` เป็นเรื่องเดียวกับ D2 (ขนาดกล่องมาจาก `variant` ไม่ใช่ค่าดิบ) · `position` — `Dialog.md` §3 ตรึงเรขาคณิตต่อ variant ไว้แล้ว (modal กลางจอ · sheet ก้นจอ · drawer ชิดขอบ) เหตุผลเดียวกับ D21 ที่ปฏิเสธ `isInline` |
+| D31 | `Token` ไม่รับ `description` · `endContent` · `isLabelHidden` | `Token.md` §1 นิยามว่าเป็น **คำกรองสั้นคำเดียว** — คำอธิบายและเนื้อหาท้ายทำให้มันกลายเป็นการ์ดเล็ก และ **token ที่ซ่อน label คือแคปซูลเปล่า** ที่ผู้ใช้เดาไม่ได้ว่ากรองอะไร (ต่างจากปุ่มไอคอนที่รูปสื่อความหมายได้เอง) |
+| D30 | `Skeleton` ไม่รับ `height` · `index` | `height` — ความสูงของเรามาจาก `lines` ที่อิง line-height ของสเกลตัวอักษร (`Skeleton.md` §3) การรับค่าดิบเปิดทาง D3 กลับมา · `index` มีไว้ทำ stagger แต่ `Skeleton.md` §4 ตรึงไว้ว่า **ปรากฏทันที ไม่ fade เข้า** และ `base.css §10` บังคับให้เป็นพื้นนิ่งใน reduced motion — การไล่ลำดับจึงไม่มีที่ยืน · ส่วนจำนวนแถบเป็นหน้าที่ของ `SkeletonGroup` |
+| D29 | `Card` ไม่รับ `variant` | ⚠️ **แก้ความเข้าใจผิดใน §3** — ตาราง §3 เขียนว่า `elevation`+`interactive` → `variant` ราวกับเป็นแกนเดียวกัน **ซึ่งไม่จริง**: `variant` ของ Astryx เป็น **แกนสีพื้น** (`default`/`transparent`/`muted` + tint 10 สีจาก `--color-background-*`) ไม่ใช่แกนความสูง · แกนสีจึงอยู่ใต้ D5 (ไม่แตะสี) ส่วนความสูงของเรามาจาก `--elevation-*` ที่ผูก surface+edge+shadow เข้าด้วยกันในหนึ่ง token (`Card.md` §3) และสองแกน `elevation`/`interactive` ถูกตัดสินให้แยกกันไว้แล้วใน §5.4 |
 | D28 | `TabList` — เพิ่ม `label` (บังคับ) และ `isDisabled` เกินจาก Astryx · และ **export `Tab` / `TabPanel` เพิ่ม** ทั้งที่ Astryx ให้ `TabList` เป็นแถบเปล่า | **`label`**: Astryx ให้ส่ง `aria-label` ผ่าน `BaseProps` ดิบ ๆ · ระบบนี้ใช้ prop ชื่อ `label` ที่บังคับทุกที่ที่ต้องมีชื่อ (`IconButton` · `TopNav` · `SegmentedControl`) — แถบ tab ที่ไม่มีชื่อคือ landmark ที่ผู้ใช้ screen reader ข้ามไปหาไม่ได้ · **`Tab`/`TabPanel`**: ARIA บังคับให้ `role="tab"` มี `aria-controls` ชี้ `tabpanel` และ panel มี `aria-labelledby` ย้อนกลับ · แถบเปล่าแบบ Astryx ผลักภาระต่อ id ไปที่ call site ซึ่งจะถูกลืมแล้ว tab กลายเป็นปุ่มเฉย ๆ **โดยไม่มี error** · จึงสร้างบน RAC `Tabs`/`TabList`/`Tab`/`TabPanel` ที่ต่อให้ครบ (เหตุผลเดียวกับ D8) · ผลพลอยได้: panel ที่ไม่ได้เลือก**ไม่อยู่ใน DOM** ต่างจากการซ่อนด้วย CSS ที่ SR ยังอ่านเจอ |
 | D27 | `Pagination` ไม่รับ `pageSizeOptions` / `onPageSizeChange` (ตัวเลือกจำนวนรายการต่อหน้า) และไม่รับ `variant="dots"` | ไม่มี template ของ marketplace ที่ต้องใช้ตัวเลือกจำนวนต่อหน้า — เหตุผลเดียวกับที่ §1.4 ตัด `Carousel`/`CommandPalette` ออก · `pageSize` **ยังรับ** เพราะจำเป็น ต่อการคำนวณจำนวนหน้าจาก `totalItems` · ส่วน `dots` เป็นจุดที่เล็กกว่าเกณฑ์ touch มากและเป็น สำนวนของ carousel ซึ่งถูกตัดไปแล้ว (เป็นค่าของ `variant` ไม่ใช่ชื่อ prop จึงไม่ปรากฏใน gate) |
 | D26 | `EmptyState` — `role="status"` เป็น opt-in ชื่อ `isLive` (Astryx ตั้งตายตัว) และ `title` **ไม่**เป็นหัวข้อโดยค่าเริ่มต้น (Astryx ตั้ง `headingLevel: 3`) | `SearchResult.tsx` มีคอมเมนต์กำกับไว้ก่อนหน้านี้แล้วว่า "ไม่ใช่ live region — ข้อความจำนวนด้านบนประกาศไปแล้ว ถ้าประกาศซ้ำผู้ใช้จะได้ยินสองรอบ" — `role="status"` ตายตัวจะทำให้ regress · ปัญหารูปเดียวกับ `role="alert"` ของ `Banner` (§8.4) และตอบเหมือนกัน · ส่วนหัวข้อ: ที่ว่างสามอันในหน้าเดียวจะฉีด `<h3>` สามอันปนโครงของเนื้อหาจริง (เหตุผลเดียวกับ `Banner.titleAs`) · ⚠️ **หนี้คำศัพท์ที่รู้ตัว**: `Banner` ใช้ `titleAs` ส่วนตัวนี้ใช้ `headingLevel` — หมายถึงสิ่งเดียวกัน ควรรวมเป็นชื่อเดียวในรอบถัดไป |
@@ -235,7 +239,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 
 | component | prop | ทำไมเก็บไว้ |
 |---|---|---|
-| `Switch` | `align` | ป้ายของ switch ในฟอร์ม marketplace ยาวหลายบรรทัด ต้องเลือกได้ว่าหัวสวิตช์ชิดบนหรือกึ่งกลาง — Astryx ให้แต่ `labelPosition` ซึ่งเป็นแกนซ้าย/ขวา คนละแกนกัน |
+| `Switch` | `align` | ⚠️ **เหตุผลเดิมเขียนผิด — ระบุว่าเป็นแกนบน/ล่าง ซึ่งไม่จริง** · โค้ดจริง (`Switch.tsx:55,62`) ทำสองอย่างพร้อมกันคือสลับลำดับ label/หัวสวิตช์ **และ** ใส่ `justify-between` — จึงเป็น **แกนเดียวกับ `labelPosition` + `labelSpacing` ของ Astryx รวมกัน** ไม่ใช่คนละแกน · `align` ของเรายุบสองแกนเป็นหนึ่งและเปิดได้แค่ 2 ใน 4 ชุดค่า → **ยังไม่ตัดสิน** ว่าจะแยกเป็นสอง prop ตาม Astryx หรือคง `align` ไว้ (ดู §6.5) |
 | `Card` | `elevation` · `interactive` | สองแกนอิสระตาม §5.4 · `variant` ตัวเดียวของ Astryx เขียน "ยกสูงแต่กดไม่ได้" ไม่ได้ ซึ่งขัดกฎ "พื้นทึบ = กดได้" ของระบบ |
 | `Skeleton` | `shape` | คู่กับ `lines` — รูปทรงของ placeholder ผูกกับ `--radius-*` ของเรา ไม่ใช่ `radius` ดิบแบบ Astryx (D2) |
 | `ProgressBar` | `format` · `maxValue` · `tone` | ชื่อเดิมของเราสำหรับสิ่งที่ Astryx เรียก `formatValueLabel` / `max` / `variant` (§3) ยังไม่ rename จึงยังนับเป็นเกิน |
@@ -273,7 +277,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 23,
+  "maxProblems": 19,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea"
@@ -301,6 +305,14 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Tooltip": {
       "companion": "TooltipTrigger",
       "props": ["delay", "hideDelay", "isDefaultOpen", "isEnabled"]
+    },
+    "Dialog": {
+      "companion": "DialogTrigger",
+      "props": ["isOpen", "onOpenChange"]
+    },
+    "Token": {
+      "companion": "RemovableChip",
+      "props": ["onRemove"]
     }
   },
   "propsOursOnly": {
@@ -357,7 +369,6 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
       "anchorRef": "D21", "hasHoverIndication": "D21"
     },
     "ProgressBar": { "isIndeterminate": "D21" },
-    "Dialog": { "isInline": "D21" },
     "Grid": {
       "align": "D22", "columnGap": "D22", "columns": "D22", "gap": "D22",
       "height": "D22", "justify": "D22", "maxWidth": "D22",
@@ -370,8 +381,20 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
       "variant": "D22"
     },
     "Divider": { "isFullBleed": "D22", "label": "D22", "variant": "D22" },
-    "Card": { "width": "D2", "height": "D2", "maxWidth": "D2", "minHeight": "D2" },
-    "Pagination": { "pageSizeOptions": "D27", "onPageSizeChange": "D27" }
+    "Card": {
+      "width": "D2", "height": "D2", "maxWidth": "D2", "minHeight": "D2",
+      "variant": "D29"
+    },
+    "Pagination": { "pageSizeOptions": "D27", "onPageSizeChange": "D27" },
+    "Skeleton": { "radius": "D2", "height": "D30", "index": "D30" },
+    "Token": {
+      "href": "D20", "size": "D1", "color": "D5",
+      "description": "D31", "endContent": "D31", "isLabelHidden": "D31"
+    },
+    "Dialog": {
+      "isInline": "D21", "purpose": "D32", "padding": "D2",
+      "maxHeight": "D2", "position": "D21"
+    }
   }
 }
 ```

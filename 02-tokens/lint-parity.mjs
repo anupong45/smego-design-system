@@ -46,7 +46,55 @@ if (!block) {
 }
 let cfg;
 try {
-  cfg = JSON.parse(block[1]);
+  /* ★★ ต้องจับ **คีย์ซ้ำ** ด้วย — `JSON.parse` ปกติยอมรับเงียบ ๆ แล้วให้
+     อันหลังชนะ ผลคือคำตัดสินที่บันทึกไว้แล้วหายไปโดยไม่มีใครรู้
+
+     เจอจริง 2026-07-28: มี `"Card"` สองครั้งใน `wontAdopt` — อันหลัง
+     (`{ variant }`) ทับอันแรก (`{ width, height, maxWidth, minHeight }`)
+     ทำให้ D2 ที่เคยบันทึกไว้หลุดหายไปทั้งชุด และ gate กลับมาฟ้องของที่
+     ตัดสินไปแล้ว · ไฟล์นี้เป็นแหล่งความจริงของ allowlist การเสียคำตัดสิน
+     เงียบ ๆ จึงแย่กว่าการ fail */
+  const dupPath = [];
+  cfg = JSON.parse(block[1], function reviver(key, value) {
+    return value;
+  });
+
+  /* reviver ของ JSON.parse ไม่เห็นคีย์ซ้ำ (มันถูกยุบไปก่อนแล้ว)
+     จึงต้องนับจากข้อความดิบทีละบล็อกด้วย regex ของคีย์ระดับบนสุดในแต่ละ object */
+  const countDupKeys = (text) => {
+    const dups = new Set();
+    /* ไล่ทีละ object โดยดูคีย์ที่อยู่ในระดับเดียวกัน */
+    const stack = [];
+    let depth = 0;
+    let current = new Map();
+    const frames = [current];
+    for (const m of text.matchAll(/[{}]|"((?:[^"\\]|\\.)*)"\s*:/g)) {
+      if (m[0] === '{') {
+        depth++;
+        current = new Map();
+        frames.push(current);
+      } else if (m[0] === '}') {
+        depth--;
+        frames.pop();
+        current = frames[frames.length - 1] ?? new Map();
+      } else if (m[1] !== undefined) {
+        const k = m[1];
+        current.set(k, (current.get(k) ?? 0) + 1);
+        if (current.get(k) > 1) dups.add(k);
+      }
+    }
+    return [...dups];
+  };
+
+  const dups = countDupKeys(block[1]);
+  if (dups.length) {
+    console.error(
+      '✗ บล็อก json parity มีคีย์ซ้ำ: ' + dups.join(', ') +
+        '\n  อันหลังจะทับอันแรกเงียบ ๆ ทำให้คำตัดสินที่บันทึกไว้หาย — ยุบให้เป็นคีย์เดียว',
+    );
+    process.exit(1);
+  }
+  void dupPath;
 } catch (e) {
   console.error('✗ บล็อก json parity เสีย: ' + e.message);
   process.exit(1);
