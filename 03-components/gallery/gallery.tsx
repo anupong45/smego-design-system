@@ -21,7 +21,8 @@ import {
   Collapsible, AccordionItem, ImageGallery, DescriptionList,
   Banner, ProgressBar, Skeleton, SkeletonText, Spinner, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
-  TopNav,
+  TopNav, Pagination, TabList, Tab, TabPanel,
+  SegmentedControl, SegmentedControlItem,
   EntityCard, EntityAmount, EntityMeta, DeadlineBadge, DeadlineText,
   ProductCard, ServiceCard, ProgramCard, GrantCard, FundingCard,
   BusinessCard, TrainingCard, SearchResult,
@@ -750,8 +751,52 @@ function Marketplace() {
 /* ── หมวด 6 · Navigation ──────────────────────────────────────────────────── */
 
 function Navigation() {
+  const [tab, setTab] = useState('detail');
+  const [view, setView] = useState('grid');
+  const [page, setPage] = useState(3);
+
   return (
     <Group id="navigation" title="6 · Navigation">
+      <Specimen name="TabList" note="สลับ panel คนละชุด — panel ที่ไม่ได้เลือกไม่อยู่ใน DOM" wide>
+        <TabList value={tab} onChange={setTab} label="ข้อมูลสินค้า" hasDivider>
+          <Tab value="detail" label="รายละเอียด" />
+          <Tab value="spec" label="สเปก" />
+          <Tab value="review" label="รีวิว" endContent={<Badge>12</Badge>} />
+          <TabPanel value="detail">เครื่องคั่วกาแฟขนาด 5 กิโลกรัม สำหรับร้านกาแฟขนาดกลาง</TabPanel>
+          <TabPanel value="spec">กำลังไฟ 3,500 วัตต์ · ความจุถัง 5 กก. · ใช้ไฟ 220V</TabPanel>
+          <TabPanel value="review">ยังไม่มีรีวิวสำหรับสินค้านี้</TabPanel>
+        </TabList>
+      </Specimen>
+
+      <Specimen name="SegmentedControl" note="สลับมุมมองของเนื้อหาเดิม — radiogroup ไม่ใช่ tablist">
+        <Row label="hug">
+          <SegmentedControl value={view} onChange={setView} label="รูปแบบการแสดงผล">
+            <SegmentedControlItem value="grid" label="ตาราง" icon={<Icon name="layout-grid" size={20} />} />
+            <SegmentedControlItem value="list" label="รายการ" icon={<Icon name="list" size={20} />} />
+          </SegmentedControl>
+        </Row>
+        <Row label="fill + ไอคอนล้วน">
+          <div className="w-full max-w-sm">
+            <SegmentedControl value={view} onChange={setView} label="รูปแบบการแสดงผล" layout="fill">
+              <SegmentedControlItem value="grid" label="ตาราง" isLabelHidden icon={<Icon name="layout-grid" size={20} />} />
+              <SegmentedControlItem value="list" label="รายการ" isLabelHidden icon={<Icon name="list" size={20} />} />
+            </SegmentedControl>
+          </div>
+        </Row>
+      </Specimen>
+
+      <Specimen name="Pagination" note="ปุ่ม 44px (ไม่ใช่ 32 ของ Astryx) · ชื่อปุ่มเป็น &quot;หน้า 3&quot;" wide>
+        <Row label="pages">
+          <Pagination page={page} totalPages={12} onChange={setPage} label="การแบ่งหน้า ตัวอย่าง" />
+        </Row>
+        <Row label="count">
+          <Pagination page={page} totalItems={240} pageSize={20} variant="count" onChange={setPage} label="การแบ่งหน้า แบบนับ" />
+        </Row>
+        <Row label="compact (จอแคบ)">
+          <Pagination page={page} totalPages={12} variant="compact" onChange={setPage} label="การแบ่งหน้า แบบกระชับ" />
+        </Row>
+      </Specimen>
+
       <Specimen name="TopNav" note="sticky จริงอยู่บนสุดของหน้านี้แล้ว — นี่คือสำเนาแบบอยู่กับที่" wide>
         <div className="relative">
           <TopNav

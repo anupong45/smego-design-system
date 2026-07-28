@@ -227,6 +227,22 @@ export {
   type PaginationVariant,
   type PaginationSize,
 } from './navigation/Pagination';
+export {
+  TabList,
+  Tab,
+  TabPanel,
+  type TabListProps,
+  type TabProps,
+  type TabPanelProps,
+  type TabListSize,
+} from './navigation/TabList';
+export {
+  SegmentedControl,
+  SegmentedControlItem,
+  type SegmentedControlProps,
+  type SegmentedControlItemProps,
+  type SegmentedControlSize,
+} from './navigation/SegmentedControl';
 
 /* ── Marketplace ──────────────────────────────────────────────────────────── */
 export {

@@ -45,3 +45,14 @@ globalThis.matchMedia ??= ((query: string) => ({
   removeEventListener() {},
   dispatchEvent: () => false,
 })) as unknown as typeof matchMedia;
+
+/* jsdom ไม่มี `CSS.escape` — react-aria เรียกมันใน selection utils ตอน focus
+   ของ collection (Tabs · ListBox · Menu) แล้วโยน
+   `TypeError: Cannot read properties of undefined (reading 'escape')`
+   ซึ่ง**อ่านไม่ออกเลยว่าเกี่ยวกับอะไร** — เจอตอนเขียนเทส TabList
+
+   ⚠️ อาการหลอก: เทสที่ล้มคือเทสที่ **กด/เลื่อน focus** ส่วนเทสที่อ่าน
+   markup เฉย ๆ ผ่านหมด ทำให้ดูเหมือน component พังเฉพาะตอน interact */
+globalThis.CSS ??= {} as unknown as typeof CSS;
+globalThis.CSS.escape ??= ((value: string) =>
+  String(value).replace(/[^\w-]/g, (ch) => `\\${ch}`)) as typeof CSS.escape;
