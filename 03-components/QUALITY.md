@@ -82,10 +82,35 @@
 ## 3 · เครื่องมือ
 
 ```bash
-npm run lint          # lint-classes (สี) + lint-quality (4 ข้อ)
+npm run lint          # lint-classes (สี) + lint-quality (4 ข้อ) + parity + docs
 npm run lint:quality  # เฉพาะ 4 ข้อ
+npm run lint:docs     # ลิงก์เสีย + ชื่อก่อน rename ในเอกสาร
 npm run verify        # ทั้งหมด: typecheck → lint → vitest → playwright → tokens
 ```
+
+### contrast sweep (ปิดหนี้จากรอบ grill 2026-07-26)
+
+รอบนั้นสรุปว่าจะทำ sweep อัตโนมัติ "ทุกหน้า preview ทั้งสองโหมด" เพราะบั๊ก
+`primary-50` เป็นพื้นหลุดถึงโค้ดพร้อมใช้ **เนื่องจากตรวจ contrast แบบสุ่มจุด**
+ทำเสร็จเมื่อ **2026-07-29** ที่ [`tests/e2e/contrast-sweep.spec.ts`](./tests/e2e/contrast-sweep.spec.ts)
+
+| | ครอบ |
+|---|---|
+| ✅ SC 1.4.3 ข้อความ | **618 element** บนหน้า gallery × 2 โหมด + **32 element** ใน popover ที่เปิด |
+| ❌ SC 1.4.11 ขอบเขต UI (3:1) | ยังพึ่ง spec รายตัว (`pass3` · `banner`) — แยก "ขอบสื่อความหมาย" จากขอบตกแต่งด้วย computed style ไม่ได้ |
+| ❌ state `hover` / `focus` | ยังไม่ครอบ |
+
+⚠️ **สองบทเรียนจากการเขียน sweep นี้**
+
+1. **ต้องดับ `transition` ก่อนวัด** — ฉบับแรกอ่านสีต่างกันทุกรอบ
+   (`rgb(120,123,128)` แล้ว `rgb(124,127,133)`) เพราะวัดตอนสีไล่อยู่กลางทาง
+   ให้ "ปัญหา" ปลอม 2 จุด · flaky ยังไม่ร้ายเท่า **รายงานสีผิด** ซึ่งพาไปแก้
+   token ที่ไม่ได้ผิด
+2. **เกตต้องพิสูจน์ว่า fail ได้** — ฉีดสี 3.45:1 เข้าไปแล้วต้องจับได้ 10 จุด
+   ก่อนจะเชื่อว่าที่มันเขียวคือเขียวจริง · sweep ที่ตรวจ 0 element ก็เขียว
+   เหมือนกัน จึงมีเกณฑ์ขั้นต่ำ (`checked > 150`) กันการตายเงียบ
+
+ผลตอนนี้: **ไม่มีจุดที่ไม่ผ่าน** ทั้งสองโหมด
 
 [`02-tokens/lint-quality.mjs`](../02-tokens/lint-quality.mjs) เป็นหลักฐานของ 4 ข้อใน checklist:
 
