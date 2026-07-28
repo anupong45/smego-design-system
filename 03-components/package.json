@@ -17,12 +17,13 @@
     "test:e2e": "npm run build:fixture && npm run gallery:build && playwright test",
     "gallery:build": "esbuild gallery/gallery.tsx --bundle --outfile=gallery/gallery.js --loader:.tsx=tsx --jsx=automatic --define:process.env.NODE_ENV='\"development\"' && tailwindcss -i gallery/gallery.in.css -o gallery/gallery.css",
     "gallery": "npm run gallery:build && http-server gallery -p 4400 -c-1 -o",
-    "verify": "npm run typecheck && npm run lint && npm run test && npm run test:e2e && npm run gallery:build && node ../02-tokens/validate-tokens.js",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run test:e2e && npm run gallery:build && npm run check:bundle && node ../02-tokens/validate-tokens.js",
     "verify:head": "node ../02-tokens/verify-head.mjs",
     "lint": "node ../02-tokens/lint-classes.mjs && npm run lint:quality && npm run lint:parity && npm run lint:docs",
     "lint:quality": "node ../02-tokens/lint-quality.mjs",
     "gen:rac-fallback": "node scripts/gen-rac-fallback.mjs",
     "lint:docs": "node ../02-tokens/lint-docs.mjs",
+    "check:bundle": "node scripts/check-bundle.mjs",
     "lint:parity": "node ../02-tokens/lint-parity.mjs"
   },
   "peerDependencies": {

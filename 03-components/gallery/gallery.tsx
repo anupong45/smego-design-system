@@ -21,7 +21,7 @@ import {
   Collapsible, AccordionItem, ImageGallery, DescriptionList,
   Banner, ProgressBar, Skeleton, SkeletonText, Spinner, Dialog, DialogTrigger,
   Tooltip, TooltipTrigger,
-  TopNav, BottomNav, Pagination, TabList, Tab, TabPanel,
+  TopNav, BottomNav, Pagination, TabList, Tab, TabPanel, Table,
   DropdownMenu, DropdownMenuItem, DropdownMenuSection,
   DropdownMenuSeparator, DropdownMenuTrigger,
   SegmentedControl, SegmentedControlItem,
@@ -810,6 +810,51 @@ function Navigation() {
             className="!static"
           />
         </div>
+      </Specimen>
+
+      <Specimen
+        name="Table"
+        note="<table> ปกติ ไม่ใช่ RAC Table (D38 · ประหยัด 44 KB gzip) · ที่ <lg แต่ละแถวเป็นการ์ด · aria-sort อยู่ที่ th"
+        wide
+      >
+        <Table
+          label="คำสั่งซื้อของฉัน ตัวอย่าง"
+          rowKey={(r) => r.id}
+          sortBy="amount"
+          sortDirection="descending"
+          onSortChange={() => {}}
+          columns={[
+            { key: 'product', header: 'สินค้า', isSortable: true },
+            {
+              key: 'amount',
+              header: 'ยอดรวม (บาท)',
+              align: 'end',
+              isSortable: true,
+              render: (r) => (
+                <span className="font-numeric">{r.amount.toLocaleString('en-US')}</span>
+              ),
+            },
+            {
+              key: 'status',
+              header: 'สถานะ',
+              render: (r) => <Badge variant={r.tone} label={r.status} />,
+            },
+          ]}
+          rows={[
+            { id: 'o1', product: 'เครื่องคั่วกาแฟ TR-500', amount: 185000, status: 'รอชำระเงิน', tone: 'warning' as const },
+            { id: 'o2', product: 'ผ้าฝ้ายทอมือ จำนวน 200 เมตร', amount: 12400, status: 'จัดส่งแล้ว', tone: 'success' as const },
+            { id: 'o3', product: 'บรรจุภัณฑ์กระดาษคราฟท์', amount: 8750, status: 'ยกเลิก', tone: 'neutral' as const },
+          ]}
+          rowAction={(r) => (
+            <DropdownMenuTrigger>
+              <IconButton name="more-vertical" label={`คำสั่งสำหรับ ${r.product}`} variant="ghost" />
+              <DropdownMenu>
+                <DropdownMenuItem id="v" label="ดูรายละเอียด" icon="file-text" />
+                <DropdownMenuItem id="c" label="ยกเลิกคำสั่งซื้อ" isDestructive />
+              </DropdownMenu>
+            </DropdownMenuTrigger>
+          )}
+        />
       </Specimen>
 
       <Specimen

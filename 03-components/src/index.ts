@@ -156,6 +156,13 @@ export {
 } from './data-display/Avatar';
 export { EmptyState, type EmptyStateProps } from './data-display/EmptyState';
 export {
+  Table,
+  type TableProps,
+  type TableColumn,
+  type TableAlign,
+  type SortDirection,
+} from './data-display/Table';
+export {
   Collapsible,
   AccordionItem,
   type CollapsibleProps,

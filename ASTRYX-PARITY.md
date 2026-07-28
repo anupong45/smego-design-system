@@ -213,6 +213,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | D19 | ไม่รับ `tooltip` บน `Button` `IconButton` `Link` | `IconButton.md` §5 และ `Tooltip.md` §5 เขียนตรงกันว่า `aria-describedby` **ไม่ใช่** accessible name — prop ชื่อ `tooltip` บนปุ่มเชิญให้ทำ anti-pattern ที่สองไฟล์นั้นกันไว้เอง (ใช้ `label` ตั้งชื่อ แล้วครอบด้วย `TooltipTrigger` ถ้าต้องการคำอธิบายเสริม) |
 | D20 | เส้นแบ่ง link/button — ไม่รับ `Button.href/target/rel` (และ `IconButton.href/target/rel` ด้วยเหตุผลเดียวกัน) และไม่รับ `Link.label/color/weight/display/type/maxLines/hasUnderline` | `Link.md` §1 ตั้งกฎไว้ว่า "เปลี่ยน URL = ลิงก์ · เปลี่ยนข้อมูล = ปุ่ม" · `Button.href` ลบเส้นนั้นทิ้ง ส่วน `Link.color/weight/display/type/maxLines` เปิดทางให้ลิงก์แต่งตัวเป็นปุ่ม · `hasUnderline` คือปุ่มปิด SC 1.4.1 (สีอย่างเดียวไม่พอ) ที่ `base.css` บังคับขีดเส้นใต้ด้วย `:where(a[href])` อยู่แล้ว |
 | D21 | props ที่ขัด SC หรือขัดคำตัดสินเดิม — `IconButton.isLoading/clickAction/isInterruptible` · `Tooltip.focusTrigger/alignment/anchorRef/hasHoverIndication` · `ProgressBar.isIndeterminate` · `Dialog.isInline` | `IconButton` เป็นไอคอนล้วน ไม่มีที่ให้ spinner โดยไม่บังไอคอน — `IconButton.md` §10 สั่งให้ใช้ `Button isLoading` แทนอยู่แล้ว · `clickAction`/`isInterruptible` เป็น event model ของ Astryx (เหตุผลเดียวกับ D8) · `focusTrigger` เปิดช่องปิดการแสดงตอน focus = ตก SC 1.4.13 · `alignment`/`anchorRef`/`hasHoverIndication` ขัด offset 8px ที่ตรึงไว้โดยเจตนา · `isIndeterminate` ทับเขต `Spinner` ตามกฎ §8.5 · `Dialog.isInline` คือ dialog ที่ไม่ใช่ overlay ซึ่งเป็นงานของ `Card`/`Section` |
+| D38 | `Table` ใช้ `<table>` ปกติ ไม่ใช่ RAC `Table` และ API ต่างจาก Astryx เกือบทั้งชุด | วัดแล้ว RAC `Table` เพิ่ม **+44 KB gzip** บน baseline 30.5 KB (เกินเท่าตัว · ลีกเดียวกับ `Typeahead` +43 และ `Selector` +40) · สิ่งที่ได้มาแลกคือ selection · การเดินด้วยลูกศร 2 มิติ · drag-and-drop ซึ่งเป็น **ของที่ขอบเขตตัดออกทั้งชุด** (คำตัดสิน 2026-07-26: read + sort + row action) · และ RAC ประกาศ `role="grid"` ซึ่งเปลี่ยน screen reader เป็นโหมด application ทั้งที่ตารางอ่านอย่างเดียวได้ประโยชน์จาก semantic ของ `<table>` มากกว่า · `CompareTable` ใช้ `<table>` ปกติอยู่แล้ว การใช้ RAC จะทำให้ระบบมีตารางสองแบบที่ SR เจอคนละโมเดล (หลักเดียวกับ D15 · D22 · D33) · prop จึงเป็นชุด `columns`/`rows`/`rowKey` แบบ data-driven ไม่ใช่ compound component ของเขา |
 | D37 | `Icon` ไม่รับชื่อ `icon` ของ Astryx — คง `name` | ของ Astryx รับ **`ReactNode`** ส่วนของเรารับ **key ของ registry** (`IconName`) ซึ่งเป็นสิ่งที่ทำให้การันตีชุดไอคอนที่ผ่านการตรวจ stroke/ขนาดได้ · `name` สื่อ "อ้างถึงรายการในทะเบียน" ตรงกว่า `icon` ที่สื่อ "ยัดอะไรก็ได้" · รับชื่อเขาแต่คงชนิดเราจะได้ชื่อเดียวกันชนิดต่างกัน (กับดักเดียวกับ D34) และจ่าย **247 call site** เพื่อความสับสน (ยืนยันคำตัดสิน 2026-07-28) |
 | D36 | `Banner` ไม่รับ `status` — คง `tone` | ⚠️ **ชื่อชนกันแต่รูปร่างคนละอย่าง** · `status` ของ Astryx คือ `BannerStatus` (string enum ที่ theme ขยายได้) ส่วน `status` ในระบบนี้คือ `InputStatus` = `{ type, message }` ที่ใช้เหมือนกันทั้ง 13 input · รับชื่อเขาจะทำให้ prop ชื่อเดียวกันมีสองรูปร่างในระบบเดียว ซึ่งเป็นกับดักที่ **D34 ปฏิเสธไปแล้วตรง ๆ** · `tone` เป็นชื่อที่ถูกของแกนนี้ และ §8.4/D13 ตัดสินไว้แล้วว่า `Alert`→`Banner` รับแค่ชื่อ component ไม่รับ API |
 | D35 | ไม่รับ `labelIcon` ทุกตัว (`CheckboxInput` `NumberInput` `Switch` ฯลฯ) | ไอคอนข้างป้ายเป็นการตกแต่งที่ไม่มีทางประกาศความหมายให้ screen reader ได้ — ถ้าไอคอนสื่อความหมายจริง ข้อความต้องพูดสิ่งนั้นออกมา และถ้าไม่สื่อ ก็เป็น noise ที่กินพื้นที่ป้ายซึ่งข้อความไทยยาวกว่าอังกฤษ 20–40% อยู่แล้ว · เคสที่อ้างกันบ่อยคือ "ไอคอนช่วยอธิบาย" ซึ่งระบบนี้ตอบด้วย `description` (มีทุกตัว) ไม่ใช่ภาพ · หลักเดียวกับ D16 แต่แยกรหัสเพราะ D16 แจกแจง prop ไว้ตายตัวแล้ว |
@@ -292,7 +293,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Button", "IconButton", "Link", "Switch", "Card", "Badge", "Dialog",
     "Tooltip", "Skeleton", "ProgressBar", "Icon", "Grid", "Stack",
     "Section", "Divider", "EmptyState", "Pagination", "Avatar", "Spinner",
-    "SegmentedControl", "DropdownMenu",
+    "SegmentedControl", "DropdownMenu", "Table",
     "CheckboxInput", "RadioList", "Selector", "Typeahead",
     "NumberInput", "DateInput", "FileInput", "Slider", "Token", "Collapsible",
     "Banner", "TopNav"
@@ -338,6 +339,10 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "EmptyState": ["isLive"],
     "TabList": ["label", "isDisabled"],
     "DropdownMenu": ["width"],
+    "Table": [
+      "label", "rows", "rowKey", "columns", "sortBy", "sortDirection",
+      "onSortChange", "rowAction", "rowActionLabel", "emptyState"
+    ],
     "Card": ["selected", "elevation", "interactive"],
     "Badge": ["showIcon"],
     "Icon": ["name"],
