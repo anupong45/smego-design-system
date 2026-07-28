@@ -5,7 +5,7 @@ import {
   Button, IconButton, Link, Icon,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Skeleton, SkeletonGroup, SkeletonText,
-  TextInput, TextArea, CheckboxInput, CheckboxGroup, Radio, RadioGroup, RangeSlider,
+  TextInput, TextArea, CheckboxInput, CheckboxGroup, Radio, RadioList, RangeSlider,
   Accordion, AccordionItem, Tooltip, TooltipTrigger,
   Dialog, DialogOverlay, DialogTrigger,
   Stack, VStack, HStack, Grid, Container, Section, Divider,
@@ -104,15 +104,15 @@ const cases: [string, React.ReactElement][] = [
   ],
 
   [
-    'RadioGroup · card',
-    <RadioGroup label="วิธีชำระเงิน" defaultValue="promptpay">
+    'RadioList · card',
+    <RadioList label="วิธีชำระเงิน" defaultValue="promptpay">
       <Radio value="promptpay" layout="card" description="สแกน QR ด้วยแอปธนาคาร">
         พร้อมเพย์
       </Radio>
       <Radio value="transfer" layout="card" description="โอนแล้วอัปโหลดสลิปเพื่อยืนยัน">
         โอนผ่านธนาคาร
       </Radio>
-    </RadioGroup>,
+    </RadioList>,
   ],
 
   [

@@ -1,6 +1,8 @@
-# RadioGroup · Radio
+# RadioList · Radio
 
-**`@smego/ui`** · ชั้น 03 · [RadioGroup.tsx](./RadioGroup.tsx)
+**`@smego/ui`** · ชั้น 03 · [RadioList.tsx](./RadioList.tsx)
+
+> เดิมชื่อ `RadioGroup` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `errorMessage`→`status` · `showOptional`→`isOptional` ตาม §8
 
 ---
 
@@ -26,13 +28,13 @@
 ## 2 · React API
 
 ```tsx
-import { RadioGroup, Radio } from '@smego/ui';
+import { RadioList, Radio } from '@smego/ui';
 
-<RadioGroup label="วิธีชำระเงิน" value={method} onChange={setMethod}>
+<RadioList label="วิธีชำระเงิน" value={method} onChange={setMethod}>
   <Radio value="promptpay" layout="card" description="สแกน QR ด้วยแอปธนาคาร">
     พร้อมเพย์
   </Radio>
-</RadioGroup>
+</RadioList>
 ```
 
 ### Radio
@@ -46,14 +48,14 @@ import { RadioGroup, Radio } from '@smego/ui';
 | `layout` | `'inline' \| 'card'` | `'inline'` | |
 | `isDisabled` | `boolean` | `false` | |
 
-### RadioGroup
+### RadioList
 
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
 | `description` | `string` | — | |
-| `errorMessage` | `string` | — | |
-| `showOptional` | `boolean` | `false` | |
+| `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` |
+| `isOptional` | `boolean` | `false` | |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | |
 | `value` / `defaultValue` / `onChange` | `string` | — | จาก RAC |
 
@@ -202,7 +204,7 @@ Component set **`Radio`**
 | `Description` | `True` · `False` |
 | `End slot` | `None` · `Slot` |
 
-Component set **`RadioGroup`** — property `Orientation`, `Error`, `Optional`
+Component set **`RadioList`** — property `Orientation`, `Error`, `Optional`
 
 **ต้องมีตัวอย่างจริงของ `PaymentMethodSelect`** ที่ใช้ `layout="card"` ครบ 4 ตัวเลือกเรียงตามลำดับของจริง (พร้อมเพย์ → โอน → เครดิตเทอม → บัตร) เพื่อไม่ให้ใครเรียงแบบ B2C ตะวันตก
 
@@ -214,7 +216,7 @@ Component set **`RadioGroup`** — property `Orientation`, `Error`, `Optional`
 
 ```tsx
 // วิธีชำระเงิน — ลำดับตามที่ SME ไทยใช้จริง ไม่ใช่บัตรขึ้นก่อน
-<RadioGroup label="วิธีชำระเงิน" value={method} onChange={setMethod}>
+<RadioList label="วิธีชำระเงิน" value={method} onChange={setMethod}>
   <Radio value="promptpay" layout="card" description="สแกน QR ด้วยแอปธนาคาร">
     พร้อมเพย์
   </Radio>
@@ -227,25 +229,25 @@ Component set **`RadioGroup`** — property `Orientation`, `Error`, `Optional`
   <Radio value="card" layout="card" description="วีซ่า มาสเตอร์การ์ด">
     บัตรเครดิต
   </Radio>
-</RadioGroup>
+</RadioList>
 ```
 
 ```tsx
 // ตัวเลือกสั้น — inline
-<RadioGroup label="ประเภทผู้ประกอบการ" orientation="horizontal">
+<RadioList label="ประเภทผู้ประกอบการ" orientation="horizontal">
   <Radio value="person">บุคคลธรรมดา</Radio>
   <Radio value="juristic">นิติบุคคล</Radio>
   <Radio value="community">วิสาหกิจชุมชน</Radio>
-</RadioGroup>
+</RadioList>
 ```
 
 ```tsx
 // ต้องมีทางไม่เลือก
-<RadioGroup label="ขนาดกิจการ" showOptional>
+<RadioList label="ขนาดกิจการ" isOptional>
   <Radio value="micro">รายย่อย</Radio>
   <Radio value="small">ขนาดเล็ก</Radio>
   <Radio value="unspecified">ไม่ระบุ</Radio>
-</RadioGroup>
+</RadioList>
 ```
 
 ---
@@ -254,7 +256,7 @@ Component set **`RadioGroup`** — property `Orientation`, `Error`, `Optional`
 
 | ❌ | ✅ | ทำไม |
 |---|---|---|
-| `<Radio>` เดี่ยวนอก `<RadioGroup>` | อยู่ในกลุ่มเสมอ | ไม่มี `role="radiogroup"` = roving ไม่ทำงาน |
+| `<Radio>` เดี่ยวนอก `<RadioList>` | อยู่ในกลุ่มเสมอ | ไม่มี `role="radiogroup"` = roving ไม่ทำงาน |
 | radio 2 ตัวสำหรับ ใช่/ไม่ใช่ | `<Switch>` หรือ `<Checkbox>` | กินพื้นที่แนวตั้งโดยไม่ได้อะไรกลับมา |
 | radio เป็นสี่เหลี่ยม | `rounded-full` | ผู้ใช้เข้าใจพฤติกรรมผิด |
 | จุดกลางต่างแค่สี | ต่างที่ขนาด (20 vs 10) | SC 1.4.1 |
@@ -279,7 +281,7 @@ Component set **`RadioGroup`** — property `Orientation`, `Error`, `Optional`
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | ✅ | §4 `focus-visible` · ลูกศรเลื่อนภายในกลุ่ม · `Tab` ข้ามทั้งกลุ่มเป็นหน่วยเดียว (roving tabindex ของ RAC) |
 | กำลังโหลด (Loading) | — | ตัวเลือกมาพร้อมหน้า |
-| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `errorMessage` ที่ระดับกลุ่ม ไม่ใช่รายตัวเลือก (SC 3.3.1) |
+| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `status` ที่ระดับกลุ่ม ไม่ใช่รายตัวเลือก (SC 3.3.1) |
 | ว่างเปล่า (Empty) | — | กลุ่มที่ไม่มีตัวเลือกคือกลุ่มที่ไม่ควร render |
 | Skeleton | — | ตัวเลือกเป็นข้อความสั้น ไม่ต้องมีตัวแทนระหว่างโหลด |
 | การเคลื่อนไหว (Animation) | ✅ | `base.css §10` ครอบ `*` ด้วย `!important` — ไม่มีการเคลื่อนไหวที่หลุดตัวกัน (`lint-quality.mjs` 0 จุด) |

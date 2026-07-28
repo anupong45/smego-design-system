@@ -1,6 +1,6 @@
 import { useId, useRef, useState, type ReactNode } from 'react';
 import { cn } from '../lib/cn';
-import { RadioGroup, Radio } from '../inputs/RadioGroup';
+import { RadioList, Radio } from '../inputs/RadioList';
 import { Button } from '../inputs/Button';
 import { Icon } from '../icon/Icon';
 import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
@@ -64,11 +64,11 @@ export function PaymentMethodSelect({
   ];
 
   return (
-    <RadioGroup
+    <RadioList
       label={s.payment.methodLabel}
       value={value}
       onChange={(v) => onChange(v as PaymentMethod)}
-      errorMessage={errorMessage}
+      status={errorMessage ? { type: 'error', message: errorMessage } : undefined}
       className={className}
     >
       {methods.map((m) => (
@@ -82,7 +82,7 @@ export function PaymentMethodSelect({
           {m.label}
         </Radio>
       ))}
-    </RadioGroup>
+    </RadioList>
   );
 }
 

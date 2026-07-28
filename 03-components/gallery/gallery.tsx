@@ -15,7 +15,7 @@ import {
   Stack, HStack, Grid, Container, Divider,
   Icon, iconRegistry, type IconName,
   Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
-  Radio, RadioGroup, RangeSlider, DatePicker, OTPField, NumberField,
+  Radio, RadioList, RangeSlider, DatePicker, OTPField, NumberField,
   SearchField, Switch, Select, ComboBox, FileUpload,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Accordion, AccordionItem, ImageGallery, DescriptionList,
@@ -228,19 +228,19 @@ function Inputs() {
         </Stack>
       </Specimen>
 
-      <Specimen name="RadioGroup" note="layout inline · card · แนวนอน">
+      <Specimen name="RadioList" note="layout inline · card · แนวนอน">
         <Stack gap="5">
-          <RadioGroup label="รูปแบบการรับสินค้า" value={radio} onChange={setRadio}>
+          <RadioList label="รูปแบบการรับสินค้า" value={radio} onChange={setRadio}>
             <Radio value="a" description="ส่งภายใน 3–5 วันทำการ">จัดส่ง</Radio>
             <Radio value="b" description="รับที่โรงงาน จ.เชียงใหม่">รับเอง</Radio>
-          </RadioGroup>
-          <RadioGroup label="ขนาดกิจการ" orientation="horizontal" defaultValue="s">
+          </RadioList>
+          <RadioList label="ขนาดกิจการ" orientation="horizontal" defaultValue="s">
             <Radio value="s">เล็ก</Radio><Radio value="m">กลาง</Radio><Radio value="l">ใหญ่</Radio>
-          </RadioGroup>
-          <RadioGroup label="แผนการใช้งาน" defaultValue="free">
+          </RadioList>
+          <RadioList label="แผนการใช้งาน" defaultValue="free">
             <Radio value="free" layout="card" description="ลงสินค้าได้ 10 รายการ" endSlot={<Badge variant="success">ฟรี</Badge>}>เริ่มต้น</Radio>
             <Radio value="pro" layout="card" description="ไม่จำกัดรายการ + สถิติ" endSlot={<span className="text-body-strong">฿590/เดือน</span>}>มืออาชีพ</Radio>
-          </RadioGroup>
+          </RadioList>
         </Stack>
       </Specimen>
 

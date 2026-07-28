@@ -108,10 +108,10 @@ export {
 } from './inputs/CheckboxInput';
 export {
   Radio,
-  RadioGroup,
+  RadioList,
   type RadioProps,
-  type RadioGroupProps,
-} from './inputs/RadioGroup';
+  type RadioListProps,
+} from './inputs/RadioList';
 export { RangeSlider, type RangeSliderProps } from './inputs/RangeSlider';
 export {
   DatePicker,

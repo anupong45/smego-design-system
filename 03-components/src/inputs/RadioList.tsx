@@ -10,9 +10,19 @@ import {
 import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { useStrings } from '../provider/SmeGoProvider';
+import {
+  statusTextClass,
+  isErrorStatus,
+  type InputStatus,
+} from './fieldStyles';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · RadioGroup / Radio
+   SME.GO · RadioList / Radio   (เดิมชื่อ RadioGroup — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    `status` (เดิมชื่อ `errorMessage`) · `isOptional` (เดิมชื่อ `showOptional`)
+   ไม่รับ `isLabelHidden` `size` `width` (D6) `labelTooltip` `htmlName` (D15)
+          `disabledMessage` (D16) ของ Astryx — ไม่มี use case ใน marketplace
    ───────────────────────────────────────────────────────────────────────────
    ★ radio ใช้ **roving tabindex** ต่างจาก checkbox
 
@@ -147,10 +157,10 @@ export function Radio({
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   RadioGroup
+   RadioList
    ───────────────────────────────────────────────────────────────────────────── */
 
-export interface RadioGroupProps
+export interface RadioListProps
   extends Omit<
     RACRadioGroupProps,
     'children' | 'className' | 'style' | 'validationBehavior'
@@ -158,36 +168,36 @@ export interface RadioGroupProps
   label: string;
   children: ReactNode;
   description?: string;
-  errorMessage?: string;
-  showOptional?: boolean;
+  status?: InputStatus;
+  isOptional?: boolean;
   /** เรียงแนวตั้ง (ค่าเริ่มต้น) หรือแนวนอน */
   orientation?: 'vertical' | 'horizontal';
   className?: string;
 }
 
-export function RadioGroup({
+export function RadioList({
   label,
   children,
   description,
-  errorMessage,
-  showOptional,
+  status,
+  isOptional,
   orientation = 'vertical',
   className,
   ...rest
-}: RadioGroupProps) {
+}: RadioListProps) {
   const s = useStrings();
 
   return (
     <RACRadioGroup
       validationBehavior="aria"
-      isInvalid={Boolean(errorMessage)}
+      isInvalid={isErrorStatus(status)}
       orientation={orientation}
       className={cn('grid min-w-0 gap-2', className)}
       {...rest}
     >
       <Label className="text-label text-fg-secondary">
         {label}
-        {showOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
+        {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>
 
       {description && (
@@ -207,7 +217,15 @@ export function RadioGroup({
         {children}
       </div>
 
-      <FieldError className="text-caption text-danger-icon">{errorMessage}</FieldError>
+      {isErrorStatus(status) ? (
+        <FieldError className="text-caption text-danger-icon">{status?.message}</FieldError>
+      ) : (
+        status?.message && (
+          <Text slot="description" className={statusTextClass[status.type]}>
+            {status.message}
+          </Text>
+        )
+      )}
     </RACRadioGroup>
   );
 }

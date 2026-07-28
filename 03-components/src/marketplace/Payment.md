@@ -92,7 +92,7 @@ component เหล่านี้ทำหน้าที่ **UI เท่า�
 
 | component | states |
 |---|---|
-| `PaymentMethodSelect` | สืบทอดจาก `RadioGroup` — default · hover · focus · selected · disabled · invalid |
+| `PaymentMethodSelect` | สืบทอดจาก `RadioList` — default · hover · focus · selected · disabled · invalid |
 | `SlipUpload` | ยังไม่เลือก · **อัปโหลดแล้ว** (พื้น success + ชื่อไฟล์) · **error** (`role="alert"`) |
 | `PromptPayQR` | ไม่มี state |
 

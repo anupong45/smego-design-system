@@ -268,11 +268,10 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 43,
+  "maxProblems": 42,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea",
-    "RadioGroup": "RadioList",
     "Select": "Selector",
     "ComboBox": "Typeahead",
     "NumberField": "NumberInput",
@@ -289,7 +288,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Button", "IconButton", "Link", "Switch", "Card", "Badge", "Dialog",
     "Tooltip", "Skeleton", "ProgressBar", "Icon", "Grid", "Stack",
     "Section", "Divider", "EmptyState", "Pagination", "Avatar", "Spinner",
-    "SegmentedControl", "CheckboxInput"
+    "SegmentedControl", "CheckboxInput", "RadioList"
   ],
   "renameNewBuild": { "Tabs": "TabList" },
   "extension": [
@@ -439,7 +438,8 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 | 1 | `TextField` → `TextInput` | ✅ | + `status` · `isLabelHidden` · `startIcon` · `isLoading` · `hasClear` |
 | 2 | `Textarea` → `TextArea` | ✅ | แยกเป็นไฟล์ของตัวเอง + `TextArea.md` ใหม่ |
 | 3 | `Checkbox` → `CheckboxInput` | ✅ | `children` → `label: string` บังคับ + `isLabelHidden` (§8.1) — `CheckboxGroup` คงเดิม (มี `label` อยู่แล้ว) |
-| 4–15 | ที่เหลือ | ⬜ | `RadioGroup` `Select` `ComboBox` `NumberField` `DatePicker` `FileUpload` `RangeSlider` `Chip` `Accordion` `ImageGallery` `Alert` `AppHeader` |
+| 4 | `RadioGroup` → `RadioList` | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` — `Radio` (item) คงเดิม `children` ไม่เปลี่ยน · `Payment.tsx` ตามไปแก้ internal call site |
+| 5–15 | ที่เหลือ | ⬜ | `Select` `ComboBox` `NumberField` `DatePicker` `FileUpload` `RangeSlider` `Chip` `Accordion` `ImageGallery` `Alert` `AppHeader` |
 
 **งานข้างเคียงที่เกิดขึ้นจริงในสองตัวแรก** (คาดว่าจะซ้ำกับตัวที่เหลือ):
 `fieldStyles` ย้ายออกจาก `TextField.tsx` มาเป็น `inputs/fieldStyles.ts` — เดิม Select · ComboBox · NumberField · DatePicker · SearchField ทั้งห้าตัว `import { fieldStyles } from './TextField'` ซึ่งผูกกับไฟล์ของ component อื่นโดยไม่มีเหตุผล
