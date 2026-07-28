@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
+import { EmptyState } from '../data-display/EmptyState';
 import { Button, buttonStyles } from '../inputs/Button';
 import { IconButton } from '../inputs/IconButton';
 import { Link } from '../inputs/Link';
@@ -318,16 +319,13 @@ export function CartList({
 
   if (itemCount === 0) {
     return (
-      <div
-        className={cn('grid min-w-0 justify-items-center gap-3 px-4 py-12 text-center', className)}
-      >
-        <Icon name="shopping-cart" size={32} className="text-fg-muted" />
-        <p className="text-subtitle text-fg">{s.cart.empty}</p>
-        <p className="max-w-(--container-form) text-body-sm text-fg-muted">
-          {s.cart.emptyHelp}
-        </p>
-        {emptyAction}
-      </div>
+      <EmptyState
+        icon={<Icon name="shopping-cart" size={32} />}
+        title={s.cart.empty}
+        description={s.cart.emptyHelp}
+        actions={emptyAction}
+        className={className}
+      />
     );
   }
 

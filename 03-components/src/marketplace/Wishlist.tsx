@@ -2,6 +2,7 @@ import { ToggleButton as RACToggleButton } from 'react-aria-components';
 import { useState, type ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
+import { EmptyState } from '../data-display/EmptyState';
 import { Grid } from '../layout/Grid';
 import { Button } from '../inputs/Button';
 import { useStrings } from '../provider/SmeGoProvider';
@@ -147,19 +148,13 @@ export function WishlistGrid({ children, count, emptyAction, className }: Wishli
 
   if (count === 0) {
     return (
-      <div
-        className={cn(
-          'grid min-w-0 justify-items-center gap-3 px-4 py-12 text-center',
-          className,
-        )}
-      >
-        <Icon name="heart" size={32} className="text-fg-muted" />
-        <p className="text-subtitle text-fg">{s.wishlist.empty}</p>
-        <p className="max-w-(--container-form) text-body-sm text-fg-muted">
-          {s.wishlist.emptyHelp}
-        </p>
-        {emptyAction}
-      </div>
+      <EmptyState
+        icon={<Icon name="heart" size={32} />}
+        title={s.wishlist.empty}
+        description={s.wishlist.emptyHelp}
+        actions={emptyAction}
+        className={className}
+      />
     );
   }
 

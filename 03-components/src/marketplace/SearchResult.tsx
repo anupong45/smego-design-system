@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
+import { EmptyState } from '../data-display/EmptyState';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -91,19 +92,17 @@ export function SearchResult({
       </div>
 
       {isEmpty ? (
-        <div
-          /* ไม่ใช่ live region — ข้อความจำนวนด้านบนประกาศไปแล้ว
-             ถ้าประกาศซ้ำผู้ใช้จะได้ยินสองรอบ */
-          className="grid min-w-0 justify-items-center gap-3 px-4 py-12 text-center"
-        >
-          <Icon name="search" size={32} className="text-fg-muted" />
-          <p className="text-subtitle text-fg">{s.search.noResults}</p>
-          {/* ★ บอกทางออก ไม่ใช่แค่บอกว่าไม่พบ */}
-          <p className="max-w-(--container-form) text-body-sm text-fg-muted">
-            {s.search.noResultsHelp}
-          </p>
-          {emptyAction}
-        </div>
+        /* ★★ ไม่ส่ง `isLive` โดยเจตนา — ข้อความจำนวนด้านบนประกาศไปแล้ว
+           ถ้า EmptyState ประกาศอีกผู้ใช้จะได้ยินสองรอบ
+           (นี่คือเหตุผลที่ `role="status"` ของ Astryx เป็น opt-in ที่นี่ · D26)
+
+           `description` บอกทางออก ไม่ใช่แค่บอกว่าไม่พบ */
+        <EmptyState
+          icon={<Icon name="search" size={32} />}
+          title={s.search.noResults}
+          description={s.search.noResultsHelp}
+          actions={emptyAction}
+        />
       ) : (
         children
       )}

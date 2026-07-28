@@ -154,6 +154,7 @@ export {
   type AvatarProps,
   type AvatarSize,
 } from './data-display/Avatar';
+export { EmptyState, type EmptyStateProps } from './data-display/EmptyState';
 export {
   Collapsible,
   AccordionItem,
