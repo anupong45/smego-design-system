@@ -14,7 +14,7 @@ import {
   SmeGoProvider, ToastRegion, showToast,
   Stack, HStack, Grid, Container, Divider,
   Icon, iconRegistry, type IconName,
-  Button, IconButton, Link, TextInput, TextArea, Checkbox, CheckboxGroup,
+  Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
   Radio, RadioGroup, RangeSlider, DatePicker, OTPField, NumberField,
   SearchField, Switch, Select, ComboBox, FileUpload,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
@@ -208,19 +208,22 @@ function Inputs() {
         </Stack>
       </Specimen>
 
-      <Specimen name="Checkbox / CheckboxGroup">
+      <Specimen name="CheckboxInput / CheckboxGroup">
         <Stack gap="4">
-          <Checkbox isSelected={checked} onChange={setChecked} description="ระบบจะบันทึกไว้ในบัญชีของคุณ">
-            จดจำการค้นหานี้
-          </Checkbox>
+          <CheckboxInput
+            label="จดจำการค้นหานี้"
+            isSelected={checked}
+            onChange={setChecked}
+            description="ระบบจะบันทึกไว้ในบัญชีของคุณ"
+          />
           <CheckboxGroup label="มาตรฐานที่ต้องการ" description="เลือกได้มากกว่าหนึ่ง">
-            <Checkbox value="gmp">GMP</Checkbox>
-            <Checkbox value="haccp">HACCP</Checkbox>
-            <Checkbox value="halal">ฮาลาล</Checkbox>
+            <CheckboxInput value="gmp" label="GMP" />
+            <CheckboxInput value="haccp" label="HACCP" />
+            <CheckboxInput value="halal" label="ฮาลาล" />
           </CheckboxGroup>
           <CheckboxGroup label="ประเภท" errorMessage="เลือกอย่างน้อยหนึ่งรายการ">
-            <Checkbox value="a">สินค้า</Checkbox>
-            <Checkbox value="b">บริการ</Checkbox>
+            <CheckboxInput value="a" label="สินค้า" />
+            <CheckboxInput value="b" label="บริการ" />
           </CheckboxGroup>
         </Stack>
       </Specimen>
@@ -558,7 +561,7 @@ function Marketplace() {
             groups={[
               { id: 'g1', title: 'มาตรฐาน', children: (
                 <CheckboxGroup label="มาตรฐาน" className="[&>*:first-child]:sr-only">
-                  <Checkbox value="gmp">GMP</Checkbox><Checkbox value="haccp">HACCP</Checkbox>
+                  <CheckboxInput value="gmp" label="GMP" /><CheckboxInput value="haccp" label="HACCP" />
                 </CheckboxGroup>
               ) },
               { id: 'g2', title: 'ราคา', children: <span className="text-body">ช่วงราคา…</span> },

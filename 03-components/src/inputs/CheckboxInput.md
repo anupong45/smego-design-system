@@ -1,6 +1,8 @@
-# Checkbox · CheckboxGroup
+# CheckboxInput · CheckboxGroup
 
-**`@smego/ui`** · ชั้น 03 · [Checkbox.tsx](./Checkbox.tsx)
+**`@smego/ui`** · ชั้น 03 · [CheckboxInput.tsx](./CheckboxInput.tsx)
+
+> เดิมชื่อ `Checkbox` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `children` → `label: string` บังคับตาม §8.1
 
 ---
 
@@ -17,26 +19,27 @@
 | เลือกได้ข้อเดียว | `<RadioGroup>` | checkbox บอกผู้ใช้ว่าเลือกหลายข้อได้ |
 | เปิด/ปิดที่มีผลทันที | `<Switch>` (Pass 2) | checkbox สื่อ "จะมีผลเมื่อกดบันทึก" |
 | ตัวกรองในหน้ารายการ | `<Chip>` | ตัวกรองต้องเห็นค้างและลบได้ทีละอัน |
-| เลือกจาก 20+ ตัวเลือก | `<ComboBox multiple>` (Pass 2) | รายการยาวเกินกว่าจะสแกนด้วยตา |
+| เลือกจาก 20+ ตัวเลือก | `<Typeahead multiple>` (Pass 2) | รายการยาวเกินกว่าจะสแกนด้วยตา |
 
 ---
 
 ## 2 · React API
 
 ```tsx
-import { Checkbox, CheckboxGroup } from '@smego/ui';
+import { CheckboxInput, CheckboxGroup } from '@smego/ui';
 
 <CheckboxGroup label="ใบรับรองที่มี" description="เลือกได้มากกว่าหนึ่ง">
-  <Checkbox value="tis">มาตรฐานผลิตภัณฑ์อุตสาหกรรม</Checkbox>
-  <Checkbox value="halal" description="สำหรับสินค้าอาหารและเครื่องดื่ม">ฮาลาล</Checkbox>
+  <CheckboxInput value="tis" label="มาตรฐานผลิตภัณฑ์อุตสาหกรรม" />
+  <CheckboxInput value="halal" label="ฮาลาล" description="สำหรับสินค้าอาหารและเครื่องดื่ม" />
 </CheckboxGroup>
 ```
 
-### Checkbox
+### CheckboxInput
 
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
-| `children` | `ReactNode` | — | ไม่มีเมื่อใช้ `aria-label` แทน |
+| `label` | `string` | — | **บังคับ** — accessible name (§8.1) |
+| `isLabelHidden` | `boolean` | `false` | ซ่อน label ด้วยตา ยังอ่านได้ด้วย screen reader |
 | `description` | `string` | — | คำอธิบายใต้ข้อความ |
 | `value` | `string` | — | จำเป็นเมื่ออยู่ใน group |
 | `isSelected` / `defaultSelected` | `boolean` | — | จาก RAC |
@@ -60,7 +63,7 @@ import { Checkbox, CheckboxGroup } from '@smego/ui';
 
 ## 3 · Variants
 
-Checkbox ไม่มี visual variant — มีแค่ **สถานะ** ซึ่งอยู่ใน §4
+CheckboxInput ไม่มี visual variant — มีแค่ **สถานะ** ซึ่งอยู่ใน §4
 
 | ส่วน | ค่า |
 |---|---|
@@ -177,7 +180,7 @@ const boxBase = [
 
 ## 7 · Figma Variant
 
-Component set **`Checkbox`**
+Component set **`CheckboxInput`**
 
 | Property | Values |
 |---|---|
@@ -205,16 +208,17 @@ Component set **`CheckboxGroup`** แยกต่างหาก — property `E
   onChange={setCerts}
   errorMessage={certs.length === 0 ? 'กรุณาเลือกอย่างน้อยหนึ่งรายการ — ใบรับรองเป็นข้อมูลที่ผู้ซื้อใช้ตัดสินใจ' : undefined}
 >
-  <Checkbox value="tis">มาตรฐานผลิตภัณฑ์อุตสาหกรรม (มอก.)</Checkbox>
-  <Checkbox value="halal" description="สำหรับสินค้าอาหารและเครื่องดื่ม">ฮาลาล</Checkbox>
-  <Checkbox value="gmp" isDisabled>จีเอ็มพี — ต้องยืนยันตัวตนก่อน</Checkbox>
+  <CheckboxInput value="tis" label="มาตรฐานผลิตภัณฑ์อุตสาหกรรม (มอก.)" />
+  <CheckboxInput value="halal" label="ฮาลาล" description="สำหรับสินค้าอาหารและเครื่องดื่ม" />
+  <CheckboxInput value="gmp" label="จีเอ็มพี — ต้องยืนยันตัวตนก่อน" isDisabled />
 </CheckboxGroup>
 ```
 
 ```tsx
-// เลือกทั้งหมดในหัวตาราง — ไม่มีข้อความ ต้องมี aria-label
-<Checkbox
-  aria-label="เลือกสินค้าทั้งหมดในหน้านี้"
+// เลือกทั้งหมดในหัวตาราง — ไม่มีข้อความที่มองเห็น ต้องมี label + isLabelHidden
+<CheckboxInput
+  label="เลือกสินค้าทั้งหมดในหน้านี้"
+  isLabelHidden
   isSelected={allSelected}
   isIndeterminate={someSelected && !allSelected}
   onChange={toggleAll}
@@ -223,10 +227,12 @@ Component set **`CheckboxGroup`** แยกต่างหาก — property `E
 
 ```tsx
 // ยอมรับเงื่อนไข — label เป็นข้อความยาวที่มีลิงก์ได้
-<Checkbox value="terms" isRequired>
-  ข้าพเจ้ายอมรับ <Link href="/terms">ข้อกำหนดการใช้งาน</Link> และ{' '}
-  <Link href="/privacy">นโยบายความเป็นส่วนตัว</Link>
-</Checkbox>
+<CheckboxInput
+  value="terms"
+  isRequired
+  label="ข้าพเจ้ายอมรับข้อกำหนดการใช้งานและนโยบายความเป็นส่วนตัว"
+/>
+{/* ข้อความยาวที่มีลิงก์ฝังอยู่ ให้วาง <Link> แยกไว้ข้าง CheckboxInput แทนการฝังใน label (label เป็น string ล้วน) */}
 ```
 
 ---
@@ -235,14 +241,14 @@ Component set **`CheckboxGroup`** แยกต่างหาก — property `E
 
 | ❌ | ✅ | ทำไม |
 |---|---|---|
-| `<Checkbox>` สำหรับเลือกข้อเดียว | `<RadioGroup>` | รูปทรงสี่เหลี่ยมสื่อ "เลือกหลายข้อได้" |
-| `<Checkbox>` ที่มีผลทันที | `<Switch>` | checkbox สื่อว่าต้องกดบันทึก |
+| `<CheckboxInput>` สำหรับเลือกข้อเดียว | `<RadioGroup>` | รูปทรงสี่เหลี่ยมสื่อ "เลือกหลายข้อได้" |
+| `<CheckboxInput>` ที่มีผลทันที | `<Switch>` | checkbox สื่อว่าต้องกดบันทึก |
 | indeterminate = ✓ สีจาง | `Icon "minus"` | ไม่ผ่าน SC 1.4.1 |
-| `<Checkbox className="p-0">` | ปล่อยตามค่าเริ่มต้น | checkbox โดด ๆ จะเหลือ 20×20 |
+| `<CheckboxInput className="p-0">` | ปล่อยตามค่าเริ่มต้น | checkbox โดด ๆ จะเหลือ 20×20 |
 | `tabIndex={-1}` บน checkbox ในกลุ่ม | ปล่อยให้ RAC จัดการ | roving ทำให้เลือกข้ามตัวไม่ได้ |
 | `border-neutral-300` | `border-edge-strong` | 1.56:1 ไม่ผ่าน SC 1.4.11 |
-| `<Checkbox>` ไม่มีทั้ง children และ `aria-label` | ใส่อย่างใดอย่างหนึ่ง | screen reader อ่านว่า "ช่องทำเครื่องหมาย" เฉย ๆ |
-| `<Checkbox>` เป็นตัวกรองในหน้ารายการ | `<Chip>` | ตัวกรองต้องเห็นค้างและลบทีละอันได้ |
+| `label=""` ว่างเปล่า | ใส่ข้อความจริงเสมอ | screen reader อ่านว่า "ช่องทำเครื่องหมาย" เฉย ๆ |
+| `<CheckboxInput>` เป็นตัวกรองในหน้ารายการ | `<Chip>` | ตัวกรองต้องเห็นค้างและลบทีละอันได้ |
 | ขอบแดงอย่างเดียวตอน invalid | + `errorMessage` | SC 3.3.1 |
 
 ---

@@ -210,8 +210,8 @@ Component set **`FilterChipRow`** — property `Count` = `1` · `3` · `6 (scrol
       groups={[
         { id: 'cat', title: 'หมวดหมู่ย่อย', children: (
           <CheckboxGroup label="หมวดหมู่ย่อย" value={cats} onChange={setCats}>
-            <Checkbox value="roaster">เครื่องคั่วกาแฟ</Checkbox>
-            <Checkbox value="oven">เตาอบลมร้อน</Checkbox>
+            <CheckboxInput value="roaster" label="เครื่องคั่วกาแฟ" />
+            <CheckboxInput value="oven" label="เตาอบลมร้อน" />
           </CheckboxGroup>
         )},
         { id: 'price', title: 'ช่วงราคา', children: (

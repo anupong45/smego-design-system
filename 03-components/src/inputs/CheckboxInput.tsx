@@ -13,7 +13,13 @@ import { Icon } from '../icon/Icon';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · Checkbox / CheckboxGroup
+   SME.GO · CheckboxInput / CheckboxGroup   (เดิมชื่อ Checkbox — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    `label` บังคับ (เดิมรับ `children`) · `isLabelHidden` (§8.1)
+   ไม่รับ `size` `labelIcon` `width` `isOptional` `isLoading` `htmlName`
+          `changeAction` (D8) `disabledMessage` (D16) ของ Astryx — ไม่มี
+          use case ใน marketplace ตอนนี้
    ───────────────────────────────────────────────────────────────────────────
    ★ กล่อง 20px แต่ **เป้ารวมคือทั้งแถว** ไม่ใช่แค่กล่อง
 
@@ -43,16 +49,24 @@ const boxBase = [
   'transition-colors duration-fast ease-standard',
 ].join(' ');
 
-export interface CheckboxProps
+export interface CheckboxInputProps
   extends Omit<RACCheckboxProps, 'children' | 'className' | 'style'> {
-  /** ข้อความข้างกล่อง — ไม่มีเมื่อใช้ `aria-label` แทน */
-  children?: ReactNode;
+  /** ข้อความข้างกล่อง — บังคับเสมอเพื่อ accessible name (SC 4.1.2, §8.1) */
+  label: string;
+  /** ซ่อน label ด้วยตา แต่ยังอ่านได้ด้วย screen reader — ใช้แทน `aria-label` เดิม */
+  isLabelHidden?: boolean;
   /** คำอธิบายใต้ข้อความ */
   description?: string;
   className?: string;
 }
 
-export function Checkbox({ children, description, className, ...rest }: CheckboxProps) {
+export function CheckboxInput({
+  label,
+  isLabelHidden,
+  description,
+  className,
+  ...rest
+}: CheckboxInputProps) {
   return (
     <RACCheckbox
       className={cn(
@@ -88,21 +102,19 @@ export function Checkbox({ children, description, className, ...rest }: Checkbox
             ) : null}
           </span>
 
-          {children && (
-            <span className="grid min-w-0 gap-1">
-              <span
-                className={cn(
-                  'text-body-sm',
-                  isDisabled ? 'text-fg-disabled' : 'text-fg',
-                )}
-              >
-                {children}
-              </span>
-              {description && (
-                <span className="text-caption text-fg-muted">{description}</span>
+          <span className={cn('grid min-w-0 gap-1', isLabelHidden && 'sr-only')}>
+            <span
+              className={cn(
+                'text-body-sm',
+                isDisabled ? 'text-fg-disabled' : 'text-fg',
               )}
+            >
+              {label}
             </span>
-          )}
+            {description && !isLabelHidden && (
+              <span className="text-caption text-fg-muted">{description}</span>
+            )}
+          </span>
         </>
       )}
     </RACCheckbox>

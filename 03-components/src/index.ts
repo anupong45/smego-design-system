@@ -101,11 +101,11 @@ export {
    มีแต่ทำให้บาร์เรลมีชื่อคู่ · `lint:parity` กฎ 3b บังคับข้อนี้ */
 
 export {
-  Checkbox,
+  CheckboxInput,
   CheckboxGroup,
-  type CheckboxProps,
+  type CheckboxInputProps,
   type CheckboxGroupProps,
-} from './inputs/Checkbox';
+} from './inputs/CheckboxInput';
 export {
   Radio,
   RadioGroup,

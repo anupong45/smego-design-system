@@ -208,6 +208,38 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 | D15 | ไม่รับ `htmlName` | RAC ให้ `name` อยู่แล้ว การมีสองชื่อสำหรับสิ่งเดียวกันแย่กว่าการต่างจาก Astryx |
 | D16 | ไม่รับ `labelTooltip` `disabledMessage` `onEnter` `hasAutoFocus` | ไม่มี use case ใน marketplace · `labelTooltip` ยังลาก SC 1.4.13 เข้ามาโดยไม่จำเป็น (ระบบผลัก hard case ของ Tooltip ไป `Popover` อยู่แล้ว) · `hasAutoFocus` เป็นอันตรายบนมือถือ ถ้าจำเป็นจริงใช้ `autoFocus` ของ RAC · `onEnter` ทำได้ด้วย `onKeyDown` |
 | D17 | `TextArea` ไม่รับ `startIcon` `isLoading` `hasSpellCheck` | ไอคอนนำและตัวหมุนออกแบบมาสำหรับช่องบรรทัดเดียว ตำแหน่งจะไม่แน่นอนเมื่อผู้ใช้ยืดกล่อง · `hasSpellCheck` ใช้ `spellCheck` ของ DOM ได้ตรง ๆ |
+| D18 | `label: string` บังคับทุก input (§8.1) แต่เพิ่ม `labelContent?: ReactNode` เฉพาะ `CheckboxInput` และ `RadioList` — ไม่ขยายไปตัวอื่น | ป้ายของสองตัวนี้เป็นประโยคจริงที่ต้องฝังลิงก์ได้ (consent: "ยอมรับ [เงื่อนไขการใช้งาน]") ซึ่ง `label: string` เขียนไม่ได้ · ที่เหลือไม่มีเคสนี้ · accessible name ยังมาจาก `label` ที่เป็น string เสมอ เพื่อให้ a11y test assert ชื่อได้ตรง ๆ ไม่ต้องเดินผ่าน ReactNode |
+| D19 | ไม่รับ `tooltip` บน `Button` `IconButton` `Link` | `IconButton.md` §5 และ `Tooltip.md` §5 เขียนตรงกันว่า `aria-describedby` **ไม่ใช่** accessible name — prop ชื่อ `tooltip` บนปุ่มเชิญให้ทำ anti-pattern ที่สองไฟล์นั้นกันไว้เอง (ใช้ `label` ตั้งชื่อ แล้วครอบด้วย `TooltipTrigger` ถ้าต้องการคำอธิบายเสริม) |
+| D20 | เส้นแบ่ง link/button — ไม่รับ `Button.href/target/rel` (และ `IconButton.href/target/rel` ด้วยเหตุผลเดียวกัน) และไม่รับ `Link.label/color/weight/display/type/maxLines/hasUnderline` | `Link.md` §1 ตั้งกฎไว้ว่า "เปลี่ยน URL = ลิงก์ · เปลี่ยนข้อมูล = ปุ่ม" · `Button.href` ลบเส้นนั้นทิ้ง ส่วน `Link.color/weight/display/type/maxLines` เปิดทางให้ลิงก์แต่งตัวเป็นปุ่ม · `hasUnderline` คือปุ่มปิด SC 1.4.1 (สีอย่างเดียวไม่พอ) ที่ `base.css` บังคับขีดเส้นใต้ด้วย `:where(a[href])` อยู่แล้ว |
+| D21 | props ที่ขัด SC หรือขัดคำตัดสินเดิม — `IconButton.isLoading/clickAction/isInterruptible` · `Tooltip.focusTrigger/alignment/anchorRef/hasHoverIndication` · `ProgressBar.isIndeterminate` · `Dialog.isInline` | `IconButton` เป็นไอคอนล้วน ไม่มีที่ให้ spinner โดยไม่บังไอคอน — `IconButton.md` §10 สั่งให้ใช้ `Button isLoading` แทนอยู่แล้ว · `clickAction`/`isInterruptible` เป็น event model ของ Astryx (เหตุผลเดียวกับ D8) · `focusTrigger` เปิดช่องปิดการแสดงตอน focus = ตก SC 1.4.13 · `alignment`/`anchorRef`/`hasHoverIndication` ขัด offset 8px ที่ตรึงไว้โดยเจตนา · `isIndeterminate` ทับเขต `Spinner` ตามกฎ §8.5 · `Dialog.isInline` คือ dialog ที่ไม่ใช่ overlay ซึ่งเป็นงานของ `Card`/`Section` |
+| D22 | layout layer แยกทาง — ไม่รับ props ที่ขาดทั้งหมดของ `Grid` (11) `Section` (7) `Divider` (3) และคง `gutter`/`preset` ของเราไว้ | เหตุผลเดียวกับที่ปฏิเสธ control height ใน §2.4: ชั้น layout คือภาษารูปทรงของเรา ไม่ใช่ของ Meta · Astryx ให้ `columns`/`gap` ดิบให้ call site ตัดสินเอง เราให้ `preset` ที่ตัดสินใจแทนไปแล้ว การรับทั้งสองแบบพร้อมกันคือการมีสองวิธีทำสิ่งเดียวกัน |
+
+#### รับเข้ามา — ยังไม่ลงมือ (ไม่เข้า allowlist)
+
+ห้าตัวนี้ **รับ** แล้วในเชิงคำตัดสิน แต่โค้ดยังไม่แก้ จึงยังฟ้องอยู่ใน `lint:parity` ตามเจตนา — ห้ามใส่ใน `wontAdopt` เพราะจะกลบงานที่ยังไม่ได้ทำ:
+
+| prop | สถานะ | หมายเหตุ |
+|---|---|---|
+| `IconButton`: `name` → `icon` | รับ — ยังไม่ลงมือ | rename ชุดเดียวกับ `Icon.name` → `icon` (§3) ทำพร้อมกันทีเดียว |
+| `Link.isStandalone` | รับ — ยังไม่ลงมือ | ลิงก์ที่ยืนเดี่ยวนอกย่อหน้าต้องการ hit area ของตัวเอง เป็นข้อมูลที่ call site รู้เท่านั้น |
+| `Link.isExternalLink` | รับ — ยังไม่ลงมือ | rename จาก `external` ของเรา งานเดียวกัน คนละชื่อ |
+| `Link.newTabLabel` | รับ — ยังไม่ลงมือ | คู่กับ `isExternalLink` — คำเตือน "เปิดในแท็บใหม่" ต้องแปลไทยได้ |
+| `Tooltip.content` (แทน `children` ที่เป็นเนื้อ tooltip) | รับ — ยังไม่ลงมือ | แยกเนื้อ tooltip ออกจาก trigger ชัดกว่าเดิม |
+
+#### prop ที่เราเกิน — `propsOursOnly` รอบนี้
+
+| component | prop | ทำไมเก็บไว้ |
+|---|---|---|
+| `Switch` | `align` | ป้ายของ switch ในฟอร์ม marketplace ยาวหลายบรรทัด ต้องเลือกได้ว่าหัวสวิตช์ชิดบนหรือกึ่งกลาง — Astryx ให้แต่ `labelPosition` ซึ่งเป็นแกนซ้าย/ขวา คนละแกนกัน |
+| `Card` | `elevation` · `interactive` | สองแกนอิสระตาม §5.4 · `variant` ตัวเดียวของ Astryx เขียน "ยกสูงแต่กดไม่ได้" ไม่ได้ ซึ่งขัดกฎ "พื้นทึบ = กดได้" ของระบบ |
+| `Skeleton` | `shape` | คู่กับ `lines` — รูปทรงของ placeholder ผูกกับ `--radius-*` ของเรา ไม่ใช่ `radius` ดิบแบบ Astryx (D2) |
+| `ProgressBar` | `format` · `maxValue` · `tone` | ชื่อเดิมของเราสำหรับสิ่งที่ Astryx เรียก `formatValueLabel` / `max` / `variant` (§3) ยังไม่ rename จึงยังนับเป็นเกิน |
+| `Grid` | `gutter` · `preset` | D22 — `preset` คือการตัดสินใจเรื่องคอลัมน์ที่ทำแทน call site ไปแล้ว `gutter` ผูกกับ `--sme-space-unit` |
+| `Dialog` | `hideClose` | ชื่อเดิมของเราสำหรับสิ่งที่ Astryx เรียก `purpose` (§3) — `purpose` ของเขาพ่วงความหมายอื่นมาด้วย ของเราคุมแค่ปุ่มปิด |
+
+`Icon.name` ไม่ใส่ในลิสต์นี้ เพราะจะหายไปเองตอน rename เป็น `icon`
+
+> **หมายเหตุ `Tooltip`** — `delay` `hideDelay` `isDefaultOpen` `isEnabled` ที่ `lint:parity` ฟ้องว่าขาดเป็น **false positive** เรามีครบแล้วแต่อยู่บน `TooltipTrigger` (RAC ให้ `delay` / `closeDelay` / `isDisabled` / `defaultOpen`) เป็น**ความต่างเชิงชั้น** ไม่ใช่ prop ที่ขาด — ตรวจที่ `TooltipTrigger` ไม่ใช่ที่ `Tooltip` · ไม่ใส่ใน `wontAdopt` เพราะนั่นแปลว่า "มีแล้วไม่เอา" ส่วนนี่คือ "มีแล้ว แต่คนละที่" (แก้ที่ `layerDiff` ของ linter)
 
 ### 4.1 · รูปแบบที่เครื่องอ่าน
 
@@ -218,6 +250,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 - `propsOursOnly` — prop ที่เราจงใจมีเกิน แยกตาม component
 - `propsSkipAll` — prop ที่ยกเว้นทุก component
 - `wontAdopt` — prop ของ Astryx ที่จงใจไม่รับ พร้อมรหัส D
+- `layerDiff` — prop ที่ Astryx วางบน component เดียว แต่เราแยกตาม RAC · ต่างจาก `wontAdopt` ตรงที่นั่นคือ "มีแล้วไม่เอา" ส่วนนี่คือ **"มีแล้ว แต่คนละที่"** · รายงานเป็น note ไม่ใช่ fail
 - `maxProblems` — **เพดานนับถอยหลัง** ดูด้านล่าง
 
 #### เพดานนับถอยหลัง (`maxProblems`)
@@ -235,11 +268,10 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 53,
+  "maxProblems": 43,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea",
-    "Checkbox": "CheckboxInput",
     "RadioGroup": "RadioList",
     "Select": "Selector",
     "ComboBox": "Typeahead",
@@ -257,7 +289,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Button", "IconButton", "Link", "Switch", "Card", "Badge", "Dialog",
     "Tooltip", "Skeleton", "ProgressBar", "Icon", "Grid", "Stack",
     "Section", "Divider", "EmptyState", "Pagination", "Avatar", "Spinner",
-    "SegmentedControl"
+    "SegmentedControl", "CheckboxInput"
   ],
   "renameNewBuild": { "Tabs": "TabList" },
   "extension": [
@@ -269,6 +301,12 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "FilterPanel", "Cart", "Wishlist", "Container", "SmeGoProvider"
   ],
   "propsSkipAll": ["className", "as", "children"],
+  "layerDiff": {
+    "Tooltip": {
+      "companion": "TooltipTrigger",
+      "props": ["delay", "hideDelay", "isDefaultOpen", "isEnabled"]
+    }
+  },
   "propsOursOnly": {
     "Button": ["fullWidth", "iconPosition"],
     "IconButton": ["label", "size", "variant"],
@@ -276,12 +314,16 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "TextInput": ["prefix"],
     "FileInput": ["onRemove"],
     "Slider": ["minLabel", "maxLabel", "unit"],
-    "Card": ["selected"],
+    "Switch": ["align"],
+    "CheckboxInput": ["labelContent"],
+    "RadioList": ["labelContent"],
+    "Card": ["selected", "elevation", "interactive"],
     "Badge": ["showIcon"],
     "Banner": ["isLive", "titleAs"],
-    "Dialog": ["footer", "size", "title"],
-    "ProgressBar": ["note", "size", "unit", "unknownLabel"],
-    "Skeleton": ["lines"],
+    "Dialog": ["footer", "size", "title", "hideClose"],
+    "ProgressBar": ["note", "size", "unit", "unknownLabel", "format", "maxValue", "tone"],
+    "Skeleton": ["lines", "shape"],
+    "Grid": ["gutter", "preset"],
     "Typeahead": ["options"],
     "NumberInput": ["hideStepper", "suffix"],
     "Lightbox": ["itemName"],
@@ -299,7 +341,36 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     },
     "TextArea": { "startIcon": "D17", "isLoading": "D17", "hasSpellCheck": "D17" },
     "Banner": { "defaultIsExpanded": "D13", "container": "D13" },
-    "Button": { "clickAction": "D8", "isInterruptible": "D8" },
+    "Button": {
+      "clickAction": "D8", "isInterruptible": "D8", "tooltip": "D19",
+      "href": "D20", "target": "D20", "rel": "D20"
+    },
+    "IconButton": {
+      "tooltip": "D19", "href": "D20", "target": "D20", "rel": "D20",
+      "isLoading": "D21", "clickAction": "D21", "isInterruptible": "D21"
+    },
+    "Link": {
+      "tooltip": "D19", "label": "D20", "color": "D20", "weight": "D20",
+      "display": "D20", "type": "D20", "maxLines": "D20", "hasUnderline": "D20"
+    },
+    "Tooltip": {
+      "focusTrigger": "D21", "alignment": "D21",
+      "anchorRef": "D21", "hasHoverIndication": "D21"
+    },
+    "ProgressBar": { "isIndeterminate": "D21" },
+    "Dialog": { "isInline": "D21" },
+    "Grid": {
+      "align": "D22", "columnGap": "D22", "columns": "D22", "gap": "D22",
+      "height": "D22", "justify": "D22", "maxWidth": "D22",
+      "minChildWidth": "D22", "minHeight": "D22", "rowGap": "D22",
+      "rowHeight": "D22"
+    },
+    "Section": {
+      "dividers": "D22", "height": "D22", "maxWidth": "D22",
+      "minHeight": "D22", "padding": "D22", "paddingBlock": "D22",
+      "variant": "D22"
+    },
+    "Divider": { "isFullBleed": "D22", "label": "D22", "variant": "D22" },
     "Card": { "width": "D2", "height": "D2", "maxWidth": "D2", "minHeight": "D2" }
   }
 }
@@ -367,7 +438,8 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 |---|---|---|---|
 | 1 | `TextField` → `TextInput` | ✅ | + `status` · `isLabelHidden` · `startIcon` · `isLoading` · `hasClear` |
 | 2 | `Textarea` → `TextArea` | ✅ | แยกเป็นไฟล์ของตัวเอง + `TextArea.md` ใหม่ |
-| 3–15 | ที่เหลือ | ⬜ | `Checkbox` `RadioGroup` `Select` `ComboBox` `NumberField` `DatePicker` `FileUpload` `RangeSlider` `Chip` `Accordion` `ImageGallery` `Alert` `AppHeader` |
+| 3 | `Checkbox` → `CheckboxInput` | ✅ | `children` → `label: string` บังคับ + `isLabelHidden` (§8.1) — `CheckboxGroup` คงเดิม (มี `label` อยู่แล้ว) |
+| 4–15 | ที่เหลือ | ⬜ | `RadioGroup` `Select` `ComboBox` `NumberField` `DatePicker` `FileUpload` `RangeSlider` `Chip` `Accordion` `ImageGallery` `Alert` `AppHeader` |
 
 **งานข้างเคียงที่เกิดขึ้นจริงในสองตัวแรก** (คาดว่าจะซ้ำกับตัวที่เหลือ):
 `fieldStyles` ย้ายออกจาก `TextField.tsx` มาเป็น `inputs/fieldStyles.ts` — เดิม Select · ComboBox · NumberField · DatePicker · SearchField ทั้งห้าตัว `import { fieldStyles } from './TextField'` ซึ่งผูกกับไฟล์ของ component อื่นโดยไม่มีเหตุผล

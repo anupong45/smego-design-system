@@ -5,7 +5,7 @@ import {
   Button, IconButton, Link, Icon,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Skeleton, SkeletonGroup, SkeletonText,
-  TextInput, TextArea, Checkbox, CheckboxGroup, Radio, RadioGroup, RangeSlider,
+  TextInput, TextArea, CheckboxInput, CheckboxGroup, Radio, RadioGroup, RangeSlider,
   Accordion, AccordionItem, Tooltip, TooltipTrigger,
   Dialog, DialogOverlay, DialogTrigger,
   Stack, VStack, HStack, Grid, Container, Section, Divider,
@@ -94,13 +94,13 @@ const cases: [string, React.ReactElement][] = [
   [
     'CheckboxGroup',
     <CheckboxGroup label="ใบรับรองที่มี" description="เลือกได้มากกว่าหนึ่ง">
-      <Checkbox value="tis">มาตรฐานผลิตภัณฑ์อุตสาหกรรม</Checkbox>
-      <Checkbox value="halal" description="สำหรับสินค้าอาหารและเครื่องดื่ม">ฮาลาล</Checkbox>
+      <CheckboxInput value="tis" label="มาตรฐานผลิตภัณฑ์อุตสาหกรรม" />
+      <CheckboxInput value="halal" label="ฮาลาล" description="สำหรับสินค้าอาหารและเครื่องดื่ม" />
     </CheckboxGroup>,
   ],
   [
-    'Checkbox · aria-label เดี่ยว',
-    <Checkbox aria-label="เลือกสินค้าทั้งหมดในหน้านี้" isIndeterminate />,
+    'CheckboxInput · label ซ่อนด้วยตา',
+    <CheckboxInput label="เลือกสินค้าทั้งหมดในหน้านี้" isLabelHidden isIndeterminate />,
   ],
 
   [
