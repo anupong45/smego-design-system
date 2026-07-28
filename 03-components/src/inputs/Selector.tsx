@@ -19,6 +19,7 @@ import {
   statusTextClass,
   isErrorStatus,
   type InputStatus,
+  type BaseFieldProps,
 } from './fieldStyles';
 import { useStrings } from '../provider/SmeGoProvider';
 
@@ -64,20 +65,16 @@ export interface SelectorProps
   extends Omit<
     RACSelectProps<SelectOption>,
     'children' | 'className' | 'style' | 'validationBehavior' | 'items'
-  > {
-  label: string;
+  >,
+    BaseFieldProps {
   options: SelectOption[];
-  description?: string;
-  status?: InputStatus;
-  isOptional?: boolean;
   /** ข้อความเมื่อยังไม่เลือก */
   placeholder?: string;
-  size?: 'md' | 'lg';
-  className?: string;
 }
 
 export function Selector({
   label,
+  isLabelHidden,
   options,
   description,
   status,
@@ -97,7 +94,7 @@ export function Selector({
       className={cn(fieldStyles.root, className)}
       {...rest}
     >
-      <Label className={fieldStyles.label}>
+      <Label className={cn(fieldStyles.label, isLabelHidden && 'sr-only')}>
         {label}
         {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>

@@ -3,6 +3,11 @@ import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
 import { Button } from './Button';
 import { useStrings } from '../provider/SmeGoProvider';
+import {
+  statusTextClass,
+  isErrorStatus,
+  type LabelledFieldProps,
+} from './fieldStyles';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SME.GO · FileInput   (เดิมชื่อ FileUpload — ดู ASTRYX-PARITY.md §1.2)
@@ -48,9 +53,7 @@ export interface UploadedFile {
   size: number;
 }
 
-export interface FileInputProps {
-  label: string;
-  description?: string;
+export interface FileInputProps extends LabelledFieldProps {
   /** MIME types ที่รับ */
   accept?: string[];
   /** ขนาดสูงสุดต่อไฟล์ (เมกะไบต์) */
@@ -62,7 +65,6 @@ export interface FileInputProps {
   onChange: (files: File[]) => void;
   onRemove?: (id: string) => void;
   isDisabled?: boolean;
-  className?: string;
 }
 
 const DEFAULT_ACCEPT = ['image/jpeg', 'image/png', 'application/pdf'];
@@ -76,7 +78,10 @@ function formatSize(bytes: number) {
 
 export function FileInput({
   label,
+  isLabelHidden,
   description,
+  status,
+  isOptional,
   accept = DEFAULT_ACCEPT,
   maxSize = 5,
   isMultiple,
@@ -91,8 +96,11 @@ export function FileInput({
   const labelId = useId();
   const descId = useId();
   const errorId = useId();
+  const statusId = useId();
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setDragging] = useState(false);
+
+  const statusMessage = status?.message;
 
   const validate = (list: File[]) => {
     const accepted: File[] = [];
@@ -126,8 +134,12 @@ export function FileInput({
 
   return (
     <div className={cn('grid min-w-0 gap-2', className)}>
-      <span id={labelId} className="text-label text-fg-secondary">
+      <span
+        id={labelId}
+        className={cn('text-label text-fg-secondary', isLabelHidden && 'sr-only')}
+      >
         {label}
+        {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </span>
       <p id={descId} className="text-caption text-fg-muted">
         {description ?? s.common.uploadHelp(maxSize)}
@@ -168,8 +180,11 @@ export function FileInput({
           accept={accept.join(',')}
           disabled={isDisabled}
           aria-labelledby={labelId}
-          aria-describedby={cn(descId, error && errorId)}
-          aria-invalid={error ? true : undefined}
+          /* ★ error มีสองทาง: `error` = validation ภายใน (ชนิด/ขนาดไฟล์)
+             `status` = ที่ผู้เรียกส่งมา (เช่นเซิร์ฟเวอร์ปฏิเสธ) ทั้งคู่ต้อง
+             ประกาศ ไม่ใช่เลือกอันเดียว — ผู้ใช้อาจโดนทั้งสองพร้อมกัน */
+          aria-describedby={cn(descId, error && errorId, statusMessage && statusId)}
+          aria-invalid={error || isErrorStatus(status) ? true : undefined}
           /* sr-only ไม่ใช่ display:none — focus ต้องไปถึง */
           className="sr-only"
           onChange={(e) => {
@@ -217,6 +232,16 @@ export function FileInput({
             </li>
           ))}
         </ul>
+      )}
+
+      {statusMessage && (
+        <p
+          id={statusId}
+          role={isErrorStatus(status) ? 'alert' : undefined}
+          className={cn('text-caption', statusTextClass[status!.type])}
+        >
+          {statusMessage}
+        </p>
       )}
 
       {error && (

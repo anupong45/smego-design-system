@@ -27,6 +27,7 @@ import {
   statusTextClass,
   isErrorStatus,
   type InputStatus,
+  type LabelledFieldProps,
 } from './fieldStyles';
 import { useStrings } from '../provider/SmeGoProvider';
 
@@ -79,16 +80,12 @@ export interface DateInputProps<T extends DateValue>
   extends Omit<
     RACDatePickerProps<T>,
     'children' | 'className' | 'style' | 'validationBehavior'
-  > {
-  label: string;
-  description?: string;
-  status?: InputStatus;
-  isOptional?: boolean;
-  className?: string;
-}
+  >,
+    LabelledFieldProps {}
 
 export function DateInput<T extends DateValue>({
   label,
+  isLabelHidden,
   description,
   status,
   isOptional,
@@ -105,7 +102,7 @@ export function DateInput<T extends DateValue>({
       className={cn(fieldStyles.root, className)}
       {...rest}
     >
-      <Label className={fieldStyles.label}>
+      <Label className={cn(fieldStyles.label, isLabelHidden && 'sr-only')}>
         {label}
         {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>

@@ -11,6 +11,7 @@ import {
 import { useId } from 'react';
 import { cn } from '../lib/cn';
 import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
+import type { LabelledFieldProps } from './fieldStyles';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    SME.GO · Slider — ตัวกรองช่วงราคา   (เดิมชื่อ RangeSlider — ดู ASTRYX-PARITY.md §1.2)
@@ -47,8 +48,7 @@ import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';
    ปรับอันไหน
    ═══════════════════════════════════════════════════════════════════════════ */
 
-export interface SliderProps {
-  label: string;
+export interface SliderProps extends LabelledFieldProps {
   /** ค่าปัจจุบัน [ต่ำสุด, สูงสุด] */
   value: [number, number];
   onChange: (value: [number, number]) => void;
@@ -61,11 +61,13 @@ export interface SliderProps {
   minLabel?: string;
   maxLabel?: string;
   isDisabled?: boolean;
-  className?: string;
 }
 
 export function Slider({
   label,
+  isLabelHidden,
+  status,
+  isOptional,
   value,
   onChange,
   min,
@@ -103,7 +105,17 @@ export function Slider({
         className="grid min-w-0 gap-2"
       >
         <div className="flex items-baseline justify-between gap-2">
-          <Label className="text-label text-fg-secondary">{label}</Label>
+          <Label
+            className={cn(
+              'text-label text-fg-secondary',
+              isLabelHidden && 'sr-only',
+            )}
+          >
+            {label}
+            {isOptional && (
+              <span className="text-fg-muted"> ({s.common.optional})</span>
+            )}
+          </Label>
           {/* ค่าปัจจุบันเป็นข้อความ — ผู้ใช้เห็นตัวเลขโดยไม่ต้องอ่านจาก thumb */}
           <SliderOutput className="text-caption text-fg-muted font-numeric">
             {({ state }) =>

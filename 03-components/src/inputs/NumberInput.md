@@ -40,6 +40,7 @@
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
+| `isLabelHidden` | `boolean` | `false` | ซ่อน label ด้วยตา แต่ยังประกาศให้ screen reader (§8.1) |
 | `description` | `string` | — | **ควรระบุช่วงที่รับได้** — ดู §5 |
 | `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` |
 | `suffix` | `string` | — | หน่วยในช่อง · ได้ `aria-hidden` |

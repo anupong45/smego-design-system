@@ -41,6 +41,9 @@ import { Slider } from '@smego/ui';
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
+| `isLabelHidden` | `boolean` | `false` | ซ่อน label ด้วยตา แต่ยังประกาศให้ screen reader (§8.1) |
+| `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` — `error` เท่านั้นที่ตั้ง `aria-invalid` |
+| `isOptional` | `boolean` | `false` | ต่อท้าย label ว่า "(ไม่บังคับ)" |
 | `value` | `[number, number]` | — | `[ต่ำสุด, สูงสุด]` |
 | `onChange` | `(v: [number, number]) => void` | — | |
 | `min` / `max` | `number` | — | |

@@ -40,6 +40,7 @@ import { CalendarDate } from '@internationalized/date';
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
+| `isLabelHidden` | `boolean` | `false` | ซ่อน label ด้วยตา แต่ยังประกาศให้ screen reader (§8.1) |
 | `description` | `string` | — | |
 | `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` |
 | `isOptional` | `boolean` | `false` | |

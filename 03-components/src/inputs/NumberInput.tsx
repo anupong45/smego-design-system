@@ -15,6 +15,7 @@ import {
   statusTextClass,
   isErrorStatus,
   type InputStatus,
+  type BaseFieldProps,
 } from './fieldStyles';
 import { useStrings } from '../provider/SmeGoProvider';
 
@@ -61,21 +62,17 @@ export interface NumberInputProps
   extends Omit<
     RACNumberFieldProps,
     'children' | 'className' | 'style' | 'validationBehavior'
-  > {
-  label: string;
-  description?: string;
-  status?: InputStatus;
-  isOptional?: boolean;
+  >,
+    BaseFieldProps {
   /** หน่วยต่อท้ายในช่อง เช่น "บาท" "ชิ้น" */
   suffix?: string;
   /** ซ่อนปุ่มเพิ่ม/ลด — ใช้กับช่องที่ค่ากว้างมาก เช่นจำนวนเงิน */
   hideStepper?: boolean;
-  size?: 'md' | 'lg';
-  className?: string;
 }
 
 export function NumberInput({
   label,
+  isLabelHidden,
   description,
   status,
   isOptional,
@@ -94,7 +91,7 @@ export function NumberInput({
       className={cn(fieldStyles.root, className)}
       {...rest}
     >
-      <Label className={fieldStyles.label}>
+      <Label className={cn(fieldStyles.label, isLabelHidden && 'sr-only')}>
         {label}
         {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>

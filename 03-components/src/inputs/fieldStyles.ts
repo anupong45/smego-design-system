@@ -98,7 +98,19 @@ export const statusBorderClass: Record<InputStatusType, string> = {
 export const isErrorStatus = (s?: InputStatus): boolean => s?.type === 'error';
 
 /** ชนิดที่ทุก field ใช้ร่วมกัน */
-export interface BaseFieldProps {
+/* ★ แยกเป็นสองชั้นโดยเจตนา (คำตัดสิน 2026-07-28 ข้อ 2)
+
+   `LabelledFieldProps` = สัญญาของ §8.1/§3.1 เพียว ๆ — input **ทุกตัว**
+   ต้อง extend ชั้นนี้ ไม่ใช่ประกาศ prop สี่ตัวนี้เองซ้ำ ๆ
+
+   เหตุผล: §8.1 ถูกติด ✅ ไว้ทั้งที่ทำจริงแค่ 4 จาก 13 ตัว เพราะแต่ละตัว
+   ประกาศ prop เองแยกกัน จึงไม่มีที่ไหนที่ "ครบ" หรือ "ไม่ครบ" ได้ทั้งก้อน
+   ตอนนี้การลืม `isLabelHidden` เป็นไปไม่ได้ — มันมาจาก type เดียวกัน
+
+   `BaseFieldProps` = ชั้นบน เพิ่ม `size` สำหรับตัวที่**ทำ** size จริง
+   (`DateInput` `FileInput` `Slider` ไม่มี — จึง extend ชั้นล่างแทน
+   การรับ prop ที่ไม่ได้ทำอะไรแย่กว่าการไม่มี) */
+export interface LabelledFieldProps {
   /** ข้อความ label — อยู่เหนือ input เสมอ บังคับเพื่อการันตี accessible name */
   label: string;
 
@@ -122,6 +134,10 @@ export interface BaseFieldProps {
   /** แสดงคำว่า "ไม่บังคับ" ต่อท้าย label เมื่อช่องไม่จำเป็น */
   isOptional?: boolean;
 
-  size?: 'md' | 'lg';
   className?: string;
 }
+
+export interface BaseFieldProps extends LabelledFieldProps {
+  size?: 'md' | 'lg';
+}
+

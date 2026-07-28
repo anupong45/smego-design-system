@@ -38,6 +38,9 @@
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
+| `isLabelHidden` | `boolean` | `false` | ซ่อน label ด้วยตา แต่ยังประกาศให้ screen reader (§8.1) |
+| `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` — `error` เท่านั้นที่ตั้ง `aria-invalid` |
+| `isOptional` | `boolean` | `false` | ต่อท้าย label ว่า "(ไม่บังคับ)" |
 | `description` | `string` | `s.common.uploadHelp(maxSize)` | |
 | `accept` | `string[]` | JPEG · PNG · PDF | MIME types |
 | `maxSize` | `number` | `5` | ต่อไฟล์ |

@@ -281,7 +281,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 11,
+  "maxProblems": 5,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea"
@@ -538,7 +538,17 @@ validate-tokens ✓ ทุกข้อ
 
 ## 8 · คำตัดสิน (2026-07-28)
 
-**8.1 · §5.3 — รับ `label: string` บังคับ** ✅
+**8.1 · §5.3 — รับ `label: string` บังคับ** ✅ *(ทำครบจริง 2026-07-28)*
+
+> ⚠️ **หมายเหตุ**: หัวข้อนี้ติด ✅ ไว้ตั้งแต่แรกทั้งที่ทำจริงแค่ **4 จาก 13 ตัว**
+> — `isLabelHidden` มีอยู่แค่ `TextInput` `TextArea` `CheckboxInput` `RadioList`
+> ส่วน `Switch` ยังรับ `children` โดยไม่มี `label` เลย · สาเหตุคือแต่ละ component
+> ประกาศ prop สี่ตัวนี้เองแยกกัน จึงไม่มีที่ไหนที่วัดได้ว่าครบทั้งก้อน
+> (D24 ยังเคยอ้างหัวข้อนี้เป็นเหตุผลตอนที่มันจริงแค่ 2 ตัว)
+>
+> แก้เชิงโครงสร้างแล้ว: prop สี่ตัวนี้อยู่ใน **`LabelledFieldProps` ที่เดียว**
+> (`fieldStyles.ts`) และ input ทุกตัว extend ชั้นนั้น — ลืมไม่ได้ในระดับ type
+> ส่วน `parityScope` ใน §4.1 ทำให้ gate ฟ้องถ้าตัวไหนยังขาด
 
 input ทุกตัวเปลี่ยนจาก `children: ReactNode` เป็น `label: string` บังคับ พร้อม `isLabelHidden?: boolean` สำหรับกรณีที่ต้องซ่อนด้วยตา แต่ยังต้องมีให้ screen reader — เป็นการรับกฎของ Astryx ที่ **a11y ดีกว่าของเดิมจริง** ไม่ใช่แค่การเปลี่ยนชื่อ
 

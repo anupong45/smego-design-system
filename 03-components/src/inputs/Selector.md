@@ -36,6 +36,7 @@
 | prop | type | ค่าเริ่มต้น | หมายเหตุ |
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
+| `isLabelHidden` | `boolean` | `false` | ซ่อน label ด้วยตา แต่ยังประกาศให้ screen reader (§8.1) |
 | `options` | `SelectOption[]` | — | `{ id, label, description?, isDisabled? }` |
 | `description` · `status` · `isOptional` | | | |
 | `placeholder` | `string` | `s.common.selectPlaceholder` | |

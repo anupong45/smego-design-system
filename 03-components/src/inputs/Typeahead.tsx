@@ -18,6 +18,7 @@ import {
   statusTextClass,
   isErrorStatus,
   type InputStatus,
+  type BaseFieldProps,
 } from './fieldStyles';
 import { SelectItem, type SelectOption } from './Selector';
 import { useStrings } from '../provider/SmeGoProvider';
@@ -58,19 +59,15 @@ export interface TypeaheadProps
   extends Omit<
     RACComboBoxProps<SelectOption>,
     'children' | 'className' | 'style' | 'validationBehavior' | 'items'
-  > {
-  label: string;
+  >,
+    BaseFieldProps {
   options: SelectOption[];
-  description?: string;
-  status?: InputStatus;
-  isOptional?: boolean;
   placeholder?: string;
-  size?: 'md' | 'lg';
-  className?: string;
 }
 
 export function Typeahead({
   label,
+  isLabelHidden,
   options,
   description,
   status,
@@ -94,7 +91,7 @@ export function Typeahead({
       className={cn(fieldStyles.root, className)}
       {...rest}
     >
-      <Label className={fieldStyles.label}>
+      <Label className={cn(fieldStyles.label, isLabelHidden && 'sr-only')}>
         {label}
         {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>
