@@ -15,7 +15,7 @@ import {
   Stack, HStack, Grid, Container, Divider,
   Icon, iconRegistry, type IconName,
   Button, IconButton, Link, TextInput, TextArea, CheckboxInput, CheckboxGroup,
-  Radio, RadioList, RangeSlider, DatePicker, OTPField, NumberInput,
+  Radio, RadioList, RangeSlider, DateInput, OTPField, NumberInput,
   SearchField, Switch, Selector, Typeahead, FileUpload,
   Card, CardMedia, Badge, Dot, Chip, RemovableChip, ChipRow,
   Accordion, AccordionItem, ImageGallery, DescriptionList,
@@ -248,8 +248,8 @@ function Inputs() {
         <RangeSlider label="ช่วงราคา" value={range} onChange={setRange} minValue={0} maxValue={500000} step={5000} unit="บาท" />
       </Specimen>
 
-      <Specimen name="DatePicker" note="ปฏิทินพุทธศักราช (พ.ศ.)">
-        <DatePicker label="วันปิดรับสมัคร" description="เลือกจากปฏิทิน พ.ศ." />
+      <Specimen name="DateInput" note="ปฏิทินพุทธศักราช (พ.ศ.)">
+        <DateInput label="วันปิดรับสมัคร" description="เลือกจากปฏิทิน พ.ศ." />
       </Specimen>
 
       <Specimen name="OTPField" note="6 หลัก · วางทั้งชุดได้ (SC 3.3.8)">

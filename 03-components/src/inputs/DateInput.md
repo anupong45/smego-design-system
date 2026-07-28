@@ -1,6 +1,8 @@
-# DatePicker
+# DateInput
 
-**`@smego/ui`** · ชั้น 03 · [DatePicker.tsx](./DatePicker.tsx)
+**`@smego/ui`** · ชั้น 03 · [DateInput.tsx](./DateInput.tsx)
+
+> เดิมชื่อ `DatePicker` — เปลี่ยนตาม ASTRYX-PARITY.md §1.2 · `errorMessage`→`status` · `showOptional`→`isOptional` ตาม §8 · ชื่อชนกับ `DateInput` ของ React Aria เอง (segment ภายใน) — โค้ด alias เป็น `RACDateInput`
 
 ---
 
@@ -24,10 +26,10 @@
 ## 2 · React API
 
 ```tsx
-import { DatePicker } from '@smego/ui';
+import { DateInput } from '@smego/ui';
 import { CalendarDate } from '@internationalized/date';
 
-<DatePicker
+<DateInput
   label="วันที่จดทะเบียนนิติบุคคล"
   description="ระบุตามหนังสือรับรอง DBD"
   value={date}
@@ -39,8 +41,8 @@ import { CalendarDate } from '@internationalized/date';
 |---|---|---|---|
 | `label` | `string` | — | **บังคับ** |
 | `description` | `string` | — | |
-| `errorMessage` | `string` | — | มีค่า = invalid |
-| `showOptional` | `boolean` | `false` | |
+| `status` | `InputStatus` | — | `{ type: "error"\|"warning"\|"success", message? }` |
+| `isOptional` | `boolean` | `false` | |
 | `value` / `defaultValue` | `DateValue` | — | จาก RAC |
 | `onChange` | `(v: DateValue \| null) => void` | — | |
 | `minValue` / `maxValue` | `DateValue` | — | จำกัดช่วง |
@@ -179,7 +181,7 @@ Popover ใช้ opacity เท่านั้น ไม่มี transform (�
 
 ## 7 · Figma Variant
 
-Component set **`DatePicker`**
+Component set **`DateInput`**
 
 | Property | Values |
 |---|---|
@@ -200,15 +202,15 @@ Component set **`DatePicker`**
 ```tsx
 const [date, setDate] = useState<CalendarDate | null>(null);
 
-<DatePicker
+<DateInput
   label="วันที่จดทะเบียนนิติบุคคล"
   description="ระบุตามหนังสือรับรอง DBD"
   value={date}
   onChange={setDate}
   maxValue={today(SMEGO_TIMEZONE)}
-  errorMessage={
+  status={
     date && date.compare(today(SMEGO_TIMEZONE)) > 0
-      ? 'วันที่จดทะเบียนต้องไม่เกินวันนี้ — ตรวจสอบจากหนังสือรับรองนิติบุคคล'
+      ? { type: 'error', message: 'วันที่จดทะเบียนต้องไม่เกินวันนี้ — ตรวจสอบจากหนังสือรับรองนิติบุคคล' }
       : undefined
   }
 />
@@ -238,7 +240,7 @@ setDate(parseDate(record.registeredAt));
 | วันนี้ต่างแค่พื้นอ่อน | + ขอบ | แยกจากวันที่เลือกไม่ออก (SC 1.4.1) |
 | `validationBehavior="native"` | `"aria"` (บังคับแล้ว) | tooltip browser ขึ้นภาษาตาม OS |
 | ช่องปฏิทิน 24×24 | 36×36 | ช่องชิดกันมาก กดพลาดง่ายบนมือถือ |
-| `type="text"` เขียน `26/07/2569` เอง | `<DatePicker>` | ไม่มี validation ไม่มี keyboard ไม่มี screen reader |
+| `type="text"` เขียน `26/07/2569` เอง | `<DateInput>` | ไม่มี validation ไม่มี keyboard ไม่มี screen reader |
 | 2026 ในตัวอย่าง Figma | 2569 | มีคนคัดลอกไปใส่โค้ด |
 
 ---
@@ -255,7 +257,7 @@ setDate(parseDate(record.registeredAt));
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |
 | คีย์บอร์ด (Keyboard) | ✅ | §4 `segment focused` — เลื่อนระหว่าง วัน/เดือน/ปี ด้วยลูกศรซ้าย-ขวา และพิมพ์ทับได้โดยไม่ต้องเปิดปฏิทิน |
 | กำลังโหลด (Loading) | — | ปฏิทินคำนวณในเครื่อง ไม่รอเครือข่าย |
-| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `errorMessage` (SC 3.3.1) · วันที่นอกช่วงบอกเป็นข้อความ |
+| ข้อผิดพลาด (Error) | ✅ | §4 `invalid` · `status` (SC 3.3.1) · วันที่นอกช่วงบอกเป็นข้อความ |
 | ว่างเปล่า (Empty) | ✅ | §4 `placeholder` — ช่องที่ยังไม่เลือกแสดงรูปแบบที่ต้องกรอก ไม่ใช่ช่องเปล่า |
 | Skeleton | — | ตารางปฏิทินเป็นโครงคงที่ที่วาดได้ทันที ไม่ต้องรอข้อมูล |
 | การเคลื่อนไหว (Animation) | ✅ | `base.css §10` ครอบ `*` ด้วย `!important` — ไม่มีการเคลื่อนไหวที่หลุดตัวกัน (`lint-quality.mjs` 0 จุด) |

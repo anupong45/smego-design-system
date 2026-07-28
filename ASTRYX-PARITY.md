@@ -268,11 +268,10 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 ```json parity
 {
   "astryxVersion": "0.1.8",
-  "maxProblems": 39,
+  "maxProblems": 38,
   "rename": {
     "TextField": "TextInput",
     "Textarea": "TextArea",
-    "DatePicker": "DateInput",
     "FileUpload": "FileInput",
     "RangeSlider": "Slider",
     "Chip": "Token",
@@ -286,7 +285,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
     "Tooltip", "Skeleton", "ProgressBar", "Icon", "Grid", "Stack",
     "Section", "Divider", "EmptyState", "Pagination", "Avatar", "Spinner",
     "SegmentedControl", "CheckboxInput", "RadioList", "Selector", "Typeahead",
-    "NumberInput"
+    "NumberInput", "DateInput"
   ],
   "renameNewBuild": { "Tabs": "TabList" },
   "extension": [
@@ -440,7 +439,8 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 | 5 | `Select` → `Selector` | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` — `SelectItem`/`SelectOption` คงชื่อเดิม (ใช้ร่วมกับ `Typeahead`) |
 | 6 | `ComboBox` → `Typeahead` | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` — `options` คงเป็น ours-only (ไม่รับ `searchSource` async ของ Astryx) |
 | 7 | `NumberField` → `NumberInput` | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` — `hideStepper`/`suffix` คงเป็น ours-only · `Cart.tsx`/`BuyBox.tsx` ตามไปแก้ internal call site |
-| 8–15 | ที่เหลือ | ⬜ | `DatePicker` `FileUpload` `RangeSlider` `Chip` `Accordion` `ImageGallery` `Alert` `AppHeader` |
+| 8 | `DatePicker` → `DateInput` | ✅ | `errorMessage`→`status` · `showOptional`→`isOptional` — ชื่อชนกับ `DateInput` ของ RAC เอง (segment ภายใน) → alias เป็น `RACDateInput` ในโค้ด |
+| 9–15 | ที่เหลือ | ⬜ | `FileUpload` `RangeSlider` `Chip` `Accordion` `ImageGallery` `Alert` `AppHeader` |
 
 **งานข้างเคียงที่เกิดขึ้นจริงในสองตัวแรก** (คาดว่าจะซ้ำกับตัวที่เหลือ):
 `fieldStyles` ย้ายออกจาก `TextField.tsx` มาเป็น `inputs/fieldStyles.ts` — เดิม Select · ComboBox · NumberField · DatePicker · SearchField ทั้งห้าตัว `import { fieldStyles } from './TextField'` ซึ่งผูกกับไฟล์ของ component อื่นโดยไม่มีเหตุผล

@@ -17,16 +17,16 @@
 
    ⚠️ **สิ่งที่ต้องระวังจริงคือ 3 ตัวนี้** (ส่วนเพิ่มจากฐาน 35 KB):
 
-       DatePicker  +59 KB gzip
-       ComboBox    +43 KB
-       Select      +40 KB
+       DateInput   +59 KB gzip
+       Typeahead   +43 KB
+       Selector    +40 KB
 
-   ที่เหลือทั้งหมดอยู่ที่ **+0 ถึง +6 KB** (Switch · Checkbox · OTPField ·
+   ที่เหลือทั้งหมดอยู่ที่ **+0 ถึง +6 KB** (Switch · CheckboxInput · OTPField ·
    FileUpload · Dialog · Accordion · Tooltip) — ไม่ต้องกังวล
 
    สามตัวนั้นควรโหลดแบบ lazy เมื่ออยู่ในหน้าที่ไม่ได้ใช้ทันที:
 
-       const DatePicker = lazy(() => import('@smego/ui/inputs/DatePicker'));
+       const DateInput = lazy(() => import('@smego/ui/inputs/DateInput'));
 
    ทางหนีเมื่อ wrapper ไม่พอ: `@smego/ui/primitives` เปิด RAC ทั้งชุด
    ═══════════════════════════════════════════════════════════════════════════ */
@@ -114,10 +114,10 @@ export {
 } from './inputs/RadioList';
 export { RangeSlider, type RangeSliderProps } from './inputs/RangeSlider';
 export {
-  DatePicker,
+  DateInput,
   createBuddhistCalendar,
-  type DatePickerProps,
-} from './inputs/DatePicker';
+  type DateInputProps,
+} from './inputs/DateInput';
 export { OTPField, type OTPFieldProps } from './inputs/OTPField';
 export { NumberInput, type NumberInputProps } from './inputs/NumberInput';
 export { SearchField, type SearchFieldProps } from './inputs/SearchField';

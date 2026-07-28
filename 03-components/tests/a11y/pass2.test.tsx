@@ -4,7 +4,7 @@ import { screen, act } from '@testing-library/react';
 import { CalendarDate } from '@internationalized/date';
 import { render, expectNoViolations } from './render';
 import {
-  DatePicker, OTPField, createBuddhistCalendar,
+  DateInput, OTPField, createBuddhistCalendar,
   NumberInput, SearchField, Switch, Selector, Typeahead, FileUpload,
 } from '../../src/index';
 
@@ -12,7 +12,7 @@ import {
    Pass 2 · สองตัวที่แผนระบุว่าต้องยืนยันด้วยตาเป็นพิเศษ
    ═══════════════════════════════════════════════════════════════════════════ */
 
-describe('DatePicker · ปฏิทิน พ.ศ.', () => {
+describe('DateInput · ปฏิทิน พ.ศ.', () => {
   it('createBuddhistCalendar คืนปฏิทินพุทธจริง', () => {
     const cal = createBuddhistCalendar();
     const gregorian = new CalendarDate(2026, 7, 26);
@@ -24,7 +24,7 @@ describe('DatePicker · ปฏิทิน พ.ศ.', () => {
 
   it('★ แสดง 2569 ไม่ใช่ 2026', () => {
     render(
-      <DatePicker
+      <DateInput
         label="วันที่จดทะเบียน"
         value={new CalendarDate(2026, 7, 26)}
         onChange={() => {}}
@@ -39,7 +39,7 @@ describe('DatePicker · ปฏิทิน พ.ศ.', () => {
 
   it('เดือนเป็นภาษาไทย', () => {
     const { container } = render(
-      <DatePicker
+      <DateInput
         label="วันที่จดทะเบียน"
         value={new CalendarDate(2026, 7, 26)}
         onChange={() => {}}
@@ -60,7 +60,7 @@ describe('DatePicker · ปฏิทิน พ.ศ.', () => {
 
   it('ไม่มี axe violation', async () => {
     const { container } = render(
-      <DatePicker
+      <DateInput
         label="วันที่จดทะเบียน"
         description="ระบุวันที่ตามหนังสือรับรอง"
         value={new CalendarDate(2026, 7, 26)}
@@ -72,9 +72,9 @@ describe('DatePicker · ปฏิทิน พ.ศ.', () => {
 
   it('สถานะ invalid มีข้อความ ไม่ใช่แค่ขอบแดง', async () => {
     const { container } = render(
-      <DatePicker
+      <DateInput
         label="วันที่จดทะเบียน"
-        errorMessage="วันที่จดทะเบียนต้องไม่เกินวันนี้ — ตรวจสอบจากหนังสือรับรองนิติบุคคล"
+        status={{ type: 'error', message: 'วันที่จดทะเบียนต้องไม่เกินวันนี้ — ตรวจสอบจากหนังสือรับรองนิติบุคคล' }}
         value={new CalendarDate(2030, 1, 1)}
         onChange={() => {}}
       />,

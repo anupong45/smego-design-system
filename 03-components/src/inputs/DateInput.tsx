@@ -1,7 +1,7 @@
 import {
   DatePicker as RACDatePicker,
   type DatePickerProps as RACDatePickerProps,
-  DateInput,
+  DateInput as RACDateInput,
   DateSegment,
   Group,
   Label,
@@ -22,11 +22,24 @@ import { BuddhistCalendar } from '@internationalized/date';
 import type { DateValue } from 'react-aria-components';
 import { cn } from '../lib/cn';
 import { Icon } from '../icon/Icon';
-import { fieldStyles } from './fieldStyles';
+import {
+  fieldStyles,
+  statusTextClass,
+  isErrorStatus,
+  type InputStatus,
+} from './fieldStyles';
 import { useStrings } from '../provider/SmeGoProvider';
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SME.GO · DatePicker — ปฏิทิน พ.ศ.
+   SME.GO · DateInput — ปฏิทิน พ.ศ.   (เดิมชื่อ DatePicker — ดู ASTRYX-PARITY.md §1.2)
+   ───────────────────────────────────────────────────────────────────────────
+   ⚠️ ชื่อชนกับ `DateInput` ของ React Aria เอง (segment ภายใน) — RAC import
+   ถูก alias เป็น `RACDateInput` เพื่อไม่ให้ชนกับชื่อ export ของเรา
+   ───────────────────────────────────────────────────────────────────────────
+   ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
+   รับ    `status` (เดิมชื่อ `errorMessage`) · `isOptional` (เดิมชื่อ `showOptional`)
+   ไม่รับ `min` `max` `dateConstraints` `numberOfMonths` `hasClear`
+          `placeholder` ของ Astryx — ไม่มี use case ใน marketplace ตอนนี้
    ───────────────────────────────────────────────────────────────────────────
    ★★★ นี่คือเหตุผลที่ระบบเลือก React Aria แทน Radix (ข้อ 21)
 
@@ -62,39 +75,39 @@ function createBuddhistCalendar() {
   return new BuddhistCalendar();
 }
 
-export interface DatePickerProps<T extends DateValue>
+export interface DateInputProps<T extends DateValue>
   extends Omit<
     RACDatePickerProps<T>,
     'children' | 'className' | 'style' | 'validationBehavior'
   > {
   label: string;
   description?: string;
-  errorMessage?: string;
-  showOptional?: boolean;
+  status?: InputStatus;
+  isOptional?: boolean;
   className?: string;
 }
 
-export function DatePicker<T extends DateValue>({
+export function DateInput<T extends DateValue>({
   label,
   description,
-  errorMessage,
-  showOptional,
+  status,
+  isOptional,
   className,
   ...rest
-}: DatePickerProps<T>) {
+}: DateInputProps<T>) {
   const s = useStrings();
 
   return (
     <RACDatePicker
-      /* aria ไม่ใช่ native — เหตุผลเดียวกับ TextField (ข้อ 25) */
+      /* aria ไม่ใช่ native — เหตุผลเดียวกับ TextInput (ข้อ 25) */
       validationBehavior="aria"
-      isInvalid={Boolean(errorMessage)}
+      isInvalid={isErrorStatus(status)}
       className={cn(fieldStyles.root, className)}
       {...rest}
     >
       <Label className={fieldStyles.label}>
         {label}
-        {showOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
+        {isOptional && <span className="text-fg-muted"> ({s.common.optional})</span>}
       </Label>
 
       <Group
@@ -107,7 +120,7 @@ export function DatePicker<T extends DateValue>({
         )}
       >
         {/* ★ พิมพ์ได้ตรง ๆ ไม่ต้องเปิดปฏิทิน */}
-        <DateInput className="flex flex-1 items-center gap-0.5">
+        <RACDateInput className="flex flex-1 items-center gap-0.5">
           {(segment) => (
             <DateSegment
               segment={segment}
@@ -122,7 +135,7 @@ export function DatePicker<T extends DateValue>({
               )}
             />
           )}
-        </DateInput>
+        </RACDateInput>
 
         <RACButton
           className={cn(
@@ -143,7 +156,16 @@ export function DatePicker<T extends DateValue>({
           {description}
         </Text>
       )}
-      <FieldError className={fieldStyles.error}>{errorMessage}</FieldError>
+
+      {isErrorStatus(status) ? (
+        <FieldError className={fieldStyles.error}>{status?.message}</FieldError>
+      ) : (
+        status?.message && (
+          <Text slot="description" className={statusTextClass[status.type]}>
+            {status.message}
+          </Text>
+        )
+      )}
 
       <Popover
         placement="bottom start"
