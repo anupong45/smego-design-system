@@ -54,9 +54,14 @@ import {
    ── สิ่งที่รับมาจาก Astryx และสิ่งที่ไม่รับ ──────────────────────────────
    รับ    `label` บังคับ · `isLabelHidden` · `status` · `isOptional` ·
           `startIcon` (เดิมชื่อ `prefix`) · `isLoading` · `hasClear`
-   ไม่รับ `size` ของเขา (18/26px — ต่ำกว่าเกณฑ์ touch · D1) ·
+   ไม่รับ `changeAction` (D8) · `htmlName` (D15) · `width` (D6) ·
           `changeAction` (D8) · `htmlName` (D15) · `width` (D6) ·
           `labelTooltip` `disabledMessage` `onEnter` `hasAutoFocus` (D16)
+
+   ★ `size` **มีทั้งสองฝั่งแต่คนละค่า** — ของ Astryx คือ 18/26px ซึ่งต่ำกว่า
+     เกณฑ์ touch ของระบบนี้ ส่วนของเราคือ `md`/`lg` = 38/46px (D1)
+     ⚠️ เดิมบรรทัด "ไม่รับ" เขียนรวม `size` ไว้ ซึ่งอ่านได้ว่า "ไม่มี prop นี้"
+     ทั้งที่มี · เกต lint-api-comments จับได้เมื่อ 2026-07-29
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export interface TextInputProps

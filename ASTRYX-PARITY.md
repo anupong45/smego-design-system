@@ -520,7 +520,7 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 |---|---|---|
 | 1 | pin `@astryxdesign/core@0.1.8` (exact) + เขียน `02-tokens/lint-parity.mjs` + `npm run lint:parity` | ✅ เสร็จ |
 | 2 | token: `radius-sm` 6→4 | ✅ เสร็จ |
-| 3 | rename 14 ตัว (`SearchField`, `ImageGallery` ตัดออก) + prop rename ตาม §3 + `label: string` (§8.1) — **หักดิบ ไม่มี `@deprecated` alias** (§8 · 0.2.0) | ✅ เสร็จ 14/14 |
+| 3 | rename 14 ตัว (`SearchField`, `ImageGallery` ตัดออก) + prop rename ตาม §3 + `label: string` (§8.1) — **หักดิบ ไม่มี `@deprecated` alias** (§8 · 0.2.0) | ✅ เสร็จ 14/14 · **ขยับเป็น 0.2.0 แล้วเมื่อ 2026-07-29** พร้อม [CHANGELOG](03-components/CHANGELOG.md) ⚠️ ครึ่งหลังของข้อตกลงนี้ค้างอยู่หลายวัน — เอกสารติด ✅ ว่าหักดิบแล้วแต่ `package.json` ยัง 0.1.0 และไม่มีเกตไหนตรวจว่าการหัก API ต้องมาพร้อมการขยับเวอร์ชัน |
 | 4 | อัปเดต `.md` คู่ + gallery + e2e fixture | ✅ เสร็จควบคู่กับเฟส 3 ทีละตัว |
 | 5 | สร้าง 6 component ใหม่ + `.md` + a11y test | ✅ เสร็จ 6/6 |
 | 6 | **ต่อ `lint:parity` เข้า `npm run verify`** + รัน verify ทั้งชุด | ✅ เสร็จ — เพดานนับถอยหลัง (ดู §4.1) |
