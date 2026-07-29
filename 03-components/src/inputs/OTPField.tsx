@@ -177,8 +177,12 @@ export function OTPField({
             onKeyDown={handleKeyDown(i)}
             onFocus={(e) => e.target.select()}
             className={cn(
-              /* 44×48 — ใหญ่พอสำหรับนิ้วโป้งและมองเห็นชัดขณะกรอก */
-              'h-12 w-11 min-w-0 text-center',
+              /* 44×48 — ใหญ่พอสำหรับนิ้วโป้งและมองเห็นชัดขณะกรอก
+                 ★ `min-h-12` ไม่ใช่ `h-12` (แก้หนี้ 2.5 เมื่อ 2026-07-29)
+                 ความสูงตายตัวจะตัดตัวเลขทิ้งเมื่อผู้ใช้ตั้งขนาดตัวอักษร
+                 ใหญ่ขึ้น ซึ่ง SC 1.4.4 ให้ทำได้ถึง 200% · `min-h` ยืดตาม
+                 เนื้อหาแล้วยังคงพื้น 48px ไว้เท่าเดิม */
+              'min-h-12 w-11 min-w-0 text-center',
               'rounded-(--radius-control) border',
               'bg-surface text-title text-fg tabular-nums',
               'transition-colors duration-fast ease-standard',

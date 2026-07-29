@@ -215,7 +215,7 @@ Component set **`DeadlineBadge`**
 
 | รายการ | สถานะ | หลักฐาน |
 |---|---|---|
-| การเข้าถึง (Accessibility) | ⚠️ | §5 · **ไม่มีเทสที่ render `<DeadlineBadge>`/`<DeadlineText>` ตรง ๆ** — ครอบคลุมผ่าน 5 ตัวที่ใช้งาน (`GrantCard` · `ProgramCard` · `FundingCard` · `TrainingCard` · `OrderTimeline`) ซึ่ง axe ผ่านทั้งหมด และเทส "วันที่แสดงเป็น พ.ศ. แต่ `dateTime` เก็บ ค.ศ." วัด `DeadlineText` ผ่าน `GrantCard` · **หนี้:** ยังไม่มีเทสของตัวเอง |
+| การเข้าถึง (Accessibility) | ✅ | §5 · **มีเทสของตัวเองแล้ว** `a11y/deadline.test.tsx` 9 ข้อ (2026-07-29 · ปิดหนี้ 2.4) — ล็อกว่า `dateTime` เก็บ ค.ศ. ขณะข้อความเป็น พ.ศ. · เขตเวลา Asia/Bangkok ไม่ทำให้วันเลื่อน · ทุกสถานะมีข้อความ+ไอคอน และอ่านต่างกันได้โดยไม่เห็นสี · เดิม: ครอบคลุมผ่าน 5 ตัวที่ใช้งาน |
 | ตอบสนอง (Responsive) | ✅ | ป้ายและข้อความสั้นพอที่จะอยู่ในกล่อง **136px** ได้ — ยืนยันผ่าน `e2e/pass4.spec.ts:17` ซึ่ง render `FundingCard` ที่มี `DeadlineBadge` อยู่ |
 | โหมดมืด (Dark Mode) | ✅ | `lint-classes.mjs` 0 จุด — ทุกสีมาจาก token ที่ override ในโหมดมืดแล้ว |
 | คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี `ml-`/`pl-`/`left-` ในไฟล์นี้ |

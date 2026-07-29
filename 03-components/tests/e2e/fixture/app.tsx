@@ -7,6 +7,7 @@ import {
   TopNav, SearchField, BuyBox, ImageGallery, CheckoutSummary,
   CartDrawer, CartList, CartSellerGroup, CartLineItem,
   ToastRegion, showToast, useStrings,
+  Tooltip, TooltipTrigger,
 } from '../../../src/index';
 
 /* เส้นทางซื้อของ Pass 5 — ต้องอยู่ในหน้าเดียวกับของเดิม
@@ -117,6 +118,17 @@ function App() {
               value={taxId}
               onChange={setTaxId}
             />
+          </div>
+
+          {/* ★ Tooltip สำหรับวัดที่ 320px (หนี้ 2.1) — ต้องอยู่ในหน้าที่**คุมได้**
+             ลองวัดบน gallery ก่อนแล้วไม่ได้ เพราะ gallery เองเลื่อนแนวนอนที่
+             320px (scrollWidth 549) จาก specimen ที่กว้างอย่าง Table
+             ⚠️ ข้อความยาวโดยเจตนา — ต้องดันขอบขวาให้ถึงที่สุด */}
+          <div className="mt-6" data-testid="tooltip-block">
+            <TooltipTrigger delay={0}>
+              <Button variant="secondary" icon="info">วงเงินสูงสุด</Button>
+              <Tooltip content="เพดานที่ขอได้ ไม่ใช่จำนวนที่ได้รับจริง — ขึ้นกับผลประเมินของสถาบันการเงิน" />
+            </TooltipTrigger>
           </div>
 
           <div className="mt-6 max-w-md" data-testid="slider-block">

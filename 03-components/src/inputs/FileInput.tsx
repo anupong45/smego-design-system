@@ -16,8 +16,14 @@ import {
    รับ    `value` (เดิมชื่อ `files`) · `onChange` (เดิมชื่อ `onSelect`) ·
           `isMultiple` (เดิมชื่อ `multiple`) · `maxSize` (เดิมชื่อ `maxSizeMb`)
    คงไว้  `onRemove` (ours-only)
-   ไม่รับ `maxFiles` `mode` `status` `isLoading` ของ Astryx — ไม่มี use case
-          ใน marketplace ตอนนี้
+   รับ    `status` · `isOptional` · `isLabelHidden` เพิ่มเมื่อ 2026-07-29
+          จาก `LabelledFieldProps` (§8.1 — sweep ที่ทำครบทั้งระบบ)
+   ไม่รับ `maxFiles` `mode` `isLoading` `isRequired` — **อยู่นอกขอบเขต parity**
+          ตามคำตัดสิน 2026-07-28 ข้อ 1 (ขอบเขตคือชื่อ + prop สี่ตัวของ §8)
+
+   ⚠️ บรรทัดนี้เคยเขียนว่า "ไม่รับ … `status` …" ซึ่งค้างอยู่หนึ่งวันหลังจาก
+   `status` ถูกเพิ่มเข้ามาจริง · ไม่มีเกตไหนตรวจคอมเมนต์ใน `.tsx`
+   (`lint-docs` ดูแค่ `.md`) จึงต้องอ่านเทียบด้วยตาเวลาแก้ prop
    ───────────────────────────────────────────────────────────────────────────
    ★★★ SC 2.5.7 Dragging Movements — **ลากวางต้องไม่ใช่ทางเดียว**
 
