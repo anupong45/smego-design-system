@@ -97,3 +97,27 @@ Lucide **ไม่มี**ไอคอนสำหรับสิ่งที่
 | `<button><Icon name="search" /></button>` | [`<IconButton>`](../inputs/IconButton.md) | ปุ่มไอคอนล้วนต้องมี accessible name + เป้า ≥44px |
 | ใส่ `label` ทุกตัว | ใส่เฉพาะตอนไอคอนเป็นข้อมูลเดียว | screen reader จะอ่านซ้ำกับข้อความข้าง ๆ |
 | ไอคอนแทนสัญลักษณ์รับรองไทย | ข้อความ หรือโลโก้จริง | §5 |
+
+---
+
+## 7 · Quality Checklist
+
+**หลักฐาน ไม่ใช่ความตั้งใจ** — ทุกแถวชี้ไปที่หัวข้อในไฟล์นี้หรือชื่อเทสที่รันได้จริง
+
+> ⚠️ หัวข้อนี้**หายไปทั้งก้อน**ตอนเขียนไฟล์นี้ครั้งแรก (2026-07-29) ทั้งที่
+> `CLAUDE.md` ข้อ 4 ระบุว่าทุก `.md` ต้องมี · ไม่มีเกตไหนจับ จนกระทั่งเพิ่ม
+> กฎ `lint:docs` ในวันเดียวกัน — กฎที่ไม่มีเกตบังคับกลายเป็นเท็จได้ในไม่กี่นาที
+
+| รายการ | สถานะ | หลักฐาน |
+|---|---|---|
+| การเข้าถึง (Accessibility) | ✅ | §4 · `label` มีค่า = `role="img"` + `aria-label` · ไม่มีค่า = `aria-hidden` อัตโนมัติ ไม่มีสถานะกลาง · axe ผ่านใน `a11y/primitives.test.tsx` (`Icon`) |
+| ตอบสนอง (Responsive) | ✅ | `data-icon` ให้ `flex-shrink: 0` จาก `base.css` — ไอคอนใน flex ที่มีข้อความไทยยาวจะไม่ถูกบีบจนเบี้ยว ซึ่งเกิดจริงที่ 320–360px |
+| โหมดมืด (Dark Mode) | ✅ | `stroke: currentColor` — สีมาจากข้อความรอบตัวเสมอ ไม่มีสีของตัวเอง |
+| คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด — ไม่มี class ที่มีข้าง |
+| คีย์บอร์ด (Keyboard) | ✅ | `focusable="false"` กัน SVG ติด tab order ใน browser เก่า · ไอคอนไม่เคยเป็นเป้ากดเอง (ปุ่มไอคอนใช้ `IconButton`) |
+| กำลังโหลด (Loading) | — | ไอคอนไม่มีสถานะโหลด · ตัวหมุนใช้ [`Spinner`](../feedback/Spinner.md) ที่ครอบ `loader` ไว้แล้ว |
+| ข้อผิดพลาด (Error) | — | ชื่อที่ไม่มีใน registry เป็น **type error** ไม่ใช่ runtime error — `IconName` เป็น union ของ key จริง |
+| ว่างเปล่า (Empty) | — | ไม่มีสถานะว่าง |
+| Skeleton | — | ขนาดคงที่ตาม `size` จึงไม่ทำให้ CLS |
+| การเคลื่อนไหว (Animation) | — | ไอคอนนิ่ง · `.spinner` ของ `Spinner` เป็นตัวจัดการการหมุนและอยู่ในรายการ DENY ของ reduced motion |
+| ประสิทธิภาพ (Performance) | ✅ | §1 — `registry.ts` เป็น static import map · ถ้า import จาก `lucide-react` ตรง ๆ bundler จะลากไอคอน ~1,600 ตัวเข้ามา · `lint-classes.mjs` ปฏิเสธการ import นั้น |

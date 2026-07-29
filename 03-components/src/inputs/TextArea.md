@@ -148,9 +148,23 @@ resize-none ❌ พรากการควบคุมจากผู้ใช�
 
 ## 8 · Quality Checklist
 
-| เกณฑ์ | ผ่าน | หลักฐาน |
+**หลักฐาน ไม่ใช่ความตั้งใจ** — ทุกแถวชี้ไปที่หัวข้อในไฟล์นี้หรือชื่อเทสที่รันได้จริง
+
+> ⚠️ ไฟล์นี้เคยใช้ checklist **ชุดเก่า 4 เกณฑ์** (ความสม่ำเสมอ · ภาษาไทย ·
+> Astryx parity) ซึ่งคนละชุดกับ 11 ข้อที่ `QUALITY.md` ประกาศว่า
+> "เหมือนกันทุกไฟล์" — คำอ้างนั้นจึงไม่เคยจริงสำหรับไฟล์นี้
+> แปลงเป็นชุดมาตรฐานเมื่อ 2026-07-29 พร้อมเพิ่มเกต
+
+| รายการ | สถานะ | หลักฐาน |
 |---|---|---|
-| การเข้าถึง (Accessibility) | ✅ | axe ผ่านใน `a11y/primitives.test.tsx` (`TextArea`) |
-| ความสม่ำเสมอ (Consistency) | ✅ | ใช้ `fieldStyles` ชุดเดียวกับ `TextInput` ทุก token |
-| ภาษาไทย | ✅ | line-height 1.75 · IME composition guard · ดู §3 |
-| Astryx parity | ✅ | ชื่อและ props ตรงตาม §3 ของ ASTRYX-PARITY.md ยกเว้นที่บันทึกใน D1 · D6 · D8 |
+| การเข้าถึง (Accessibility) | ✅ | axe ผ่านใน `a11y/primitives.test.tsx` (`TextArea`) · `isLabelHidden` · `status` จาก `LabelledFieldProps` — เทส `field-contract.test.tsx` |
+| ตอบสนอง (Responsive) | ✅ | `rows` เป็นค่าเริ่มต้นแล้วยืดตามเนื้อหา · ไม่มีความกว้างตายตัว (D6) |
+| โหมดมืด (Dark Mode) | ✅ | `lint-classes.mjs` 0 จุด — ใช้ `fieldStyles` ชุดเดียวกับ `TextInput` ทุก token · อยู่ใน contrast sweep ทั้งสองโหมด |
+| คุณสมบัติเชิงตรรกะ (Logical properties) | ✅ | `lint-quality.mjs` 0 จุด |
+| คีย์บอร์ด (Keyboard) | ✅ | `<textarea>` จริงจาก RAC · Enter ขึ้นบรรทัดใหม่ ไม่ส่งฟอร์ม |
+| กำลังโหลด (Loading) | — | **ไม่รับ `isLoading`** (D17) — ช่องข้อความยาวไม่มีการตรวจค่าเบื้องหลังแบบ `TextInput` |
+| ข้อผิดพลาด (Error) | ✅ | `status={{ type: 'error', message }}` — `error` เท่านั้นที่ตั้ง `aria-invalid` (`fieldStyles`) |
+| ว่างเปล่า (Empty) | — | `placeholder` ไม่ใช่ที่แทน label (§3) |
+| Skeleton | — | ความสูงคงที่ตาม `rows` จึงไม่ทำให้ CLS |
+| การเคลื่อนไหว (Animation) | ✅ | `transition-colors` เท่านั้น — อยู่ในรายการ ALLOW ของ reduced motion |
+| ประสิทธิภาพ (Performance) | ✅ | line-height 1.75 สำหรับสระ/วรรณยุกต์ไทยซ้อน · IME composition guard (§3) |
