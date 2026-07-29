@@ -4,6 +4,22 @@ let T;
 try { T = JSON.parse(fs.readFileSync(P, 'utf8')); console.log('✅ JSON valid'); }
 catch (e) { console.log('❌ JSON INVALID:', e.message); process.exit(1); }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   ★★★ ตัวสะสมความล้มเหลว — เพิ่มเมื่อ 2026-07-29
+
+   ก่อนหน้านี้ไฟล์นี้มี `process.exit(1)` **ที่เดียว** คือตอน JSON พัง
+   เช็คทั้ง 10 ข้อแค่ `console.log` ❌ แล้วจบด้วย exit 0
+
+   ⇒ **เกตนี้เป็นของประดับมาตลอดอายุของมัน** — `npm run verify` จะพิมพ์ ❌
+     ออกมาแล้วผ่านฉลุย · พิสูจน์แล้วด้วยการเปลี่ยนชื่อ `--color-danger-icon`
+     ใน semantic.css: มันพิมพ์ "❌ ... 65 json / 64 css" แล้ว exit 0
+
+   นี่เป็นเกตที่เก่าที่สุดในโปรเจกต์ และถูกอ้างใน CLAUDE.md · README ·
+   memory ว่าเป็นส่วนของ verify — ความเชื่อนั้นผิดทั้งหมด
+   ═══════════════════════════════════════════════════════════════════════════ */
+const failures = [];
+const must = (bad, label) => { if (bad) failures.push(label); };
+
 const get = (path) => path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), T);
 const isTok = (o) => o && typeof o === 'object' && '$value' in o;
 
@@ -32,6 +48,7 @@ console.log(`\ntokens: ${tokens.length}   references: ${refs.length}`);
 const broken = refs.filter(r => !isTok(get(r.to)));
 console.log(`\n${broken.length ? '❌' : '✅'} reference integrity: ${broken.length} broken`);
 broken.forEach(r => console.log(`   ${r.from}  ->  {${r.to}}  NOT FOUND`));
+must(broken.length, 'reference integrity');
 
 // 2. no literals in tier 2 (semantic / semanticDark) colour tokens
 const HEXLIKE = /^#|^rgb|^hsl/i;
@@ -54,12 +71,14 @@ checkLiterals(T.semanticDark, 'semanticDark');
 // #00000000 zero-alpha shadows are the documented exception
 const realLiterals = literals.filter(l => !l.includes('#00000000'));
 console.log(`\n${realLiterals.length ? '❌' : '✅'} tier-2 has no hard-coded colours: ${realLiterals.length} found (${literals.length - realLiterals.length} documented #00000000 exceptions ignored)`);
+must(realLiterals.length, 'tier-2 ไม่มีสีดิบ');
 realLiterals.forEach(l => console.log('   ' + l));
 
 // 3. font-size floor = 13px
 const fs13 = Object.entries(T.scale.fontSize).filter(([k]) => !k.startsWith('$'));
 const below = fs13.filter(([k]) => Number(k) < 13);
 console.log(`\n${below.length ? '❌' : '✅'} 13px font-size floor: ${below.length} violations   (steps: ${fs13.map(([k]) => k).join(', ')})`);
+must(below.length, 'พื้น font-size 13px');
 
 // 4. every typography token ratio >= 1.333
 console.log('\nline-height ratios:');
@@ -74,23 +93,27 @@ for (const [name, t] of Object.entries(T.semantic.typography)) {
   console.log(`   ${ok ? '✅' : '❌'} ${name.padEnd(10)} ${fsKey}/${lhKey} = ${ratio.toFixed(3)}`);
 }
 console.log(`${bad ? '❌' : '✅'} minimum ratio 1.333: ${bad} violations`);
+must(bad, 'line-height ขั้นต่ำ 1.333');
 
 // 5. line-heights on the 4px grid
 const lh = Object.keys(T.scale.lineHeight).filter(k => !k.startsWith('$'));
 const offGrid = lh.filter(k => Number(k) % 4 !== 0);
 console.log(`\n${offGrid.length ? '❌' : '✅'} line-heights on 4px grid: ${offGrid.length} off-grid`);
+must(offGrid.length, 'line-height บนกริด 4px');
 
 // 6. spacing scale = approved set only
 const approved = ['0','0.5','1','2','3','4','5','6','8','10','12','16','20','24','32'];
 const sp = Object.keys(T.scale.space).filter(k => !k.startsWith('$'));
 const extra = sp.filter(k => !approved.includes(k)), missing = approved.filter(k => !sp.includes(k));
 console.log(`${extra.length || missing.length ? '❌' : '✅'} spacing = approved set  (extra: ${extra.join(',') || 'none'} | missing: ${missing.join(',') || 'none'})`);
+must(extra.length || missing.length, 'ชุด spacing');
 
 // 7. icon stroke defined for every icon size
 const sizes = Object.keys(T.scale.icon.size).filter(k => !k.startsWith('$'));
 const strokes = Object.keys(T.scale.icon.stroke).filter(k => !k.startsWith('$'));
 const unpaired = sizes.filter(s => !strokes.includes(s));
 console.log(`${unpaired.length ? '❌' : '✅'} every icon size has a locked stroke: ${unpaired.length} unpaired`);
+must(unpaired.length, 'icon size ↔ stroke');
 
 // 8. semanticDark keys must exist in semantic (no orphan overrides)
 const flat = (n, p = '') => { const out = []; if (!n || typeof n !== 'object') return out;
@@ -100,6 +123,7 @@ const lightKeys = new Set(flat(T.semantic));
 const orphans = flat(T.semanticDark).filter(k => !lightKeys.has(k));
 console.log(`\n${orphans.length ? '❌' : '✅'} dark overrides all have light counterparts: ${orphans.length} orphans`);
 orphans.forEach(k => console.log('   ' + k));
+must(orphans.length, 'dark override มีคู่ light');
 
 // 9. tier 3 empty
 const c = Object.keys(T.component).filter(k => !k.startsWith('$'));
@@ -121,3 +145,11 @@ const onlyCss  = [...cssVars].filter(v => !jsonVars.has(v)).sort();
 console.log(`\n${onlyJson.length || onlyCss.length ? '❌' : '✅'} tokens.json <-> semantic.css agree: ${jsonVars.size} json / ${cssVars.size} css`);
 onlyJson.forEach(v => console.log(`   only in tokens.json: ${v}`));
 onlyCss.forEach(v  => console.log(`   only in semantic.css: ${v}`));
+must(onlyJson.length || onlyCss.length, 'tokens.json ↔ semantic.css');
+
+/* ── ตัดสิน ─────────────────────────────────────────────────────────────── */
+if (failures.length) {
+  console.error(`\n✗ token: ${failures.length} ข้อไม่ผ่าน — ${failures.join(' · ')}\n`);
+  process.exit(1);
+}
+console.log('\n✓ token ผ่านทุกข้อ');
