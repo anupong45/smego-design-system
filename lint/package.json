@@ -1,8 +1,8 @@
 {
   "name": "@smego/lint",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "เกตของ SME.GO Design System ที่รีโปแอปรันได้ — สีนอกระบบ · สเกล spacing/radius · logical properties · scroll container · กฎ theme.css",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bin": {
     "smego-lint-classes": "lint-classes.mjs",
     "smego-lint-quality": "lint-quality.mjs"
@@ -16,8 +16,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anupong45/smego-design-system.git",
+    "url": "git+https://github.com/anupong45/smego_design_system.git",
     "directory": "lint"
   },
-  "homepage": "https://github.com/anupong45/smego-design-system/tree/master/lint#readme"
+  "homepage": "https://github.com/anupong45/smego_design_system/tree/master/lint#readme"
 }

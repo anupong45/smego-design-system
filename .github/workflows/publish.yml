@@ -33,10 +33,24 @@ name: publish
 # `"version": "0.3.0"` เท่านั้น
 # ═══════════════════════════════════════════════════════════════════════════
 
+# ★★★ `workflow_dispatch` ต้องรับชื่อ tag — ปุ่มที่ไม่รับจะพังเสมอ
+#
+#   ฉบับแรกเขียน `workflow_dispatch:` เปล่า ๆ ⇒ dispatch รันบน **branch** ทำให้
+#   `github.ref_name` เป็น `master` · เกตเทียบเวอร์ชันจึงคำนวณ `TAG` ได้เป็น
+#   `master` แล้วตายทันทีทั้งสอง job · ปุ่มนั้นเป็นของประดับมาตลอด
+#
+#   ทุกที่ที่เคยอ่าน `github.ref_name` ตรง ๆ จึงต้องอ่าน `inputs.tag || github.ref_name`
+#   แทน **ทั้งหมด** — รวม `if:` ของ job และ `ref:` ของ checkout
+#   ถ้าแก้แค่บางจุด dispatch จะเลือก job ถูกแต่ไป checkout ผิด ref (หรือกลับกัน)
 on:
   push:
     tags: ['v*', 'lint-v*']
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'tag ที่จะ publish — เช่น v0.3.1 หรือ lint-v0.1.1 (ต้องมีอยู่แล้ว)'
+        required: true
+        type: string
 
 # npm public ไม่ต้องใช้ GITHUB_TOKEN เลย — สิทธิ์อ่านโค้ดพอ
 permissions:
@@ -45,12 +59,14 @@ permissions:
 jobs:
   publish:
     # tag `lint-v*` ก็ขึ้นต้นด้วยตัวอักษร จึงไม่ชนกับ `v*` — แต่กันไว้ให้ชัด
-    if: "!startsWith(github.ref_name, 'lint-v')"
+    if: ${{ !startsWith(inputs.tag || github.ref_name, 'lint-v') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
 
       - uses: actions/setup-node@v4
         with:
@@ -63,8 +79,10 @@ jobs:
       # npm unpublish ทำได้ในกรอบเวลาแคบเท่านั้น · เวอร์ชันที่ปล่อยผิดจะอยู่ถาวร
       - name: ตรวจว่า tag ตรงกับ version ใน package.json
         working-directory: 03-components
+        env:
+          REF_NAME: ${{ inputs.tag || github.ref_name }}
         run: |
-          TAG="${GITHUB_REF_NAME#v}"
+          TAG="${REF_NAME#v}"
           PKG="$(node -p "require('./package.json').version")"
           if [ "$TAG" != "$PKG" ]; then
             echo "::error::tag คือ v$TAG แต่ package.json เป็น $PKG — ขยับเวอร์ชันให้ตรงก่อน tag"
@@ -138,11 +156,13 @@ jobs:
   # ทั้งที่ไม่มีเหตุผลให้ผูกกัน (ตัวหนึ่งเป็นไลบรารี UI ตัวหนึ่งเป็นเกต)
   # ═════════════════════════════════════════════════════════════════════════
   publish-lint:
-    if: startsWith(github.ref_name, 'lint-v')
+    if: ${{ startsWith(inputs.tag || github.ref_name, 'lint-v') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -150,8 +170,10 @@ jobs:
 
       - name: ตรวจว่า tag ตรงกับ version
         working-directory: lint
+        env:
+          REF_NAME: ${{ inputs.tag || github.ref_name }}
         run: |
-          TAG="${GITHUB_REF_NAME#lint-v}"
+          TAG="${REF_NAME#lint-v}"
           PKG="$(node -p "require('./package.json').version")"
           [ "$TAG" = "$PKG" ] || { echo "::error::tag lint-v$TAG ไม่ตรงกับ $PKG"; exit 1; }
 
