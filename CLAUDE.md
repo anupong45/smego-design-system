@@ -50,7 +50,9 @@ cd 03-components && npm run verify
 | `lint:parity` | ชื่อ/prop ที่ต่างจาก Astryx ต้องถูกตัดสินและบันทึกเหตุผล · **ทุกชื่อของ Astryx 105 ตัว** ต้องอยู่ในลิสต์ใดลิสต์หนึ่ง |
 | `lint:docs` | ลิงก์เสีย + ชื่อก่อน rename ค้างในเอกสาร |
 | `check:bundle` | เพดาน gzip ต่อรูปแบบหน้า |
-| `check:dist` | **`dist/` คือสิ่งที่ผู้ใช้ได้รับ แต่เกตอื่นอ่าน `src/` ทั้งนั้น** · ตรวจว่า `.d.ts` ครบ · `"use client"` **รอดมาถึง dist ครบ 55 และไม่เกิน** · ไม่มี source รั่ว · ทุก path ใน `exports` มีจริง · bundle `dist/index.js` ได้ (ทุก import resolve) |
+| `check:dist` | **`dist/` คือสิ่งที่ผู้ใช้ได้รับ แต่เกตอื่นอ่าน `src/` ทั้งนั้น** · ตรวจว่า `.d.ts` ครบ · `"use client"` **รอดมาถึง dist ครบ 56 และไม่เกิน** · ไม่มี source รั่ว · ทุก path ใน `exports` มีจริง · bundle `dist/index.js` ได้ (ทุก import resolve) |
+| `lint:docs` ข้อ 3ก | **`.tsx` ทุกตัวต้องมี `.md` คู่** — กฎเดิมวนจาก `.md` ไปหา `.tsx` ทางเดียว ⇒ `SmeGoProvider.tsx` ไม่มีเอกสารมาตลอดและเกตเขียว · **เกตที่ตรวจทางเดียวคือเกตที่ตรวจครึ่งเดียว** |
+| `theme.spec.ts` + `theme-init.test.ts` | **ผู้ใช้เปิดโหมดมืดได้จริง** — contrast sweep ตั้ง `data-theme` เอง จึงพิสูจน์แค่ว่าค่าสีถูก ไม่ได้พิสูจน์ว่าเปิดได้ · ตรวจการจำข้ามรีโหลด · ตั้งก่อน first paint · `THEME_INIT_SCRIPT` ตรงกับต้นฉบับ |
 | `lint:rsc` | `"use client"` ต้องมีเมื่อจำเป็น **และต้องไม่มีเมื่อไม่จำเป็น** · ทิศที่เกินพังเงียบ — ถ้าไม่ห้าม ไลบรารีจะกลายเป็น client ทั้งก้อนโดยไม่มี commit ไหนตัดสินใจ · directive ต้องอยู่ **บรรทัดแรก** ไม่งั้นเป็นสตริงลอย ๆ |
 | `check:fonts` + `font.spec.ts` | ฟอนต์ต้องถูก **ดึงจากเซิร์ฟเวอร์ของเราจริง** — ฟอนต์ที่โหลดไม่ได้ไม่ throw · จนถึง 2026-07-30 ระบบไม่เคยโหลด Anuphan เลย และไม่มีเกตไหนรู้ |
 | contrast sweep (e2e) | ทุกข้อความบน gallery ทั้งสองโหมด |
@@ -93,8 +95,8 @@ sweep ที่ตรวจ 0 element ก็เขียว · เกตที�
 
 `npm run build` = `tsc -p tsconfig.build.json` + `build:css` · ไม่มี bundler ไม่มี dep เพิ่ม
 
-★★★ **ถ้า bundle รวมเป็นไฟล์เดียว ขอบเขต client/server พังทั้งหมด** — 55 ไฟล์ client
-จะรวมกับ 17 ไฟล์ server เป็นโมดูลเดียวที่มี `"use client"` บนสุด ⇒ ทุกอย่างเป็น client
+★★★ **ถ้า bundle รวมเป็นไฟล์เดียว ขอบเขต client/server พังทั้งหมด** — 56 ไฟล์ client
+จะรวมกับ 18 ไฟล์ server เป็นโมดูลเดียวที่มี `"use client"` บนสุด ⇒ ทุกอย่างเป็น client
 **และ `lint:rsc` ยังเขียว** เพราะมันอ่าน `src/` · `check:dist` มีอยู่เพื่อปิดช่องนี้
 
 `dist/` มี: `.js` + `.d.ts` + sourcemap ต่อไฟล์ · `theme.css` + `src/*.css` + `src/fonts/*.woff2`
@@ -116,7 +118,11 @@ sweep ที่ตรวจ 0 element ก็เขียว · เกตที�
 - **WCAG 2.2 AA เป็น pass/fail** ไม่ใช่เป้าหมาย
 - แบรนด์ `primary-600 = #0077C1`
 - **ไทยล้วน** — `th-TH-u-ca-buddhist` · วันที่เป็น พ.ศ.
-- **ผู้ใช้ปลายทางเป็น Next.js App Router** ⇒ `"use client"` **55 ไฟล์** · server ได้ **17 ไฟล์** (9 `.tsx` + 8 `.ts`)
+- **theme เป็นของไลบรารี ไม่ใช่ของแอป** — `ThemeToggle` + `useTheme()` + `THEME_INIT_SCRIPT`
+  ตรรกะทั้งหมดอยู่ใน `02-tokens/theme-init.js` (แหล่งความจริงเดียว) · สตริงที่ React ใช้
+  **generate** ด้วย `npm run gen:theme-init` ห้ามพิมพ์เอง
+  ⚠️ แอปเขียน `data-theme` เองไม่ได้ — last-writer-wins เหมือนกฎ `body.style.padding*` (§4)
+- **ผู้ใช้ปลายทางเป็น Next.js App Router** ⇒ `"use client"` **56 ไฟล์** · server ได้ **18 ไฟล์** (9 `.tsx` + 9 `.ts`)
   ★ **`useStrings()` = `useContext(...)` ที่ห่อไว้ และถูกเรียกใน 47 ไฟล์ รวมการ์ด marketplace ทั้ง 20**
   ⇒ ทุกไฟล์ที่อ่านข้อความไทยผ่าน context **ต้องเป็น client** ไม่มีทางเลี่ยง
   นี่คือราคาที่ยอมจ่ายเพื่อให้แอป override ข้อความได้ (คำตัดสิน 2026-07-30 ข้อ 14)

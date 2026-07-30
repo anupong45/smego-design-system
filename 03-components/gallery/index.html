@@ -1,8 +1,12 @@
 <!doctype html>
-<html lang="th" data-theme="light">
+<html lang="th">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<!-- ★ ไม่มี defer โดยเจตนา — ต้องตั้ง data-theme ก่อน first paint
+     แอปจริงต้อง **inline** THEME_INIT_SCRIPT ไม่ใช่โหลดเป็นไฟล์ (ดู ThemeToggle.md §9) -->
+<script src="./theme-init.js"></script>
 <title>SME.GO · Component Library</title>
 <link rel="stylesheet" href="./gallery.css">
 </head>

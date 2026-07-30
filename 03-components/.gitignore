@@ -12,3 +12,6 @@ gallery/fonts/
 
 # build output ที่ publish — สร้างใหม่ได้ด้วย npm run build
 dist/
+
+# theme-init ที่คัดลอกมา
+gallery/theme-init.js

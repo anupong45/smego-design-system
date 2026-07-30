@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   copy-fonts — วาง woff2 ไว้ข้าง CSS ที่ build ออกมา
+   copy-assets — วาง woff2 + theme-init.js ไว้ข้าง artifact ที่ build ออกมา
    ───────────────────────────────────────────────────────────────────────────
    `02-tokens/src/fonts.css` เขียน `url('./fonts/…')` แบบ relative โดยเจตนา
    เพื่อให้ bundler ของแอปแก้ path ให้เองตอน build (Next/webpack ทำได้)
@@ -42,6 +42,20 @@ for (const dest of FONT_DESTS) {
   }
 }
 
+/* ── theme-init.js → gallery ────────────────────────────────────────────────
+   `gallery/index.html` เป็นไฟล์ static จึง import `THEME_INIT_SCRIPT` ไม่ได้
+   จะพิมพ์ IIFE ลง HTML ก็เป็นสำเนาที่สองที่ค้างได้ ⇒ คัดลอกไฟล์ต้นฉบับมาแล้ว
+   โหลดเป็น **classic script ที่ไม่มี defer** ใน <head>
+
+   ★ script ที่บล็อก render จาก origin เดียวกันก็กันการกระพริบได้เหมือนกัน —
+     กฎ "ต้อง inline" ในไฟล์ต้นฉบับเป็นการเลี่ยง **network request** ซึ่งสำคัญ
+     บน 4G จริง แต่ไม่ใช่เงื่อนไขความถูกต้อง · gallery เป็นเครื่องมือภายใน
+     จึงแลกได้ ส่วนแอปจริงต้อง inline ตามเดิม */
+fs.copyFileSync(
+  path.resolve(here, '../../02-tokens/theme-init.js'),
+  path.resolve(here, '../gallery/theme-init.js'),
+);
+
 console.log(
-  `✅ copy:fonts — ${FONT_FILES.length} ไฟล์ → ${FONT_DESTS.length} ปลายทาง`,
+  `✅ copy:assets — woff2 ${FONT_FILES.length} ไฟล์ → ${FONT_DESTS.length} ปลายทาง · theme-init.js → gallery`,
 );

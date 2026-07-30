@@ -59,7 +59,7 @@ test.describe('Anuphan · การโหลดฟอนต์', () => {
       expect(
         fetched,
         `${s.name} ไม่ดึง woff2 ของเราเลย — @font-face หลุดจาก CSS ที่ build ` +
-          'หรือ path ผิด (ลืม copy:fonts) · ฟอนต์ที่โหลดไม่ได้ไม่ throw',
+          'หรือ path ผิด (ลืม copy:assets) · ฟอนต์ที่โหลดไม่ได้ไม่ throw',
       ).not.toEqual([]);
 
       expect(

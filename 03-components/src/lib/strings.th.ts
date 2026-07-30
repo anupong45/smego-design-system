@@ -408,6 +408,15 @@ export const stringsTh = {
       `${from.toLocaleString('en-US')}–${to.toLocaleString('en-US')} จาก ${total.toLocaleString('en-US')} รายการ`,
   },
 
+  theme: {
+    /** ชื่อกลุ่มตัวเลือกของ `ThemeToggle` (SC 1.3.1) */
+    label: 'ธีมการแสดงผล',
+    light: 'สว่าง',
+    dark: 'มืด',
+    /** ตามค่าที่ผู้ใช้ตั้งไว้ใน OS — `prefers-color-scheme` */
+    system: 'ตามระบบ',
+  },
+
   error: {
     required: (field: string) => `ยังไม่ได้กรอก${field}`,
     taxIdFormat:

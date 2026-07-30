@@ -27,6 +27,61 @@
 และการเป็น peer ทำให้แอปมี RAC **สำเนาเดียว** — สองสำเนาหมายถึง global symbol ที่
 `installRacThaiStrings` เขียนอยู่คนละอัน = คำแปลไทยหายเงียบ ๆ
 
+### Added — โหมดมืดใช้ได้เป็นครั้งแรก (`ThemeToggle` · `useTheme` · `THEME_INIT_SCRIPT`)
+
+> ★★★ **`theme-init.js` (9.9 KB) ไม่มี call site แม้แต่ที่เดียวมาตลอดอายุของมัน**
+>
+> ไม่มีไฟล์ไหนอ่านหรือเขียน `smego-theme` · `gallery/index.html` hardcode
+> `data-theme="light"` ⇒ โหมดมืดถูกพิสูจน์ว่า **ค่าสีถูก** (contrast sweep วัดทั้งสอง
+> โหมด พร้อม guard `>150` element) แต่ **เส้นทางจาก "ผู้ใช้กด" ถึง `data-theme`
+> ไม่มีปลายทั้งสองข้าง**
+
+- **`ThemeToggle`** — 3 ตัวเลือก `สว่าง` `มืด` `ตามระบบ` บน `SegmentedControl`
+  ใช้ **ข้อความไม่ใช้ไอคอน** (Lucide ไม่มี sun/moon ในทะเบียน และข้อ 09 ห้ามหยิบตัวใกล้เคียง)
+- **`useTheme()`** — `preference` · `resolved` · `isReady` · `setPreference`
+- **`THEME_INIT_SCRIPT`** — **generate** จาก `02-tokens/theme-init.js` ด้วย `gen:theme-init`
+- `stringsTh.theme` 4 คำใหม่
+- `gallery` เลิกใช้ toggle ของตัวเอง และโหลด `theme-init.js` ใน `<head>` แบบไม่มี `defer`
+
+**ตรรกะไม่ถูกเขียนซ้ำ** — component เป็นแค่หน้าตา อ่าน/เขียนผ่าน `window.smegoTheme`
+เพราะการ resolve `'system'` · การกัน exception ของ localStorage (Safari private mode ·
+iOS ที่ปิดคุกกี้ · iframe ที่ถูกบล็อก) · การฟัง `matchMedia` · การซิงก์ข้ามแท็บ
+**มีอยู่แล้วครบใน script นั้น**
+
+> ⚠️ **gallery มี anti-pattern ที่เอกสารเราเองห้ามไว้**
+>
+> `gallery.tsx` มี `ThemeToggle` ของตัวเองที่เขียน `document.documentElement.dataset.theme`
+> ตรง ๆ โดยไม่ผ่าน localStorage ⇒ theme **ไม่ถูกจำข้ามการรีโหลด** และ `useState(false)`
+> ทำให้เริ่มที่ light เสมอแม้ OS เป็นมืด · ถอดออกแล้ว
+
+> ★★★ **เกตตาบอดตัวที่ 5 — และเกิดจากเทสที่เพิ่งเขียนเอง**
+>
+> `theme-init.test.ts` import `extractIife` จาก `gen-theme-init.mjs` เพื่อไม่ให้มีตรรกะ
+> การตัด IIFE สองชุด · แต่ฉบับแรกของสคริปต์ไม่มี guard `isMain`
+> ⇒ **การ import รันสคริปต์ทั้งไฟล์แล้วเขียนไฟล์ที่ generate ใหม่ก่อนเทียบ**
+> เทส "ตรงกัน" จึงไม่มีทางแดงได้เลย · แก้แล้วและพิสูจน์ว่าแดงได้
+>
+> และอีกสองตัวในไฟล์เดียวกัน: **`typeof localStorage` ในสภาพ jsdom ของรีโปนี้คือ
+> `undefined`** ⇒ เทส "ตั้ง data-theme" มี `finally` ที่ throw ทับ error จริง และเทส
+> "localStorage โยน exception" **ผ่านโดยไม่ได้ทดสอบอะไร** เพราะ getter ที่วางไว้ไม่เคย
+> ถูกเรียก · แก้ด้วย stub ที่ทำงานได้จริง + assert ว่า getter ถูกแตะ
+
+- เทสใหม่ **12 ข้อ** — unit 6 (`theme-init`) + 6 (`theme-toggle`) · e2e **4 ข้อ**
+  ตรวจการจำข้ามรีโหลด · ตั้งก่อน first paint (บล็อก `gallery.js` แล้วยังต้องมืด) ·
+  `'system'` ตามค่า OS ที่เปลี่ยนทีหลัง · ปุ่มไม่ถูกปิด
+- พิสูจน์ว่าแดงได้: แก้ต้นฉบับแล้วไม่ regenerate · ถอน `theme-init.js` ออกจาก `<head>`
+
+### Fixed — `lint:docs` ตรวจทางเดียว
+
+กฎ ".tsx ทุกตัวต้องมี .md คู่" วนจาก `.md` ไปหา `.tsx` เท่านั้น ⇒ `.tsx` ที่ **ไม่มี
+`.md` เลย** มองไม่เห็น · `provider/SmeGoProvider.tsx` ไม่มีเอกสารมาตลอดและเกตเขียว
+เพิ่มกฎข้อ 3ก + เขียน `SmeGoProvider.md` · **เกตที่ตรวจทางเดียวคือเกตที่ตรวจครึ่งเดียว**
+
+### Changed — `copy:fonts` → `copy:assets`
+
+สคริปต์เดิมคัดลอกแค่ woff2 · ตอนนี้คัดลอก `theme-init.js` ไปให้ gallery ด้วย
+ชื่อเดิมจึงไม่ตรงกับสิ่งที่มันทำ — เปลี่ยนชื่อ ไม่ปล่อยให้ชื่อค้าง
+
 ### Breaking — `exports` ชี้ `dist/` ไม่ใช่ `src/` อีกแล้ว
 
 ก่อนหน้านี้แพ็กเกจ export `.tsx` ดิบ ⇒ แอปต้อง transpile ในนโมดูลเอง

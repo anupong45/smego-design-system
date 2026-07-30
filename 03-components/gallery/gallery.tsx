@@ -24,7 +24,7 @@ import {
   TopNav, BottomNav, Pagination, TabList, Tab, TabPanel, Table, Main,
   DropdownMenu, DropdownMenuItem, DropdownMenuSection,
   DropdownMenuSeparator, DropdownMenuTrigger,
-  SegmentedControl, SegmentedControlItem,
+  SegmentedControl, SegmentedControlItem, ThemeToggle,
   EntityCard, EntityAmount, EntityMeta, DeadlineBadge, DeadlineText,
   ProductCard, ServiceCard, ProgramCard, GrantCard, FundingCard,
   BusinessCard, TrainingCard, SearchResult,
@@ -787,6 +787,17 @@ function Navigation() {
         </Row>
       </Specimen>
 
+      <Specimen name="ThemeToggle" note="สลับโหมดสว่าง/มืด — ต้องมี THEME_INIT_SCRIPT ใน <head> ก่อนใช้ได้">
+        <Row label="hug">
+          <ThemeToggle />
+        </Row>
+        <Row label="fill + sm">
+          <div className="w-full max-w-sm">
+            <ThemeToggle layout="fill" size="sm" />
+          </div>
+        </Row>
+      </Specimen>
+
       <Specimen name="Pagination" note="ปุ่ม 44px (ไม่ใช่ 32 ของ Astryx) · ชื่อปุ่มเป็น &quot;หน้า 3&quot;" wide>
         <Row label="pages">
           <Pagination page={page} totalPages={12} onChange={setPage} label="การแบ่งหน้า ตัวอย่าง" />
@@ -930,19 +941,11 @@ const NAV: { id: string; label: string }[] = [
   { id: 'navigation', label: '6 · Navigation' },
 ];
 
-function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-  return (
-    <Switch
-      isSelected={dark}
-      onChange={(v) => {
-        setDark(v);
-        document.documentElement.dataset.theme = v ? 'dark' : 'light';
-      }}
-      label="โหมดมืด"
-    />
-  );
-}
+/* ⚠️ เดิมที่นี่มี `ThemeToggle` ของ gallery เอง ที่เขียน
+   `document.documentElement.dataset.theme` ตรง ๆ โดยไม่ผ่าน localStorage
+   ⇒ theme ไม่ถูกจำข้ามการรีโหลด และ `useState(false)` ทำให้เริ่มที่ light
+   เสมอแม้ OS เป็นมืด · นั่นคือ anti-pattern ที่ `ThemeToggle.md §9` ห้ามไว้
+   เกิดขึ้นในรีโปเราเอง — ถอดออกแล้วใช้ `ThemeToggle` จาก @smego/ui */
 
 function App() {
   return (

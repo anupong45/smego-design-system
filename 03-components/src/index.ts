@@ -64,6 +64,18 @@ export {
   type SmeGoProviderProps,
 } from './provider/SmeGoProvider';
 
+export {
+  ThemeToggle,
+  useTheme,
+  type ThemeToggleProps,
+  type ThemePreference,
+  type SmegoThemeApi,
+} from './provider/ThemeToggle';
+
+/* IIFE ที่แอปต้อง inline ใน <head> ก่อน first paint — generate จาก
+   `02-tokens/theme-init.js` ซึ่งเป็นแหล่งความจริงเดียว ห้ามพิมพ์สตริงเอง */
+export { THEME_INIT_SCRIPT } from './lib/theme-init.generated';
+
 export { Icon, type IconProps, type IconName, type IconSize } from './icon/Icon';
 export { iconRegistry } from './icon/registry';
 

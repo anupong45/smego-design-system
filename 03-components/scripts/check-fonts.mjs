@@ -121,7 +121,7 @@ for (const { css: out, by } of BUILT) {
     if (!fs.existsSync(abs)) {
       note(
         `${path.basename(out)} อ้าง ${rel} แต่ไฟล์ไม่อยู่ที่ ` +
-          `${path.relative(path.resolve(here, '..'), abs)} — ลืม npm run copy:fonts`,
+          `${path.relative(path.resolve(here, '..'), abs)} — ลืม npm run copy:assets`,
       );
     }
   }
