@@ -4,7 +4,7 @@
    นำเข้าไฟล์เดียวนี้ในแอป:
 
        @import "@smego/ui/theme.css";
-       @source "../node_modules/@smego/ui/dist";   /* ห้ามลืม — ไม่งั้น purge เกลี้ยง */
+       @source "../node_modules/@smego/ui/dist";   ← ห้ามลืม ไม่งั้น purge เกลี้ยง
 
    ⚠️ ชั้น 02 **ไม่ใช่แพ็กเกจแยก** — `@smego/tokens` ไม่มีอยู่จริงและ resolve
       ไม่ได้ · ไฟล์นี้ถูกคัดลอกเข้า `dist/` ของ `@smego/ui` ตอน build
