@@ -5,8 +5,8 @@
   "license": "UNLICENSED",
   "private": false,
   "bin": {
-    "smego-lint-classes": "./lint-classes.mjs",
-    "smego-lint-quality": "./lint-quality.mjs"
+    "smego-lint-classes": "lint-classes.mjs",
+    "smego-lint-quality": "lint-quality.mjs"
   },
   "files": [
     "lint-classes.mjs",
