@@ -1,0 +1,108 @@
+name: publish
+
+# ═══════════════════════════════════════════════════════════════════════════
+# publish @smego/ui เมื่อมี tag `v*`
+# ───────────────────────────────────────────────────────────────────────────
+# ⚠️⚠️ **ยังใช้ไม่ได้จนกว่าจะแก้เรื่อง scope** — อ่านก่อนรัน
+#
+# GitHub Packages บังคับว่า **scope ของแพ็กเกจต้องตรงกับเจ้าของ repo**
+# repo นี้คือ `anupong45/smego-design-system` (บัญชีผู้ใช้ ไม่ใช่ org)
+# ⇒ GitHub Packages รับได้เฉพาะ `@anupong45/*` แต่แพ็กเกจเราชื่อ `@smego/ui`
+#
+# ทางเลือกสามทาง (ต้องเลือกก่อน ไม่ใช่ปล่อยให้ CI ล้ม):
+#   1 ★ **สร้าง org ชื่อ `smego` (ฟรี) แล้วย้าย repo ไป** — เก็บชื่อ `@smego/ui`
+#     ไว้ได้ · ไม่ต้องเพิ่ม secret เพราะ GITHUB_TOKEN พอ · แนะนำทางนี้
+#   2 rename เป็น `@anupong45/ui` — ฟรีทันที แต่ผูกชื่อแพ็กเกจกับบัญชีบุคคล
+#     และแอปต้องเขียน `import … from '@anupong45/ui'`
+#   3 npm private registry — เก็บชื่อได้ ไม่ต้องมี org แต่มีค่าใช้จ่ายรายเดือน
+#     และต้องเพิ่ม secret `NPM_TOKEN`
+#
+# ขั้นตอน `ตรวจ scope` ด้านล่างจะ **ล้มพร้อมคำอธิบาย** ถ้ายังไม่แก้ —
+# ดีกว่าปล่อยให้ `npm publish` ตอบ 403 ที่อ่านไม่รู้เรื่อง
+#
+# ★★★ ปิดช่อง "หัก API แล้วลืมขยับเวอร์ชัน"
+#
+# `CHANGELOG.md` บันทึกไว้เองว่า 0.2.0 ค้างอยู่ที่ `0.1.0` หลายวันเพราะ
+# **ไม่มีเกตไหนตรวจว่าการหัก API ต้องมาพร้อมการขยับเวอร์ชัน**
+# ขั้น `ตรวจว่า tag ตรงกับ version` ปิดช่องนั้น: tag `v0.3.0` ต้องเจอ
+# `"version": "0.3.0"` เท่านั้น
+# ═══════════════════════════════════════════════════════════════════════════
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: 03-components/package-lock.json
+          registry-url: 'https://npm.pkg.github.com'
+
+      # ─── ตรวจก่อนทำอะไรที่ย้อนไม่ได้ ────────────────────────────────────
+      # npm unpublish ทำได้ในกรอบเวลาแคบเท่านั้น · เวอร์ชันที่ปล่อยผิดจะอยู่ถาวร
+      - name: ตรวจว่า tag ตรงกับ version ใน package.json
+        working-directory: 03-components
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "::error::tag คือ v$TAG แต่ package.json เป็น $PKG — ขยับเวอร์ชันให้ตรงก่อน tag"
+            echo "ช่องนี้เคยทำให้ 0.2.0 ค้างอยู่ที่ 0.1.0 หลายวัน (ดู CHANGELOG.md)"
+            exit 1
+          fi
+          echo "tag v$TAG ตรงกับ package.json"
+
+      - name: ตรวจ scope ว่าตรงกับเจ้าของ repo (ข้อบังคับของ GitHub Packages)
+        working-directory: 03-components
+        run: |
+          OWNER="$(echo "$GITHUB_REPOSITORY" | cut -d/ -f1)"
+          NAME="$(node -p "require('./package.json').name")"
+          SCOPE="$(echo "$NAME" | cut -d/ -f1 | tr -d '@')"
+          if [ "$(echo "$SCOPE" | tr 'A-Z' 'a-z')" != "$(echo "$OWNER" | tr 'A-Z' 'a-z')" ]; then
+            echo "::error::scope @$SCOPE ไม่ตรงกับเจ้าของ repo ($OWNER) — GitHub Packages จะตอบ 403"
+            echo "เลือกทางใดทางหนึ่ง: สร้าง org ชื่อ $SCOPE แล้วย้าย repo · rename เป็น @$OWNER/ui · หรือใช้ npm private registry"
+            echo "รายละเอียดอยู่ในหัวไฟล์ .github/workflows/publish.yml"
+            exit 1
+          fi
+
+      - name: ติดตั้ง dependencies
+        working-directory: 03-components
+        run: npm ci
+
+      - name: ติดตั้ง tailwindcss ที่ root
+        run: npm i -D tailwindcss@^4 --no-save
+
+      - name: ติดตั้ง Chromium ของ Playwright
+        working-directory: 03-components
+        run: npx playwright install --with-deps chromium
+
+      # ★ ห้าม publish ของที่ยังไม่ผ่านเกต — verify มี build + check:dist อยู่ในตัว
+      #   `check:dist` คือตัวที่ยืนยันว่า `"use client"` รอดมาถึง dist ครบ
+      #   ถ้าไม่มีมัน แอป Next จะตายตอน import โดยที่เกตอื่นเขียวทั้งหมด
+      - name: npm run verify
+        working-directory: 03-components
+        run: npm run verify
+
+      - name: แสดงสิ่งที่จะถูกส่งไปจริง (ก่อน publish)
+        working-directory: 03-components
+        run: npm pack --dry-run
+
+      - name: npm publish
+        working-directory: 03-components
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

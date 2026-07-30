@@ -1,0 +1,24 @@
+{
+  "name": "@smego/lint",
+  "version": "0.1.0",
+  "description": "เกตของ SME.GO Design System ที่รีโปแอปรันได้ — สีนอกระบบ · logical properties · scroll container · กฎ theme.css · ⚠️ ไม่ประกาศ \"type\": \"module\" โดยเจตนา — validate-tokens.js เป็น CommonJS และ .mjs เป็น ESM ด้วยนามสกุลอยู่แล้ว",
+  "license": "UNLICENSED",
+  "private": false,
+  "bin": {
+    "smego-lint-classes": "./lint-classes.mjs",
+    "smego-lint-quality": "./lint-quality.mjs"
+  },
+  "files": [
+    "lint-classes.mjs",
+    "lint-quality.mjs",
+    "README-lint.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anupong45/smego-design-system.git",
+    "directory": "02-tokens"
+  }
+}

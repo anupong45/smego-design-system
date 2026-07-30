@@ -1,0 +1,90 @@
+name: pages
+
+# ═══════════════════════════════════════════════════════════════════════════
+# deploy gallery เป็นเอกสารสาธารณะของ design system
+# ───────────────────────────────────────────────────────────────────────────
+# ★ ทำไมต้อง deploy
+#
+# ทีมแอปอยู่ **คนละรีโป** (คำตัดสิน grill 2026-07-30 ข้อ 1) ⇒ `.md` 63 ไฟล์ที่
+# อยู่ข้าง `.tsx` เข้าถึงไม่ได้เลยถ้าไม่ clone · สิ่งเดียวที่ไปถึงพวกเขาคือ
+# `.d.ts` ใน `dist/` และกฎที่แพงที่สุดของระบบ **ไม่มีทางอยู่ใน type** ได้
+# gallery คือคำตอบของ "หน้าตาควรเป็นอย่างไร" ส่วน `@smego/lint` คือ "อะไรห้ามเขียน"
+#
+# ⚠️⚠️ **Pages บน repo แบบ private ต้องมีแผน Pro/Team ขึ้นไป**
+#      repo นี้เป็น private (ยืนยันแล้ว: GitHub API ตอบ 404 ตอนไม่ล็อกอิน)
+#      ถ้าบัญชีเป็น Free workflow นี้จะล้มที่ขั้น `configure-pages`
+#      ทางเลือก: เปลี่ยน repo เป็น public · อัปเกรดแผน · หรือ deploy gallery
+#      ไปที่ Cloudflare Pages / Netlify ซึ่งรองรับ private repo ในแผนฟรี
+#
+# ⚠️ ต้องเปิดใช้ก่อน: Settings → Pages → Source = **GitHub Actions**
+#    ถ้าไม่เปิด workflow จะล้มพร้อมข้อความว่าหา Pages site ไม่เจอ
+#
+# ★ ตั้งใจ **ไม่** ผูกกับ verify — ถ้าจะ deploy ต้องผ่าน verify ก่อนเสมอ
+#   จึงเรียก `npm run verify` ในนี้ด้วย ไม่ deploy ของที่ยังไม่ผ่านเกต
+#   โดยเฉพาะ `reflow-320.spec.ts` — gallery ที่เลื่อนแนวนอนคือหน้าแรกของระบบ
+#   ที่อ้าง WCAG 2.2 AA แล้วตก SC 1.4.10 เอง (เคยเป็นแบบนั้นจริงจนถึง 2026-07-30)
+# ═══════════════════════════════════════════════════════════════════════════
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# ให้ deploy ทีละครั้ง และไม่ยกเลิกตัวที่กำลัง deploy อยู่
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: 03-components/package-lock.json
+
+      - name: ติดตั้ง dependencies
+        working-directory: 03-components
+        run: npm ci
+
+      # tailwindcss ต้องอยู่ที่ root — 02-tokens/theme.css มี @import "tailwindcss"
+      # และ node resolve จากไฟล์ที่ import จึงไล่ขึ้นจาก 02-tokens/
+      - name: ติดตั้ง tailwindcss ที่ root
+        run: npm i -D tailwindcss@^4 --no-save
+
+      - name: ติดตั้ง Chromium ของ Playwright
+        working-directory: 03-components
+        run: npx playwright install --with-deps chromium
+
+      # ★ ห้าม deploy ของที่ยังไม่ผ่านเกต
+      - name: npm run verify
+        working-directory: 03-components
+        run: npm run verify
+
+      - uses: actions/configure-pages@v5
+
+      # gallery:build วาง gallery.js · gallery.css · fonts/ · theme-init.js
+      # ไว้ในโฟลเดอร์ gallery แล้ว (index.html อยู่ใน git อยู่แล้ว)
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: 03-components/gallery
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

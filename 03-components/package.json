@@ -5,6 +5,14 @@
   "type": "module",
   "sideEffects": false,
   "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anupong45/smego-design-system.git",
+    "directory": "03-components"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "files": [
     "dist"
   ],
