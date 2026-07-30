@@ -1,6 +1,6 @@
 {
   "name": "@smego/ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SME.GO Marketplace React component library — WCAG 2.2 AA, Thai-first",
   "type": "module",
   "sideEffects": false,
@@ -41,6 +41,7 @@
     "build:fixture": "npm run copy:assets && esbuild tests/e2e/fixture/app.tsx --bundle --outfile=tests/e2e/fixture/app.js --loader:.tsx=tsx --jsx=automatic --define:process.env.NODE_ENV='\"production\"' && tailwindcss -i tests/e2e/fixture/app.in.css -o tests/e2e/fixture/app.css",
     "test:e2e": "npm run build:fixture && npm run gallery:build && playwright test",
     "gallery:build": "npm run copy:assets && esbuild gallery/gallery.tsx --bundle --outfile=gallery/gallery.js --loader:.tsx=tsx --jsx=automatic --define:process.env.NODE_ENV='\"development\"' && tailwindcss -i gallery/gallery.in.css -o gallery/gallery.css",
+    "gallery:build:prod": "npm run copy:assets && esbuild gallery/gallery.tsx --bundle --minify --outfile=gallery/gallery.js --loader:.tsx=tsx --jsx=automatic --define:process.env.NODE_ENV='\"production\"' && tailwindcss --minify -i gallery/gallery.in.css -o gallery/gallery.css",
     "gallery": "npm run gallery:build && http-server gallery -p 4400 -c-1 -o",
     "verify": "npm run typecheck && npm run lint && npm run test && npm run test:e2e && npm run gallery:build && npm run check:fonts && npm run check:bundle && node ../02-tokens/validate-tokens.js && npm run build && npm run check:dist",
     "verify:head": "node ../02-tokens/verify-head.mjs",

@@ -114,9 +114,15 @@ for (const { css: out, by } of BUILT) {
     continue;
   }
 
-  /* url ใน built CSS resolve เทียบกับที่ไฟล์ CSS นั้นอยู่ (Tailwind ไม่แก้ path) */
-  for (const url of built.match(/url\(\s*['"]?([^'")]+\.woff2)['"]?\s*\)/g) ?? []) {
-    const rel = url.match(/['"]?([^'")]+\.woff2)/)[1];
+  /* url ใน built CSS resolve เทียบกับที่ไฟล์ CSS นั้นอยู่ (Tailwind ไม่แก้ path)
+     ⚠️ **Tailwind ตอน `--minify` ถอด quote ออกจาก `url()`** ⇒ ต้องรับทั้ง
+        `url('./fonts/x.woff2')` และ `url(./fonts/x.woff2)`
+        ฉบับแรกดึงค่าด้วยการ match ซ้ำบนสตริงที่จับได้ ซึ่ง `[^'")]` ไม่กัน `(`
+        ⇒ ได้ `url(./fonts/x.woff2` ติดคำว่า url( มาด้วย แล้วรายงานว่าไฟล์หาย
+        ทั้งที่ไฟล์อยู่ครบ — false positive ที่โผล่ตอน build แบบ minify เท่านั้น
+        ตอนนี้ใช้ capture group จาก matchAll ตรง ๆ ไม่ match ซ้ำ */
+  for (const m of built.matchAll(/url\(\s*['"]?([^'")\s]+\.woff2)['"]?\s*\)/g)) {
+    const rel = m[1];
     const abs = path.resolve(path.dirname(out), rel);
     if (!fs.existsSync(abs)) {
       note(

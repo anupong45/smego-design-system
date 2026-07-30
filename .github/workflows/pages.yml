@@ -70,10 +70,25 @@ jobs:
         working-directory: 03-components
         run: npm run verify
 
+      # ★ verify build gallery แบบ **dev** เพราะ e2e ต้องการ error ของ React
+      #   ที่อ่านออก · แต่หน้าสาธารณะต้องเป็น prod: วัดเมื่อ 2026-07-30
+      #     dev   2796.9 KB  →  prod  896.7 KB  (251.8 KB gzip)
+      #   ระบบนี้ยึดหลัก "เร็วบนเครื่องที่ช้า" — หน้าเอกสารของมันเองก็ต้องทำตาม
+      - name: build gallery แบบ production
+        working-directory: 03-components
+        run: npm run gallery:build:prod
+
+      # ⚠️ Tailwind ตอน --minify ถอด quote ออกจาก url() — เคยทำให้ check:fonts
+      #    รายงาน false positive · ตรวจซ้ำหลัง prod build เพื่อยืนยันว่าฟอนต์
+      #    ยังถูกอ้างด้วย path ที่มีจริง ก่อนเอาขึ้นเว็บ
+      - name: check:fonts ซ้ำบน artifact ที่จะ deploy จริง
+        working-directory: 03-components
+        run: npm run check:fonts
+
       - uses: actions/configure-pages@v5
 
-      # gallery:build วาง gallery.js · gallery.css · fonts/ · theme-init.js
-      # ไว้ในโฟลเดอร์ gallery แล้ว (index.html อยู่ใน git อยู่แล้ว)
+      # gallery มี gallery.js · gallery.css · fonts/ · theme-init.js
+      # (index.html อยู่ใน git อยู่แล้ว)
       - uses: actions/upload-pages-artifact@v3
         with:
           path: 03-components/gallery
