@@ -73,13 +73,34 @@ jobs:
           fi
           echo "tag v$TAG ตรงกับ package.json"
 
-      - name: ตรวจว่ามี NPM_TOKEN ก่อนเริ่มงานที่ใช้เวลา
+      # ★★★ ตรวจโทเคนก่อนงานที่กินเวลา — และ **ทุก job ที่ publish ต้องมี**
+      #   ฉบับแรกใส่ไว้แต่ใน job `publish` ⇒ tag `lint-v0.1.0` วิ่งไปตายที่
+      #   `npm publish` แทนที่จะบอกเหตุตั้งแต่ต้น (run 30531529035)
+      #   เกตที่ครอบไม่ครบทุกทางออกคือเกตที่ครอบครึ่งเดียว
+      #
+      # ⚠️ อ่านผ่าน `env:` ไม่ใช่แทรค `${{ }}` ลงใน run ตรง ๆ —
+      #   โทเคนที่มี quote หรืออักขระพิเศษจะทำให้ shell parse พัง
+      #   และค่าที่ถูก mask จะอ่านเป็นสตริงว่างได้ในบางรูป
+      - name: ตรวจว่ามี NPM_TOKEN
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
-            echo "::error::ไม่มี secret NPM_TOKEN — ตั้งที่ Settings → Secrets → Actions"
-            echo "ต้องเป็น Granular access token ที่มีสิทธิ์ publish ใน scope @smego"
+          if [ -z "$NPM_TOKEN" ]; then
+            echo "::error::secret NPM_TOKEN ว่างหรือมองไม่เห็นจาก workflow นี้"
+            echo ""
+            echo "สามอย่างที่มักเป็นสาเหตุ เรียงตามที่เจอบ่อย:"
+            echo "  1 สร้างไว้ผิดที่ — Settings มีสามที่ที่หน้าตาเหมือนกัน:"
+            echo "      Secrets and variables → Actions        ← ต้องที่นี่"
+            echo "      Secrets and variables → Dependabot     ✗ workflow มองไม่เห็น"
+            echo "      Secrets and variables → Codespaces     ✗ workflow มองไม่เห็น"
+            echo "  2 สร้างเป็น Environment secret — ต้องเพิ่ม environment: ในนี้ด้วย"
+            echo "  3 ชื่อไม่ตรง — ต้องเป็น NPM_TOKEN ตรงตัว"
+            echo ""
+            echo "ตรวจได้จาก Settings → Secrets and variables → Actions"
+            echo "ต้องเห็นชื่อ NPM_TOKEN ในรายการ Repository secrets"
             exit 1
           fi
+          echo "พบ NPM_TOKEN ความยาว ${#NPM_TOKEN} อักขระ"
 
       - name: ติดตั้ง dependencies
         working-directory: 03-components
@@ -136,6 +157,35 @@ jobs:
 
       # ★ เกตต้องพิสูจน์ว่าทำงานก่อนถูกส่งไปให้ทีมอื่นใช้ —
       #   เกตที่ publish แล้วรันไม่ได้ทำให้ทีมแอปคิดว่าผ่าน ทั้งที่ไม่ได้ตรวจอะไร
+      # ★★★ ตรวจโทเคนก่อนงานที่กินเวลา — และ **ทุก job ที่ publish ต้องมี**
+      #   ฉบับแรกใส่ไว้แต่ใน job `publish` ⇒ tag `lint-v0.1.0` วิ่งไปตายที่
+      #   `npm publish` แทนที่จะบอกเหตุตั้งแต่ต้น (run 30531529035)
+      #   เกตที่ครอบไม่ครบทุกทางออกคือเกตที่ครอบครึ่งเดียว
+      #
+      # ⚠️ อ่านผ่าน `env:` ไม่ใช่แทรค `${{ }}` ลงใน run ตรง ๆ —
+      #   โทเคนที่มี quote หรืออักขระพิเศษจะทำให้ shell parse พัง
+      #   และค่าที่ถูก mask จะอ่านเป็นสตริงว่างได้ในบางรูป
+      - name: ตรวจว่ามี NPM_TOKEN
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NPM_TOKEN" ]; then
+            echo "::error::secret NPM_TOKEN ว่างหรือมองไม่เห็นจาก workflow นี้"
+            echo ""
+            echo "สามอย่างที่มักเป็นสาเหตุ เรียงตามที่เจอบ่อย:"
+            echo "  1 สร้างไว้ผิดที่ — Settings มีสามที่ที่หน้าตาเหมือนกัน:"
+            echo "      Secrets and variables → Actions        ← ต้องที่นี่"
+            echo "      Secrets and variables → Dependabot     ✗ workflow มองไม่เห็น"
+            echo "      Secrets and variables → Codespaces     ✗ workflow มองไม่เห็น"
+            echo "  2 สร้างเป็น Environment secret — ต้องเพิ่ม environment: ในนี้ด้วย"
+            echo "  3 ชื่อไม่ตรง — ต้องเป็น NPM_TOKEN ตรงตัว"
+            echo ""
+            echo "ตรวจได้จาก Settings → Secrets and variables → Actions"
+            echo "ต้องเห็นชื่อ NPM_TOKEN ในรายการ Repository secrets"
+            exit 1
+          fi
+          echo "พบ NPM_TOKEN ความยาว ${#NPM_TOKEN} อักขระ"
+
       # linter อ่านไฟล์เฉย ๆ ไม่มี dependency — ไม่ต้อง npm ci ไม่ต้องมี tailwind
       - name: ทั้งสอง bin ต้องรันได้และ exit 0 บนโค้ดที่สะอาด
         run: |
