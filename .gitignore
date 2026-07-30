@@ -18,3 +18,6 @@ node_modules/
 03-components/test-results/
 
 .DS_Store
+
+# build output ของ 03-components — สร้างใหม่ได้ด้วย npm run build
+03-components/dist/

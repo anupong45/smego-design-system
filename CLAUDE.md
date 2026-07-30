@@ -41,7 +41,7 @@
 cd 03-components && npm run verify
 ```
 
-= `typecheck` → `lint` (classes · quality · **parity** · **docs** · **api-comments**) → `vitest` → `playwright` → `gallery:build` → **`check:fonts`** → **`check:bundle`** → `validate-tokens`
+= `typecheck` → `lint` (classes · quality · **parity** · **docs** · **api-comments** · **rsc**) → `vitest` → `playwright` → `gallery:build` → **`check:fonts`** → **`check:bundle`** → `validate-tokens` → **`build`** → **`check:dist`**
 
 ⚠️ **ห้ามแก้โค้ดแล้วไม่รัน** — เกตในนี้จับของที่ตาไม่เห็นทั้งนั้น
 
@@ -50,6 +50,7 @@ cd 03-components && npm run verify
 | `lint:parity` | ชื่อ/prop ที่ต่างจาก Astryx ต้องถูกตัดสินและบันทึกเหตุผล · **ทุกชื่อของ Astryx 105 ตัว** ต้องอยู่ในลิสต์ใดลิสต์หนึ่ง |
 | `lint:docs` | ลิงก์เสีย + ชื่อก่อน rename ค้างในเอกสาร |
 | `check:bundle` | เพดาน gzip ต่อรูปแบบหน้า |
+| `check:dist` | **`dist/` คือสิ่งที่ผู้ใช้ได้รับ แต่เกตอื่นอ่าน `src/` ทั้งนั้น** · ตรวจว่า `.d.ts` ครบ · `"use client"` **รอดมาถึง dist ครบ 55 และไม่เกิน** · ไม่มี source รั่ว · ทุก path ใน `exports` มีจริง · bundle `dist/index.js` ได้ (ทุก import resolve) |
 | `lint:rsc` | `"use client"` ต้องมีเมื่อจำเป็น **และต้องไม่มีเมื่อไม่จำเป็น** · ทิศที่เกินพังเงียบ — ถ้าไม่ห้าม ไลบรารีจะกลายเป็น client ทั้งก้อนโดยไม่มี commit ไหนตัดสินใจ · directive ต้องอยู่ **บรรทัดแรก** ไม่งั้นเป็นสตริงลอย ๆ |
 | `check:fonts` + `font.spec.ts` | ฟอนต์ต้องถูก **ดึงจากเซิร์ฟเวอร์ของเราจริง** — ฟอนต์ที่โหลดไม่ได้ไม่ throw · จนถึง 2026-07-30 ระบบไม่เคยโหลด Anuphan เลย และไม่มีเกตไหนรู้ |
 | contrast sweep (e2e) | ทุกข้อความบน gallery ทั้งสองโหมด |
@@ -85,6 +86,24 @@ sweep ที่ตรวจ 0 element ก็เขียว · เกตที�
 [`.github/workflows/verify.yml`](.github/workflows/verify.yml) เคยไล่เรียกเอง 5 ขั้น แล้วไม่ถูกอัปเดตอีกเลยตั้งแต่ commit baseline ⇒ เกตที่สร้างหลังจากนั้น (`quality` · `parity` · `docs` · `api-comments` · `check:bundle` · `gallery:build`) **ไม่อยู่ใน CI เลย** — CI เขียวโดยตรวจแค่ครึ่งเดียว
 
 **การเขียนรายการเกตไว้สองที่คือกลไกที่ทำให้สองที่หลุดจากกัน** · ตอนนี้มีแหล่งความจริงเดียว เพิ่มเกตใน `package.json` แล้ว CI ได้ไปด้วยเอง
+
+---
+
+### การส่งมอบ — `dist/` ต้อง **transpile ต่อไฟล์ ห้าม bundle**
+
+`npm run build` = `tsc -p tsconfig.build.json` + `build:css` · ไม่มี bundler ไม่มี dep เพิ่ม
+
+★★★ **ถ้า bundle รวมเป็นไฟล์เดียว ขอบเขต client/server พังทั้งหมด** — 55 ไฟล์ client
+จะรวมกับ 17 ไฟล์ server เป็นโมดูลเดียวที่มี `"use client"` บนสุด ⇒ ทุกอย่างเป็น client
+**และ `lint:rsc` ยังเขียว** เพราะมันอ่าน `src/` · `check:dist` มีอยู่เพื่อปิดช่องนี้
+
+`dist/` มี: `.js` + `.d.ts` + sourcemap ต่อไฟล์ · `theme.css` + `src/*.css` + `src/fonts/*.woff2`
+(รักษาโครง path เดิมไว้ให้ `@import` และ `url()` resolve เอง ไม่เขียนใหม่) · `theme-init.js`
+
+⚠️ import ที่ emit เป็น **extensionless** ⇒ **Node ESM ล้วน resolve ไม่ได้** แต่ Next/webpack/esbuild ได้
+`check:dist` จึงตรวจด้วยการ bundle จริง ไม่ใช่ `node --import`
+
+แอปเขียนสองบรรทัด: `@import "@smego/ui/theme.css";` + `@source` ชี้ `dist` (ห้ามลืม — ไม่งั้น purge เกลี้ยงเงียบ ๆ)
 
 ---
 

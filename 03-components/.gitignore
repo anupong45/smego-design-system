@@ -9,3 +9,6 @@ playwright-report/
 gallery/gallery.js
 gallery/gallery.css
 gallery/fonts/
+
+# build output ที่ publish — สร้างใหม่ได้ด้วย npm run build
+dist/

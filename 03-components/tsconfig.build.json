@@ -1,0 +1,29 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   tsconfig.build — emit `dist/` สำหรับ publish
+   ───────────────────────────────────────────────────────────────────────────
+   ★★★ **ห้าม bundle** — ต้อง transpile ต่อไฟล์
+
+   ถ้ารวมเป็นไฟล์เดียว 55 ไฟล์ client จะรวมกับ 17 ไฟล์ server เป็นโมดูลเดียว
+   ที่มี `"use client"` อยู่บนสุด ⇒ **ทุกอย่างกลายเป็น client** และขอบเขตที่
+   `lint:rsc` สร้างไว้หายไปทั้งหมดโดยที่เกตยังเขียว (เพราะเกตอ่าน `src/`)
+
+   `tsc` รักษา directive prologue ไว้ตรงบรรทัดแรกของทุกไฟล์ — ยืนยันแล้ว
+   55 ไฟล์ใน `dist` มี `'use client';` · `Badge.js` ไม่มี
+
+   ⚠️ import ที่ emit ออกมาเป็น **extensionless** (`'./EntityCard'`) เพราะ
+      `moduleResolution: bundler` — **Node ESM ล้วน resolve ไม่ได้** แต่
+      Next/webpack/esbuild ได้ · ผู้ใช้ปลายทางคือ Next App Router จึงยอมรับได้
+      `check:dist` จึงตรวจด้วยการ bundle จริงผ่าน esbuild ไม่ใช่ `node --import`
+   ═══════════════════════════════════════════════════════════════════════════ */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"]
+}

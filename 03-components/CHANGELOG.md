@@ -27,6 +27,38 @@
 และการเป็น peer ทำให้แอปมี RAC **สำเนาเดียว** — สองสำเนาหมายถึง global symbol ที่
 `installRacThaiStrings` เขียนอยู่คนละอัน = คำแปลไทยหายเงียบ ๆ
 
+### Breaking — `exports` ชี้ `dist/` ไม่ใช่ `src/` อีกแล้ว
+
+ก่อนหน้านี้แพ็กเกจ export `.tsx` ดิบ ⇒ แอปต้อง transpile ในนโมดูลเอง
+
+| | เดิม | ใหม่ |
+|---|---|---|
+| `.` | `./src/index.ts` | `./dist/index.js` + `types` |
+| `./inputs/*` ฯลฯ | `./src/inputs/*.tsx` | `./dist/inputs/*.js` + `types` |
+| `./theme.css` | — | **`./dist/theme.css`** (ใหม่) |
+| `types` · `files` | ไม่มีทั้งคู่ | `./dist/index.d.ts` · `["dist"]` |
+
+- **`npm run build`** = `tsc -p tsconfig.build.json` + `build:css` — ไม่เพิ่ม dependency
+- `dist/` มี `.js` + `.d.ts` + sourcemap ต่อไฟล์ · `theme.css` + `src/*.css` + `src/fonts/*.woff2` + `theme-init.js`
+- **`check:dist`** เข้า `verify` — ตรวจ 6 ข้อ พิสูจน์ว่าแดงได้ทั้ง 5 แบบที่ฉีด
+
+> ★★★ **ห้าม bundle — ต้อง transpile ต่อไฟล์**
+>
+> ถ้ารวมเป็นไฟล์เดียว 55 ไฟล์ client จะรวมกับ 17 ไฟล์ server เป็นโมดูลเดียวที่มี
+> `"use client"` บนสุด ⇒ **ทุกอย่างกลายเป็น client และ `lint:rsc` ยังเขียว**
+> เพราะมันอ่าน `src/` · `check:dist` มีอยู่เพื่อปิดช่องนี้โดยเฉพาะ — ข้อที่สำคัญที่สุด
+> ของมันคือ "`'use client'` ที่ `src` มี ต้องมีใน `dist` ด้วย"
+>
+> `tsc` รักษา directive prologue ไว้บรรทัดแรกจริง — ยืนยันแล้ว 55/55
+
+⚠️ **import ที่ emit เป็น extensionless** (`'./EntityCard'`) เพราะ `moduleResolution: bundler`
+⇒ **Node ESM ล้วน resolve ไม่ได้** แต่ Next/webpack/esbuild ได้ · ผู้ใช้ปลายทางคือ
+Next App Router จึงยอมรับได้ · `check:dist` ตรวจด้วยการ bundle จริงไม่ใช่ `node --import`
+
+⚠️ **ยังไม่มีเกตที่บังคับว่า "หัก API ⇒ ต้องขยับเวอร์ชัน"** — ช่องเดิมที่ทำให้ 0.2.0
+ค้างอยู่ที่ `0.1.0` หลายวัน · ตอนนี้ยังไม่มี consumer และยังไม่มี tag จึงยังไม่เจ็บ
+แต่ต้องตัด **0.3.0** ก่อน publish ครั้งแรก
+
 ### Added — RSC boundary (`"use client"` 55 ไฟล์ + เกต `lint:rsc`)
 
 แอปปลายทางเป็น Next.js App Router ⇒ ไฟล์ที่เรียก hook · ใช้ context · หรือผูก
