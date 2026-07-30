@@ -68,7 +68,11 @@ sweep ที่ตรวจ 0 element ก็เขียว · เกตที�
 ⚠️ และเวลาวัด ให้ระวัง `$?` หลัง pipe — `node x.mjs | tail` ให้ exit ของ `tail`
 ไม่ใช่ของ node · ผมเกือบรายงานว่า `lint-classes` ไม่ fail เพราะเรื่องนี้
 
----
+### CI รัน `npm run verify` ทั้งก้อน — ห้ามไล่เรียกเกตทีละตัว
+
+[`.github/workflows/verify.yml`](.github/workflows/verify.yml) เคยไล่เรียกเอง 5 ขั้น แล้วไม่ถูกอัปเดตอีกเลยตั้งแต่ commit baseline ⇒ เกตที่สร้างหลังจากนั้น (`quality` · `parity` · `docs` · `api-comments` · `check:bundle` · `gallery:build`) **ไม่อยู่ใน CI เลย** — CI เขียวโดยตรวจแค่ครึ่งเดียว
+
+**การเขียนรายการเกตไว้สองที่คือกลไกที่ทำให้สองที่หลุดจากกัน** · ตอนนี้มีแหล่งความจริงเดียว เพิ่มเกตใน `package.json` แล้ว CI ได้ไปด้วยเอง
 
 ---
 

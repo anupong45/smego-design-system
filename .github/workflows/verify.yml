@@ -3,20 +3,27 @@ name: verify
 # ═══════════════════════════════════════════════════════════════════════════
 # ชุดตรวจของ SME.GO Design System
 # ───────────────────────────────────────────────────────────────────────────
-# `npm run verify` ครบอยู่แล้วแต่ก่อนหน้านี้ **ไม่มีอะไรรันให้** — เอกสาร
-# 40 ไฟล์ระบุค่าพิกเซลและ contrast ไว้ชัดเจน ถ้าไม่มีใครตรวจก็ drift เงียบ ๆ
+# ★★★ CI รัน `npm run verify` **ทั้งก้อน** ไม่ไล่เรียกเกตทีละตัว
 #
-# ห้าขั้นเรียงตามต้นทุน ถูกสุดก่อน:
-#   lint      → grep · วินาที
-#   typecheck → tsc
-#   tokens    → validator 11 ข้อ
-#   test      → vitest + jest-axe (112)
-#   e2e       → playwright (16) · ต้องมี browser จึงอยู่ท้ายสุด
+# ⚠️ ฉบับก่อนของไฟล์นี้ไล่เรียกเอง 5 ขั้น (`node 02-tokens/lint-classes.mjs` ·
+#    typecheck · validate-tokens · test · test:e2e) แล้ว **ไม่ถูกอัปเดตอีกเลย**
+#    ตั้งแต่ commit baseline 2026-07-28
+#
+#    ผลคือเกตที่สร้างขึ้นหลังจากนั้น **ไม่อยู่ใน CI เลยทั้งหมด**:
+#      lint:quality · lint:parity · lint:docs · lint:api-comments ·
+#      gallery:build · check:bundle
+#    → CI เขียวโดยตรวจแค่ครึ่งเดียวของสิ่งที่ verify ตรวจ
+#
+#    การเรียกเกตทีละตัวในสองที่ (package.json + workflow นี้) **คือกลไก**
+#    ที่ทำให้สองที่หลุดจากกัน · ตอนนี้มีแหล่งความจริงเดียวคือ `npm run verify`
+#    เพิ่มเกตใหม่ใน package.json แล้ว CI ได้ไปด้วยเอง
 #
 # ⚠️ `tailwindcss` ต้องติดตั้งที่ **root ของ repo** ไม่ใช่ใน 03-components
 #    เพราะ `02-tokens/theme.css` มี `@import "tailwindcss"` และ node
 #    resolve จากไฟล์ที่ import จึงไล่ขึ้นจาก 02-tokens/ ซึ่งไม่เจอ
 #    node_modules ของ 03-components เลย
+#
+# ⚠️ ต้องติดตั้ง Chromium **ก่อน** verify เพราะ test:e2e อยู่ข้างใน verify
 # ═══════════════════════════════════════════════════════════════════════════
 
 on:
@@ -33,7 +40,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -52,30 +59,19 @@ jobs:
       - name: ติดตั้ง tailwindcss ที่ root (ให้ 02-tokens/theme.css resolve ได้)
         run: npm i -D tailwindcss@^4 --no-save
 
-      # ─── ขั้นที่ถูก รันก่อน ─────────────────────────────────────────────
-      - name: lint · ห้ามใช้สีนอกระบบ · z-index ดิบ · เขียนตัวแปรแถบอื่น
-        run: node 02-tokens/lint-classes.mjs
-
-      - name: typecheck
-        working-directory: 03-components
-        run: npm run typecheck
-
-      - name: token integrity · 11 ข้อ
-        run: node 02-tokens/validate-tokens.js
-
-      # ─── unit + a11y ────────────────────────────────────────────────────
-      - name: vitest + jest-axe
-        working-directory: 03-components
-        run: npm run test
-
-      # ─── e2e · แพงที่สุด ────────────────────────────────────────────────
       - name: ติดตั้ง Chromium ของ Playwright
         working-directory: 03-components
         run: npx playwright install --with-deps chromium
 
-      - name: playwright · 4 เคส WCAG 2.2 + regression
+      # ─── ชุดตรวจทั้งก้อน ────────────────────────────────────────────────
+      # typecheck → lint (classes · quality · parity · docs · api-comments)
+      # → vitest → playwright → gallery:build → check:bundle → validate-tokens
+      #
+      # ★ ตัว script เรียงจากถูกไปแพงอยู่แล้ว จึงไม่ต้องแยกขั้นที่นี่
+      #   และการแยกขั้นคือสิ่งที่ทำให้ CI หลุดจาก verify มาก่อน
+      - name: npm run verify
         working-directory: 03-components
-        run: npm run test:e2e
+        run: npm run verify
 
       - name: เก็บผลเมื่อ e2e ล้ม
         if: failure()
