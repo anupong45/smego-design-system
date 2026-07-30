@@ -260,7 +260,7 @@ Astryx **ทุกไซส์**ต่ำกว่าเกณฑ์ที่เ
 
 ### 4.1 · รูปแบบที่เครื่องอ่าน
 
-`02-tokens/lint-parity.mjs` อ่านบล็อกนี้ ไม่ได้อ่านตารางข้างบน — ตารางไว้ให้คนอ่าน บล็อกนี้ไว้ให้เครื่อง **แก้ทั้งคู่เสมอ**
+`lint/lint-parity.mjs` อ่านบล็อกนี้ ไม่ได้อ่านตารางข้างบน — ตารางไว้ให้คนอ่าน บล็อกนี้ไว้ให้เครื่อง **แก้ทั้งคู่เสมอ**
 
 - `rename` — ชื่อของเรา → ชื่อ Astryx ที่ต้องตรงกันหลังเฟส 3
 - `extension` — component ของเราที่ไม่มีคู่เทียบ script จะไม่บ่นถึง
@@ -518,7 +518,7 @@ Astryx บังคับ `label` เป็น string เกือบทุก i
 
 | เฟส | งาน | สถานะ |
 |---|---|---|
-| 1 | pin `@astryxdesign/core@0.1.8` (exact) + เขียน `02-tokens/lint-parity.mjs` + `npm run lint:parity` | ✅ เสร็จ |
+| 1 | pin `@astryxdesign/core@0.1.8` (exact) + เขียน `lint/lint-parity.mjs` + `npm run lint:parity` | ✅ เสร็จ |
 | 2 | token: `radius-sm` 6→4 | ✅ เสร็จ |
 | 3 | rename 14 ตัว (`SearchField`, `ImageGallery` ตัดออก) + prop rename ตาม §3 + `label: string` (§8.1) — **หักดิบ ไม่มี `@deprecated` alias** (§8 · 0.2.0) | ✅ เสร็จ 14/14 · **ขยับเป็น 0.2.0 แล้วเมื่อ 2026-07-29** พร้อม [CHANGELOG](03-components/CHANGELOG.md) ⚠️ ครึ่งหลังของข้อตกลงนี้ค้างอยู่หลายวัน — เอกสารติด ✅ ว่าหักดิบแล้วแต่ `package.json` ยัง 0.1.0 และไม่มีเกตไหนตรวจว่าการหัก API ต้องมาพร้อมการขยับเวอร์ชัน |
 | 4 | อัปเดต `.md` คู่ + gallery + e2e fixture | ✅ เสร็จควบคู่กับเฟส 3 ทีละตัว |

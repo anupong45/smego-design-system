@@ -149,7 +149,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: ตรวจว่า tag ตรงกับ version
-        working-directory: 02-tokens
+        working-directory: lint
         run: |
           TAG="${GITHUB_REF_NAME#lint-v}"
           PKG="$(node -p "require('./package.json').version")"
@@ -189,11 +189,11 @@ jobs:
       # linter อ่านไฟล์เฉย ๆ ไม่มี dependency — ไม่ต้อง npm ci ไม่ต้องมี tailwind
       - name: ทั้งสอง bin ต้องรันได้และ exit 0 บนโค้ดที่สะอาด
         run: |
-          node 02-tokens/lint-classes.mjs
-          node 02-tokens/lint-quality.mjs
+          node lint/lint-classes.mjs
+          node lint/lint-quality.mjs
 
       - name: npm publish
-        working-directory: 02-tokens
+        working-directory: lint
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

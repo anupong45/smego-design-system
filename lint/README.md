@@ -3,6 +3,23 @@
 เกตของ SME.GO Design System ที่ **รีโปแอปรันได้** — ไม่ต้อง clone รีโป design system
 
 ```bash
+npm i -D @smego/lint
+```
+
+> **โฟลเดอร์นี้มี linter 6 ตัว แต่ publish 2 ตัว**
+>
+> `lint-classes` และ `lint-quality` เป็นกฎที่ **พังเหมือนกันทุกรีโป** จึงส่งให้ทีมแอป
+> ส่วน `lint-docs` · `lint-parity` · `lint-api-comments` · `lint-rsc` เป็นเรื่องภายใน
+> ของ design system (เอกสารคู่ `.tsx` · การเทียบ API กับ Astryx · `"use client"`)
+> — `files` ใน `package.json` คุมว่าอะไรถูกส่ง · ยืนยันด้วย `npm pack --dry-run`
+>
+> ⚠️ **โฟลเดอร์นี้แยกออกมาจาก `02-tokens` เมื่อ 2026-07-30** เพราะ npm ใส่
+> `README.md` ของโฟลเดอร์แพ็กเกจเป็นหน้าแสดงบน npmjs.com **เสมอ ไม่สนใจ `files`**
+> ⇒ ตอนอยู่ใน `02-tokens` หน้า npm ของแพ็กเกจนี้จะแสดงเอกสารชั้น token 21.6 kB
+> ที่เริ่มด้วย `# 02 · Design Tokens` — ทีมแอปที่ติดตั้งเพื่อเอาเกตจะเจอเอกสาร
+> ที่ไม่เกี่ยวกับสิ่งที่เขาติดตั้ง · สิ่งที่ publish ต้องมีบ้านของตัวเอง
+
+```bash
 npx smego-lint-classes src app
 npx smego-lint-quality src app
 ```

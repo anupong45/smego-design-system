@@ -25,10 +25,15 @@
 
 ```
 01-foundations/   11 .md — การตัดสินใจเชิงหลักการ (สี · สเกล · a11y · motion)
-02-tokens/        tokens.json (DTCG) + src/*.css + linter ทุกตัว
+02-tokens/        tokens.json (DTCG) + src/*.css + validate-tokens.js
 03-components/    @smego/ui — React + RAC + Tailwind v4 · ~80 .tsx / ~60 .md
 04-patterns/      6 .md — รูปแบบการประกอบของ marketplace
+lint/             @smego/lint — linter 6 ตัว · publish 2 ตัวให้รีโปแอปรันได้
 ```
+
+`lint/` **ไม่ใช่ชั้น** — เป็นโฟลเดอร์ของแพ็กเกจที่ publish · แยกจาก `02-tokens` เมื่อ 2026-07-30
+เพราะ npm ใช้ `README.md` ของโฟลเดอร์แพ็กเกจเป็นหน้าแสดงบน npmjs.com เสมอ (ไม่สนใจ `files`)
+⇒ แพ็กเกจที่อยู่ใน `02-tokens` จะมีหน้า npm ที่อธิบายระบบ token ไม่ใช่ linter
 
 **ชั้นที่ไม่มีและจะไม่มี:** 05 Templates (แอปประกอบหน้าเอง) · 07 เสร็จโดยปริยายพร้อมชั้น 02
 **ชั้นที่ยังไม่มี:** 06 Documentation

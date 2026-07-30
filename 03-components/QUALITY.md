@@ -138,7 +138,7 @@ RAC `Table` ทำให้ full bundle ขยับจาก 186.3 → **186.9 
 
 ผลตอนนี้: **ไม่มีจุดที่ไม่ผ่าน** ทั้งสองโหมด
 
-[`02-tokens/lint-quality.mjs`](../02-tokens/lint-quality.mjs) เป็นหลักฐานของ 4 ข้อใน checklist:
+[`lint/lint-quality.mjs`](../lint/lint-quality.mjs) เป็นหลักฐานของ 4 ข้อใน checklist:
 
 | ข้อใน checklist | กฎ | ระดับ |
 |---|---|---|
