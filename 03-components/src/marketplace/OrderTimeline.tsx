@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '../lib/cn';
 import { Icon, type IconName } from '../icon/Icon';
 import { Link } from '../inputs/Link';

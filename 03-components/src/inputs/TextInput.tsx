@@ -1,3 +1,5 @@
+'use client';
+
 import {
   TextField as RACTextField,
   type TextFieldProps as RACTextFieldProps,

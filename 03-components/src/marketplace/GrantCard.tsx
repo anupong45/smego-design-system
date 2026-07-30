@@ -1,3 +1,5 @@
+'use client';
+
 import type { ReactNode } from 'react';
 import { EntityCard, EntityAmount, EntityMeta } from './EntityCard';
 import { DeadlineBadge, DeadlineText, type DeadlineStatus } from './Deadline';

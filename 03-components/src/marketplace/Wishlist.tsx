@@ -1,3 +1,5 @@
+'use client';
+
 import { ToggleButton as RACToggleButton } from 'react-aria-components';
 import { useState, type ReactNode } from 'react';
 import { cn } from '../lib/cn';

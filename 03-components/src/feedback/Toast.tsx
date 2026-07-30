@@ -1,3 +1,5 @@
+'use client';
+
 import {
   UNSTABLE_Toast as RACToast,
   UNSTABLE_ToastContent as RACToastContent,

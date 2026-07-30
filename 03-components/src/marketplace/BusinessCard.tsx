@@ -1,3 +1,5 @@
+'use client';
+
 import type { ReactNode } from 'react';
 import { EntityCard, EntityMeta, type EntityMetaItem } from './EntityCard';
 import { Badge } from '../data-display/Badge';

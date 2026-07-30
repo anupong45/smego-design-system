@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { I18nProvider } from 'react-aria-components';
 import { stringsTh, type Strings, type PartialStrings } from '../lib/strings.th';

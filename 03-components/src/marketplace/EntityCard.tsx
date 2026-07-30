@@ -1,3 +1,5 @@
+'use client';
+
 import type { ElementType, ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Card, CardMedia } from '../data-display/Card';

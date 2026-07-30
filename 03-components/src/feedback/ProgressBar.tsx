@@ -1,3 +1,5 @@
+'use client';
+
 import { ProgressBar as RacProgressBar, Label } from 'react-aria-components';
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ReactNode } from 'react';

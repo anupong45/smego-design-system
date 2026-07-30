@@ -1,3 +1,5 @@
+'use client';
+
 import {
   ComboBox as RACComboBox,
   type ComboBoxProps as RACComboBoxProps,

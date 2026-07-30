@@ -1,3 +1,5 @@
+'use client';
+
 import {
   TooltipTrigger as RACTooltipTrigger,
   Tooltip as RACTooltip,

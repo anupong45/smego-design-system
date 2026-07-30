@@ -1,3 +1,5 @@
+'use client';
+
 import {
   RadioGroup as RACRadioGroup,
   type RadioGroupProps as RACRadioGroupProps,

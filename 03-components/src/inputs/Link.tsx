@@ -1,3 +1,5 @@
+'use client';
+
 import { Link as RACLink, type LinkProps as RACLinkProps } from 'react-aria-components';
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ReactNode } from 'react';

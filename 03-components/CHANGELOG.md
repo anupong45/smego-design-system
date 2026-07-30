@@ -27,6 +27,31 @@
 และการเป็น peer ทำให้แอปมี RAC **สำเนาเดียว** — สองสำเนาหมายถึง global symbol ที่
 `installRacThaiStrings` เขียนอยู่คนละอัน = คำแปลไทยหายเงียบ ๆ
 
+### Added — RSC boundary (`"use client"` 55 ไฟล์ + เกต `lint:rsc`)
+
+แอปปลายทางเป็น Next.js App Router ⇒ ไฟล์ที่เรียก hook · ใช้ context · หรือผูก
+event handler เข้า DOM ต้องประกาศตัวเป็น client ไม่งั้น build ของแอปตายตอน import
+
+- `"use client"` **55 ไฟล์** (54 `.tsx` + `primitives.ts` ที่ re-export ของ RAC ซึ่ง ship มาพร้อม `client-only`)
+- server ได้ **17 ไฟล์** — `Badge` `Card` `DescriptionList` `EmptyState` `Spinner` `Icon` `Grid` `Main` `Stack` + `.ts` ทั้ง 8 ตัวรวม `index.ts` ที่ต้องคง server-importable
+- **`lint:rsc`** ตรวจ **สองทิศ** — ขาด=แดง · **เกิน=แดง** · directive ไม่อยู่บรรทัดแรก=แดง
+  พิสูจน์แล้วทั้ง 3 ทิศด้วยการฉีดความผิด แล้วคืนค่า
+
+> ⚠️ **ตัวเลขชุดแรกที่รายงานคือ 42 / 21 ซึ่งผิด**
+>
+> `useStrings()` คือ `useContext(SmeGoContext)?.strings ?? stringsTh` และถูกเรียกใน
+> **47 ไฟล์ รวมการ์ด marketplace ทั้ง 20 ไฟล์** · การนับครั้งแรก grep หาเฉพาะชื่อ
+> hook ของ React จึงไม่เห็น hook ของเราเอง (`useStrings` `useMoney` `useDebounce`
+> `useSmeGoLocale`) ⇒ เกตจึงจับ `use[A-Z]…(` ทุกตัว **ไม่ใช่ลิสต์ชื่อที่ต้องมาเติมเอง**
+> เพราะลิสต์แบบนั้นคือสิ่งที่ทำให้นับพลาด 12 ไฟล์ตั้งแต่ต้น
+>
+> **ผลต่อสถาปัตยกรรม** — ประโยชน์ของ RSC เหลือแค่ 9 ใบเล็กที่พ่อแม่เป็น client อยู่แล้ว
+> ทางเลือกที่จะกู้คืนได้คือ `setStrings()` แบบ global ซึ่ง **ปฏิเสธ** เพราะเป็น
+> last-writer-wins บนสถานะร่วม — รูปแบบเดียวกับที่ `CLAUDE.md §4` ห้าม `body.style.padding*`
+> ⇒ **payload ต้องแก้ด้วย lazy chunk** (`DateInput` +59 KB) ไม่ใช่ด้วย RSC
+>
+> `"use client"` **ไม่ปิด SSR** — HTML ยังครบบนเซิร์ฟเวอร์ SEO ไม่กระทบ
+
 ### Added — ฟอนต์ถูกโหลดจริงเป็นครั้งแรก
 
 > ★★★ **จนถึง 2026-07-30 ระบบนี้ไม่เคยโหลด Anuphan เลย** — ไม่มี `@font-face`

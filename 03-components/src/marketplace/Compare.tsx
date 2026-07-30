@@ -1,3 +1,5 @@
+'use client';
+
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { Button } from '../inputs/Button';

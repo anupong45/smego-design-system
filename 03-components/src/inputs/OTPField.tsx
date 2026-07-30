@@ -1,3 +1,5 @@
+'use client';
+
 import { useId, useRef, useState, type ClipboardEvent, type KeyboardEvent } from 'react';
 import { cn } from '../lib/cn';
 import { useStrings } from '../provider/SmeGoProvider';

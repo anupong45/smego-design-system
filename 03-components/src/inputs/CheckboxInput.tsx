@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Checkbox as RACCheckbox,
   type CheckboxProps as RACCheckboxProps,

@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '../lib/cn';
 import { Badge } from '../data-display/Badge';
 import { useStrings, useSmeGoLocale } from '../provider/SmeGoProvider';

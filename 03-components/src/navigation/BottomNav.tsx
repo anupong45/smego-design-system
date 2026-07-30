@@ -1,3 +1,5 @@
+'use client';
+
 import { useLayoutEffect, useRef } from 'react';
 import { cn } from '../lib/cn';
 import { Icon, type IconName } from '../icon/Icon';

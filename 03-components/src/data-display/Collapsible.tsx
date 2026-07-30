@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Disclosure as RACDisclosure,
   DisclosurePanel as RACDisclosurePanel,

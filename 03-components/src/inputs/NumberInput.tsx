@@ -1,3 +1,5 @@
+'use client';
+
 import {
   NumberField as RACNumberField,
   type NumberFieldProps as RACNumberFieldProps,

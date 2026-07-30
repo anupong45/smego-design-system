@@ -1,3 +1,5 @@
+'use client';
+
 import {
   SearchField as RACSearchField,
   type SearchFieldProps as RACSearchFieldProps,

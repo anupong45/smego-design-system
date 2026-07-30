@@ -1,3 +1,5 @@
+'use client';
+
 import {
   DatePicker as RACDatePicker,
   type DatePickerProps as RACDatePickerProps,

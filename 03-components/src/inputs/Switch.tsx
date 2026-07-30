@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Switch as RACSwitch,
   type SwitchProps as RACSwitchProps,

@@ -1,3 +1,5 @@
+'use client';
+
 import { useId, useRef, useState, type ReactNode } from 'react';
 import { cn } from '../lib/cn';
 import { RadioList, Radio } from '../inputs/RadioList';

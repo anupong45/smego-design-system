@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Select as RACSelect,
   type SelectProps as RACSelectProps,

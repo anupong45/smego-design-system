@@ -1,3 +1,5 @@
+'use client';
+
 import { Button as RACButton, type ButtonProps as RACButtonProps } from 'react-aria-components';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../lib/cn';
