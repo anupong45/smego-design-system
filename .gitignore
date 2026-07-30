@@ -10,8 +10,10 @@ node_modules/
 # ผลลัพธ์ที่ generate ได้ — สร้างใหม่ได้ด้วย gallery:build / build:fixture
 03-components/gallery/gallery.js
 03-components/gallery/gallery.css
+03-components/gallery/fonts/
 03-components/tests/e2e/fixture/app.js
 03-components/tests/e2e/fixture/app.css
+03-components/tests/e2e/fixture/fonts/
 03-components/playwright-report/
 03-components/test-results/
 

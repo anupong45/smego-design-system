@@ -1,9 +1,11 @@
 node_modules/
 tests/e2e/fixture/app.js
 tests/e2e/fixture/app.css
+tests/e2e/fixture/fonts/
 test-results/
 playwright-report/
 
 # gallery build output
 gallery/gallery.js
 gallery/gallery.css
+gallery/fonts/

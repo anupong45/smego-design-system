@@ -19,11 +19,13 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:a11y": "vitest run tests/a11y",
-    "build:fixture": "esbuild tests/e2e/fixture/app.tsx --bundle --outfile=tests/e2e/fixture/app.js --loader:.tsx=tsx --jsx=automatic --define:process.env.NODE_ENV='\"production\"' && tailwindcss -i tests/e2e/fixture/app.in.css -o tests/e2e/fixture/app.css",
+    "copy:fonts": "node scripts/copy-fonts.mjs",
+    "check:fonts": "node scripts/check-fonts.mjs",
+    "build:fixture": "npm run copy:fonts && esbuild tests/e2e/fixture/app.tsx --bundle --outfile=tests/e2e/fixture/app.js --loader:.tsx=tsx --jsx=automatic --define:process.env.NODE_ENV='\"production\"' && tailwindcss -i tests/e2e/fixture/app.in.css -o tests/e2e/fixture/app.css",
     "test:e2e": "npm run build:fixture && npm run gallery:build && playwright test",
-    "gallery:build": "esbuild gallery/gallery.tsx --bundle --outfile=gallery/gallery.js --loader:.tsx=tsx --jsx=automatic --define:process.env.NODE_ENV='\"development\"' && tailwindcss -i gallery/gallery.in.css -o gallery/gallery.css",
+    "gallery:build": "npm run copy:fonts && esbuild gallery/gallery.tsx --bundle --outfile=gallery/gallery.js --loader:.tsx=tsx --jsx=automatic --define:process.env.NODE_ENV='\"development\"' && tailwindcss -i gallery/gallery.in.css -o gallery/gallery.css",
     "gallery": "npm run gallery:build && http-server gallery -p 4400 -c-1 -o",
-    "verify": "npm run typecheck && npm run lint && npm run test && npm run test:e2e && npm run gallery:build && npm run check:bundle && node ../02-tokens/validate-tokens.js",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run test:e2e && npm run gallery:build && npm run check:fonts && npm run check:bundle && node ../02-tokens/validate-tokens.js",
     "verify:head": "node ../02-tokens/verify-head.mjs",
     "lint": "node ../02-tokens/lint-classes.mjs && npm run lint:quality && npm run lint:parity && npm run lint:docs && npm run lint:api-comments",
     "lint:quality": "node ../02-tokens/lint-quality.mjs",
@@ -34,19 +36,19 @@
     "lint:parity": "node ../02-tokens/lint-parity.mjs"
   },
   "peerDependencies": {
+    "@internationalized/date": "^3.12.2",
     "react": ">=18",
-    "react-dom": ">=18"
+    "react-dom": ">=18",
+    "react-aria-components": ">=1.19.0 <1.20.0"
   },
   "dependencies": {
-    "@internationalized/date": "^3.12.0",
-    "@internationalized/string": "^3.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.470.0",
-    "react-aria-components": "^1.19.0",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@internationalized/date": "3.12.2",
     "@astryxdesign/cli": "0.1.9",
     "@astryxdesign/core": "0.1.9",
     "@astryxdesign/theme-neutral": "0.1.9",
@@ -62,6 +64,7 @@
     "http-server": "^14.1.1",
     "jest-axe": "^10.0.0",
     "jsdom": "^29.1.1",
+    "react-aria-components": "1.19.0",
     "typescript": "^5.7.0",
     "vitest": "^3.2.7"
   }

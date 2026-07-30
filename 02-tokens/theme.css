@@ -14,6 +14,11 @@
 
 @import "tailwindcss";
 
+/* @font-face · Anuphan self-host 4 subset · ต้องมาก่อน token ที่อ้างชื่อ family
+   ⚠️ url() เป็น relative ต่อ src/fonts.css — build ที่ output ไปโฟลเดอร์อื่น
+      ต้อง `npm run copy:fonts` ตามไปด้วย (เกต check:fonts กันลืม) */
+@import "./src/fonts.css";
+
 /* tier 1 — ค่าดิบ ชื่อบอกสี · :root ธรรมดา ไม่เกี่ยวกับ Tailwind */
 @import "./src/primitives.css";
 

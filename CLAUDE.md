@@ -41,7 +41,7 @@
 cd 03-components && npm run verify
 ```
 
-= `typecheck` → `lint` (classes · quality · **parity** · **docs**) → `vitest` → `playwright` → `gallery:build` → **`check:bundle`** → `validate-tokens`
+= `typecheck` → `lint` (classes · quality · **parity** · **docs** · **api-comments**) → `vitest` → `playwright` → `gallery:build` → **`check:fonts`** → **`check:bundle`** → `validate-tokens`
 
 ⚠️ **ห้ามแก้โค้ดแล้วไม่รัน** — เกตในนี้จับของที่ตาไม่เห็นทั้งนั้น
 
@@ -50,6 +50,7 @@ cd 03-components && npm run verify
 | `lint:parity` | ชื่อ/prop ที่ต่างจาก Astryx ต้องถูกตัดสินและบันทึกเหตุผล · **ทุกชื่อของ Astryx 105 ตัว** ต้องอยู่ในลิสต์ใดลิสต์หนึ่ง |
 | `lint:docs` | ลิงก์เสีย + ชื่อก่อน rename ค้างในเอกสาร |
 | `check:bundle` | เพดาน gzip ต่อรูปแบบหน้า |
+| `check:fonts` + `font.spec.ts` | ฟอนต์ต้องถูก **ดึงจากเซิร์ฟเวอร์ของเราจริง** — ฟอนต์ที่โหลดไม่ได้ไม่ throw · จนถึง 2026-07-30 ระบบไม่เคยโหลด Anuphan เลย และไม่มีเกตไหนรู้ |
 | contrast sweep (e2e) | ทุกข้อความบน gallery ทั้งสองโหมด |
 | `rac-fallback.test.ts` | ตาราง RAC en-US ที่ฝังไว้ต้องไม่เก่า — ถ้าเก่า **หน้าขาวทั้งหน้า** ตอน runtime |
 
@@ -64,6 +65,16 @@ cd 03-components && npm run verify
 
 **วิธีเดียวที่เชื่อได้: ฉีดความผิดเข้าไปจริง ๆ แล้วดูว่ามันแดง** จากนั้นคืนค่า
 sweep ที่ตรวจ 0 element ก็เขียว · เกตที่อ่านไฟล์ผิดที่ก็เขียว · **เขียวไม่ใช่หลักฐาน**
+
+**2026-07-30 — บทเรียนนี้เกิดซ้ำสด ๆ ตอนเขียน `font.spec.ts`** เทสตัวใหม่เขียวทั้งที่
+ถอน `@import` ของฟอนต์ออกแล้ว เพราะ **`baseURL` ของ playwright คือ fixture :4321
+ไม่ใช่ gallery :4400** — ผมตั้งชื่อค่าคงที่ว่า `GALLERY` แล้วมันโหลด fixture · ตอนฉีด
+ความผิดจึง rebuild แค่ gallery ส่วน `app.css` ยังมี `@font-face` เก่าอยู่
+⇒ **ตอนฉีดความผิด ต้อง rebuild ทุก artifact ที่เทสอ่าน ไม่ใช่แค่ตัวที่คิดว่าอ่าน**
+
+และอีกชั้น: `document.fonts.check()` คืน `true` จากฟอนต์ที่ **ติดตั้งในเครื่อง** ได้ —
+เทสจะเขียวบนเครื่องที่ลงฟอนต์ไว้ ขณะที่เว็บจริงตกไปฟอนต์สำรอง · ต้องยืนยันจาก
+**network response** ว่าไฟล์ของเราถูกดึงจริง
 
 ⚠️ และเวลาวัด ให้ระวัง `$?` หลัง pipe — `node x.mjs | tail` ให้ exit ของ `tail`
 ไม่ใช่ของ node · ผมเกือบรายงานว่า `lint-classes` ไม่ fail เพราะเรื่องนี้
