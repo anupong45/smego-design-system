@@ -3,22 +3,27 @@ name: publish
 # ═══════════════════════════════════════════════════════════════════════════
 # publish @smego/ui เมื่อมี tag `v*`
 # ───────────────────────────────────────────────────────────────────────────
-# ⚠️⚠️ **ยังใช้ไม่ได้จนกว่าจะแก้เรื่อง scope** — อ่านก่อนรัน
+# ═══ ทำไม npm public ไม่ใช่ GitHub Packages (ตัดสิน 2026-07-30) ═══
 #
-# GitHub Packages บังคับว่า **scope ของแพ็กเกจต้องตรงกับเจ้าของ repo**
-# repo นี้คือ `anupong45/smego-design-system` (บัญชีผู้ใช้ ไม่ใช่ org)
-# ⇒ GitHub Packages รับได้เฉพาะ `@anupong45/*` แต่แพ็กเกจเราชื่อ `@smego/ui`
+# คำตัดสินตอน grill คือ "private registry" โดยยืนอยู่บนสมมติฐานว่ารีโปเป็น
+# private · **repo เปลี่ยนเป็น public แล้ว** เหตุผลนั้นจึงหมดไป และเหลือข้อ
+# เปรียบเทียบที่ชัดสองข้อ:
 #
-# ทางเลือกสามทาง (ต้องเลือกก่อน ไม่ใช่ปล่อยให้ CI ล้ม):
-#   1 ★ **สร้าง org ชื่อ `smego` (ฟรี) แล้วย้าย repo ไป** — เก็บชื่อ `@smego/ui`
-#     ไว้ได้ · ไม่ต้องเพิ่ม secret เพราะ GITHUB_TOKEN พอ · แนะนำทางนี้
-#   2 rename เป็น `@anupong45/ui` — ฟรีทันที แต่ผูกชื่อแพ็กเกจกับบัญชีบุคคล
-#     และแอปต้องเขียน `import … from '@anupong45/ui'`
-#   3 npm private registry — เก็บชื่อได้ ไม่ต้องมี org แต่มีค่าใช้จ่ายรายเดือน
-#     และต้องเพิ่ม secret `NPM_TOKEN`
+#   · **GitHub Packages ต้องมีโทเคนแม้ติดตั้งแพ็กเกจ public** ⇒ รีโปแอปต้องมี
+#     `.npmrc` + secret ทุกที่ที่ `npm ci` รัน (เครื่องนักพัฒนา · CI · โฮสต์)
+#     ลืมที่เดียว build ตายโดย error ที่ชี้ผิดทาง
+#   · **GitHub Packages บังคับ scope = ชื่อเจ้าของ repo** ⇒ `@smego/ui` ใช้ไม่ได้
+#     บน `anupong45` ต้อง rename เป็น `@anupong45/ui` หรือสร้าง org ชื่อ smego
 #
-# ขั้นตอน `ตรวจ scope` ด้านล่างจะ **ล้มพร้อมคำอธิบาย** ถ้ายังไม่แก้ —
-# ดีกว่าปล่อยให้ `npm publish` ตอบ 403 ที่อ่านไม่รู้เรื่อง
+# npm public: ติดตั้งได้โดยไม่ต้องมีโทเคน · เก็บชื่อ `@smego/ui` ได้ · ฟรี
+# ตรวจแล้ว 2026-07-30: `@smego/ui` ยังไม่มีบน npm และ scope `@smego` มี 0 แพ็กเกจ
+#
+# ⚠️ ต้องทำครั้งเดียวก่อนใช้ workflow นี้:
+#   1 สร้างบัญชี npm แล้วสร้าง org/scope `smego` (ฟรีสำหรับแพ็กเกจ public)
+#   2 สร้าง **Granular access token** สิทธิ์ publish เฉพาะ scope นั้น
+#   3 ใส่เป็น secret ชื่อ `NPM_TOKEN` ที่ repo → Settings → Secrets → Actions
+#
+# ผมไม่รับและไม่กรอกโทเคนแทน — ขั้นนี้ต้องเป็นเจ้าของบัญชีทำเอง
 #
 # ★★★ ปิดช่อง "หัก API แล้วลืมขยับเวอร์ชัน"
 #
@@ -30,15 +35,17 @@ name: publish
 
 on:
   push:
-    tags: ['v*']
+    tags: ['v*', 'lint-v*']
   workflow_dispatch:
 
+# npm public ไม่ต้องใช้ GITHUB_TOKEN เลย — สิทธิ์อ่านโค้ดพอ
 permissions:
   contents: read
-  packages: write
 
 jobs:
   publish:
+    # tag `lint-v*` ก็ขึ้นต้นด้วยตัวอักษร จึงไม่ชนกับ `v*` — แต่กันไว้ให้ชัด
+    if: "!startsWith(github.ref_name, 'lint-v')"
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
@@ -50,7 +57,7 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: 03-components/package-lock.json
-          registry-url: 'https://npm.pkg.github.com'
+          registry-url: 'https://registry.npmjs.org'
 
       # ─── ตรวจก่อนทำอะไรที่ย้อนไม่ได้ ────────────────────────────────────
       # npm unpublish ทำได้ในกรอบเวลาแคบเท่านั้น · เวอร์ชันที่ปล่อยผิดจะอยู่ถาวร
@@ -66,16 +73,11 @@ jobs:
           fi
           echo "tag v$TAG ตรงกับ package.json"
 
-      - name: ตรวจ scope ว่าตรงกับเจ้าของ repo (ข้อบังคับของ GitHub Packages)
-        working-directory: 03-components
+      - name: ตรวจว่ามี NPM_TOKEN ก่อนเริ่มงานที่ใช้เวลา
         run: |
-          OWNER="$(echo "$GITHUB_REPOSITORY" | cut -d/ -f1)"
-          NAME="$(node -p "require('./package.json').name")"
-          SCOPE="$(echo "$NAME" | cut -d/ -f1 | tr -d '@')"
-          if [ "$(echo "$SCOPE" | tr 'A-Z' 'a-z')" != "$(echo "$OWNER" | tr 'A-Z' 'a-z')" ]; then
-            echo "::error::scope @$SCOPE ไม่ตรงกับเจ้าของ repo ($OWNER) — GitHub Packages จะตอบ 403"
-            echo "เลือกทางใดทางหนึ่ง: สร้าง org ชื่อ $SCOPE แล้วย้าย repo · rename เป็น @$OWNER/ui · หรือใช้ npm private registry"
-            echo "รายละเอียดอยู่ในหัวไฟล์ .github/workflows/publish.yml"
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "::error::ไม่มี secret NPM_TOKEN — ตั้งที่ Settings → Secrets → Actions"
+            echo "ต้องเป็น Granular access token ที่มีสิทธิ์ publish ใน scope @smego"
             exit 1
           fi
 
@@ -101,8 +103,47 @@ jobs:
         working-directory: 03-components
         run: npm pack --dry-run
 
+      # `--access public` จำเป็นสำหรับ **แพ็กเกจ scoped ครั้งแรก** — ค่าปริยาย
+      # ของ scoped package คือ restricted ซึ่งบัญชีฟรีทำไม่ได้ และจะตอบ 402
       - name: npm publish
         working-directory: 03-components
-        run: npm publish
+        run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # ═════════════════════════════════════════════════════════════════════════
+  # `@smego/lint` มีเวอร์ชันของตัวเอง จึงใช้ tag คนละชุด — `lint-v0.1.0`
+  # ถ้าใช้ tag เดียวกัน สองแพ็กเกจจะถูกบังคับให้ขยับเวอร์ชันพร้อมกันตลอด
+  # ทั้งที่ไม่มีเหตุผลให้ผูกกัน (ตัวหนึ่งเป็นไลบรารี UI ตัวหนึ่งเป็นเกต)
+  # ═════════════════════════════════════════════════════════════════════════
+  publish-lint:
+    if: startsWith(github.ref_name, 'lint-v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: ตรวจว่า tag ตรงกับ version
+        working-directory: 02-tokens
+        run: |
+          TAG="${GITHUB_REF_NAME#lint-v}"
+          PKG="$(node -p "require('./package.json').version")"
+          [ "$TAG" = "$PKG" ] || { echo "::error::tag lint-v$TAG ไม่ตรงกับ $PKG"; exit 1; }
+
+      # ★ เกตต้องพิสูจน์ว่าทำงานก่อนถูกส่งไปให้ทีมอื่นใช้ —
+      #   เกตที่ publish แล้วรันไม่ได้ทำให้ทีมแอปคิดว่าผ่าน ทั้งที่ไม่ได้ตรวจอะไร
+      # linter อ่านไฟล์เฉย ๆ ไม่มี dependency — ไม่ต้อง npm ci ไม่ต้องมี tailwind
+      - name: ทั้งสอง bin ต้องรันได้และ exit 0 บนโค้ดที่สะอาด
+        run: |
+          node 02-tokens/lint-classes.mjs
+          node 02-tokens/lint-quality.mjs
+
+      - name: npm publish
+        working-directory: 02-tokens
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

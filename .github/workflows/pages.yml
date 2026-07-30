@@ -10,14 +10,13 @@ name: pages
 # `.d.ts` ใน `dist/` และกฎที่แพงที่สุดของระบบ **ไม่มีทางอยู่ใน type** ได้
 # gallery คือคำตอบของ "หน้าตาควรเป็นอย่างไร" ส่วน `@smego/lint` คือ "อะไรห้ามเขียน"
 #
-# ⚠️⚠️ **Pages บน repo แบบ private ต้องมีแผน Pro/Team ขึ้นไป**
-#      repo นี้เป็น private (ยืนยันแล้ว: GitHub API ตอบ 404 ตอนไม่ล็อกอิน)
-#      ถ้าบัญชีเป็น Free workflow นี้จะล้มที่ขั้น `configure-pages`
-#      ทางเลือก: เปลี่ยน repo เป็น public · อัปเกรดแผน · หรือ deploy gallery
-#      ไปที่ Cloudflare Pages / Netlify ซึ่งรองรับ private repo ในแผนฟรี
-#
-# ⚠️ ต้องเปิดใช้ก่อน: Settings → Pages → Source = **GitHub Actions**
+# ⚠️ **ต้องเปิดใช้ก่อน**: Settings → Pages → Source = **GitHub Actions**
+#    ตรวจเมื่อ 2026-07-30: `has_pages: false` — ยังไม่เปิด
 #    ถ้าไม่เปิด workflow จะล้มพร้อมข้อความว่าหา Pages site ไม่เจอ
+#
+# ★ repo เป็น **public** (ยืนยันจาก GitHub API: `visibility: public`)
+#   ⇒ Pages ใช้ได้บนแผนฟรี · ถ้าวันหนึ่งเปลี่ยนกลับเป็น private
+#     Pages จะต้องมีแผน Pro/Team ขึ้นไป และ workflow นี้จะล้มที่ `configure-pages`
 #
 # ★ ตั้งใจ **ไม่** ผูกกับ verify — ถ้าจะ deploy ต้องผ่าน verify ก่อนเสมอ
 #   จึงเรียก `npm run verify` ในนี้ด้วย ไม่ deploy ของที่ยังไม่ผ่านเกต
