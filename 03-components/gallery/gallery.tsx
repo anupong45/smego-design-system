@@ -75,7 +75,16 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
 
 function Group({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-24 grid gap-8">
+    /* ★★★ `grid-cols-[minmax(0,1fr)]` ไม่ใช่ของประดับ — ถ้าไม่มี หน้าเลื่อนแนวนอน
+       `grid` ที่ไม่ประกาศคอลัมน์ได้ implicit track เป็น `auto`
+       = `minmax(min-content, max-content)` ⇒ specimen ที่ max-content กว้าง
+       (แถวของ `CategoryNav` ที่ `[&>li]:shrink-0`) ดัน track ไปถึง 540px
+       แล้ว track ล้นออกนอก container 288px ทั้งที่ตัว container กว้างถูกต้อง
+
+       วัดเมื่อ 2026-07-30 ที่ viewport 320: `scrollWidth 556` → **320** หลังแก้
+       `min-w-0` ด้วย เพราะ section นี้เป็น flex item ที่มี `min-width: auto`
+       กันไว้ด้วย `e2e/gallery-320.spec.ts` */
+    <section id={id} className="scroll-mt-24 grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8">
       <div>
         <h2 className="text-h2 text-fg">{title}</h2>
         <Divider />

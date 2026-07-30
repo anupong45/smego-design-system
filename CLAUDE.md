@@ -53,6 +53,7 @@ cd 03-components && npm run verify
 | `check:dist` | **`dist/` คือสิ่งที่ผู้ใช้ได้รับ แต่เกตอื่นอ่าน `src/` ทั้งนั้น** · ตรวจว่า `.d.ts` ครบ · `"use client"` **รอดมาถึง dist ครบ 56 และไม่เกิน** · ไม่มี source รั่ว · ทุก path ใน `exports` มีจริง · bundle `dist/index.js` ได้ (ทุก import resolve) |
 | `lint:docs` ข้อ 3ก | **`.tsx` ทุกตัวต้องมี `.md` คู่** — กฎเดิมวนจาก `.md` ไปหา `.tsx` ทางเดียว ⇒ `SmeGoProvider.tsx` ไม่มีเอกสารมาตลอดและเกตเขียว · **เกตที่ตรวจทางเดียวคือเกตที่ตรวจครึ่งเดียว** |
 | `theme.spec.ts` + `theme-init.test.ts` | **ผู้ใช้เปิดโหมดมืดได้จริง** — contrast sweep ตั้ง `data-theme` เอง จึงพิสูจน์แค่ว่าค่าสีถูก ไม่ได้พิสูจน์ว่าเปิดได้ · ตรวจการจำข้ามรีโหลด · ตั้งก่อน first paint · `THEME_INIT_SCRIPT` ตรงกับต้นฉบับ |
+| `lint:quality` ข้อ `scroll` + `reflow-320.spec.ts` | **scroll container ต้องมี `relative`** — `sr-only` คือ `position: absolute` ถ้าอยู่ในกล่องที่เลื่อนแต่ไม่มี positioned ancestor มันหลุดไปดันความกว้างของ `html` ⇒ **ทั้งหน้าเลื่อนแนวนอน SC 1.4.10 แดง** โดยตาไม่เห็นอะไรผิด · ทั้งระบบมี 14 จุดและเคยไม่มีจุดไหนเป็น `relative` |
 | `lint:rsc` | `"use client"` ต้องมีเมื่อจำเป็น **และต้องไม่มีเมื่อไม่จำเป็น** · ทิศที่เกินพังเงียบ — ถ้าไม่ห้าม ไลบรารีจะกลายเป็น client ทั้งก้อนโดยไม่มี commit ไหนตัดสินใจ · directive ต้องอยู่ **บรรทัดแรก** ไม่งั้นเป็นสตริงลอย ๆ |
 | `check:fonts` + `font.spec.ts` | ฟอนต์ต้องถูก **ดึงจากเซิร์ฟเวอร์ของเราจริง** — ฟอนต์ที่โหลดไม่ได้ไม่ throw · จนถึง 2026-07-30 ระบบไม่เคยโหลด Anuphan เลย และไม่มีเกตไหนรู้ |
 | contrast sweep (e2e) | ทุกข้อความบน gallery ทั้งสองโหมด |
@@ -142,6 +143,8 @@ sweep ที่ตรวจ 0 element ก็เขียว · เกตที�
 | **ห้าม** เขียน `body.style.padding*` หรือตัวแปรของแถบอื่น | last-writer-wins → ปุ่มท้ายหน้าจมใต้แถบ (SC 2.4.11) |
 | **ห้าม** สีดิบ · hex · `z-<number>` · ramp 50/100/200 เป็นพื้น | `lint-classes.mjs` ปฏิเสธ |
 | ตรวจ `base.css` **ก่อน** เมื่อคลาสหนึ่ง "ไม่ทำงาน" | ไฟล์นั้นไม่อยู่ใน layer จึงชนะทุก utility (เจอมา 3 ครั้ง) |
+| **`overflow-*-auto` ต้องมาพร้อม `relative`** ในสตริงคลาสเดียวกัน | `sr-only` = `position: absolute` · ไม่มี positioned ancestor ⇒ containing block เป็น viewport ⇒ หลุดออกจากกล่องที่เลื่อนไปดันความกว้างเอกสาร (SC 1.4.10) · บังคับด้วย `lint:quality` ข้อ `scroll` |
+| **`grid` ต้องประกาศคอลัมน์** ถ้าลูกมี max-content กว้าง | implicit track เป็น `auto` = `minmax(min-content, max-content)` ⇒ ล้นออกนอก container ที่กว้างถูกต้องแล้ว · ใช้ `grid-cols-[minmax(0,1fr)]` |
 | ข้อความไทยยาวกว่าอังกฤษ 20–40% | ทดสอบด้วยข้อความไทยจริง ไม่ใช่ lorem ipsum |
 | วัด contrast **ที่ composite แล้ว** | โหมดมืด override ramp — ค่าที่คอมเมนต์ไว้มักเป็นของโหมดสว่าง |
 

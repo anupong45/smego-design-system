@@ -101,7 +101,7 @@ export function DropdownMenu<T extends object>({
         width === 'trigger' && 'w-(--trigger-width)',
         /* ★ เพดานความสูงแล้วเลื่อนได้ — ไม่ใช่ความสูงตายตัว
            เมนู 20 รายการบนจอ 568px สูงจะล้นออกนอกจอ */
-        'max-h-80 overflow-y-auto',
+        'relative max-h-80 overflow-y-auto',
       )}
     >
       <RACMenu

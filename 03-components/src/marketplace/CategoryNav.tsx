@@ -73,7 +73,7 @@ export function CategoryNav({
           isScroll
             ? [
                 'items-center gap-2',
-                'overflow-x-auto snap-x',
+                'relative overflow-x-auto snap-x',
                 '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
                 /* p-1 = 4px — เท่ากับที่วงแหวน focus ล้นออกนอกขอบพอดี
                    `overflow-x: auto` ตัดทั้งสองแกน (ดู Chip.md §5) */
@@ -164,7 +164,7 @@ export function CategoryBreadcrumb({ items, className }: CategoryBreadcrumbProps
       <ol
         className={cn(
           'flex min-w-0 items-center gap-1',
-          'overflow-x-auto',
+          'relative overflow-x-auto',
           '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
           'p-1',
           '[&>li]:shrink-0',

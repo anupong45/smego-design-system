@@ -156,6 +156,21 @@ const MOTION_RISK =
   /\b(?:transition-all|(?:data-\[?(?:entering|exiting)\]?:)[\w-]*(?:translate|scale|rotate|slide|zoom)[\w./[\]-]*|animate-\[[^\]]*(?:slide|zoom|translate|scale)[^\]]*\])/g;
 const MOTION_GUARD = /data-motion=["']transform["']|motion-slide|motion-scale|motion-reduce:/;
 
+/* ★★★ scroll container ต้องเป็น positioned ancestor
+   `sr-only` ของ Tailwind คือ `position: absolute` · ถ้าอยู่ในกล่องที่เลื่อน
+   แนวนอนแต่ **ไม่มีบรรพบุรุษที่ positioned** containing block จะกลายเป็น
+   viewport ⇒ span หลุดออกจากกล่องที่เลื่อน ไปดันความกว้างของ `html`
+   **หน้าทั้งหน้าเลื่อนแนวนอน = SC 1.4.10 แดง** โดยที่ตาไม่เห็นอะไรผิด
+
+   วัดเจอจริง 2026-07-30: gallery ที่ 320px `scrollWidth 443` ต้นเหตุคือ span
+   `sr-only` ("54 รายการ") ของ `CategoryNav` อยู่ที่ x=442 · ทั้งระบบมี scroll
+   container 14 จุด และ **ไม่มีจุดไหนเป็น relative เลย**
+
+   ⚠️ กฎนี้ตรวจ **บรรทัดเดียวกัน** — ต้องเขียน `relative` ไว้ในสตริงคลาส
+      เดียวกับ `overflow-*` ไม่ใช่คนละบรรทัดของ `cn()` เพราะอ่านง่ายกว่า
+      และทำให้กฎบังคับได้จริงโดยไม่ต้องวิเคราะห์ AST */
+const SCROLL_BOX = /\boverflow(?:-[xy])?-(?:auto|scroll)\b/g;
+
 const RULES = [
   {
     id: 'logical',
@@ -174,6 +189,17 @@ const RULES = [
       'shadow-(--elevation-raised) · shadow-(--elevation-floating) · ' +
       'shadow-(--elevation-overlay) — เปลี่ยนเป็นขอบสว่างในโหมดมืดให้แล้ว',
     files: /\.(tsx?|css)$/,
+  },
+  {
+    id: 'scroll',
+    label: 'การเข้าถึง (Accessibility) — scroll container ไม่เป็น positioned',
+    severity: 'error',
+    pattern: SCROLL_BOX,
+    guard: (line) => /\brelative\b/.test(line),
+    suggest: () =>
+      'เติม `relative` ในสตริงคลาสเดียวกัน — ไม่งั้น `sr-only` (position: absolute) ' +
+      'หลุดออกจากกล่องที่เลื่อน ไปดันความกว้างของ html ทั้งหน้าเลื่อนแนวนอน (SC 1.4.10)',
+    files: /\.tsx?$/,
   },
   {
     id: 'height',
@@ -255,6 +281,7 @@ for (const scanDir of SCAN_DIRS) {
     for (const rule of RULES) {
       if (!rule.files.test(file)) continue;
       lines.forEach((line, i) => {
+        if (rule.guard && rule.guard(line)) return;
         for (const match of line.matchAll(rule.pattern)) {
           if (rule.id === 'logical' && CENTERING_IDIOM.test(match[0])) continue;
           findings.push({
@@ -312,11 +339,13 @@ if (AS_JSON) {
 }
 
 if (findings.length === 0) {
-  console.log('✅ ผ่านทั้ง 4 ข้อ — logical properties · เงา · ความสูง · การเคลื่อนไหว');
+  console.log(
+    '✅ ผ่านทั้ง 5 ข้อ — logical properties · เงา · scroll container · ความสูง · การเคลื่อนไหว',
+  );
   process.exit(0);
 }
 
-for (const rule of ['logical', 'shadow', 'height', 'motion']) {
+for (const rule of ['logical', 'shadow', 'scroll', 'height', 'motion']) {
   const group = findings.filter((f) => f.rule === rule);
   if (group.length === 0) continue;
 

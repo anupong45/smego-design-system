@@ -175,7 +175,7 @@ export function Typeahead({
               {s.common.noMatches}
             </p>
           )}
-          className="max-h-64 overflow-auto p-1 outline-none"
+          className="relative max-h-64 overflow-auto p-1 outline-none"
         >
           {(item) => (
             <SelectItem id={item.id} textValue={item.label} isDisabled={item.isDisabled}>

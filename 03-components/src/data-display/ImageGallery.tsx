@@ -89,7 +89,7 @@ export function ImageGallery({ images, itemName, className }: ImageGalleryProps)
         <ul
           aria-label={s.gallery.thumbnails}
           /* p-1 -m-1 เผื่อที่ให้วงแหวน focus 4px ไม่ถูกกล่องที่เลื่อนได้ตัด */
-          className="-m-1 flex min-w-0 gap-2 overflow-x-auto p-1"
+          className="relative -m-1 flex min-w-0 gap-2 overflow-x-auto p-1"
         >
           {images.map((image, i) => {
             const isCurrent = i === index;

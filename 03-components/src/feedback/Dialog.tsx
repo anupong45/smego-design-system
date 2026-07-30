@@ -105,7 +105,7 @@ export function Dialog({
 
           {/* เนื้อหาเลื่อนในกล่องตัวเอง — body ไม่เลื่อน
              p-1 -m-1 เผื่อที่ให้วงแหวน focus 4px ไม่ถูก overflow ตัด */}
-          <div className="-m-1 max-h-[60vh] min-w-0 overflow-y-auto p-1">{children}</div>
+          <div className="relative -m-1 max-h-[60vh] min-w-0 overflow-y-auto p-1">{children}</div>
 
           {footer && (
             /* ปุ่มซ้อนแนวตั้งบนมือถือ ปุ่มหลักอยู่บน (ข้อ 08 §7) */

@@ -149,7 +149,7 @@ export function TabList({
              tab ไทย 5 อันล้นแน่ที่ 320px และ tab ตัดบรรทัดไม่ได้
              (ต่างจาก Pagination ที่ wrap ได้) */
           orientation === 'horizontal' && [
-            'overflow-x-auto',
+            'relative overflow-x-auto',
             '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
             /* p-1 กันวงแหวน focus ถูก overflow ตัด — เหมือน ChipRow (ข้อ 05 §5) */
             'p-1',

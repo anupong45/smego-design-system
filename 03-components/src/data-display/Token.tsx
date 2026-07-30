@@ -189,7 +189,7 @@ export function ChipRow({ children, label, className }: ChipRowProps) {
       aria-label={label}
       className={cn(
         'flex min-w-0 items-center gap-2',
-        'overflow-x-auto',
+        'relative overflow-x-auto',
         'snap-x snap-mandatory',
         /* ซ่อน scrollbar บนเดสก์ท็อปแต่ยังเลื่อนได้ — บนมือถือไม่มีอยู่แล้ว */
         '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden',

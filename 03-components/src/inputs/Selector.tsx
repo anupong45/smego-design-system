@@ -148,7 +148,7 @@ export function Selector({
         <ListBox
           items={options}
           className={cn(
-            'max-h-64 overflow-auto outline-none',
+            'relative max-h-64 overflow-auto outline-none',
             /* วงแหวน focus 4px — `overflow-auto` ตัดทั้งสองแกน */
             'p-1',
           )}

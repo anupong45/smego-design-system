@@ -27,6 +27,41 @@
 และการเป็น peer ทำให้แอปมี RAC **สำเนาเดียว** — สองสำเนาหมายถึง global symbol ที่
 `installRacThaiStrings` เขียนอยู่คนละอัน = คำแปลไทยหายเงียบ ๆ
 
+### Fixed — ★★★ `sr-only` หลุดออกจากกล่องที่เลื่อน ทำให้ทั้งหน้าเลื่อนแนวนอน (SC 1.4.10)
+
+`QUALITY.md` บันทึกไว้เองว่า **"gallery เองเลื่อนแนวนอนที่ 320px (`scrollWidth 549`)"**
+แล้วใช้ข้อเท็จจริงนั้นเป็น *เหตุผลให้ย้ายเทส tooltip ไปวัดบน fixture* — คือ **รู้ว่ามี
+แล้วเดินเลี่ยง ไม่ได้แก้** · ระบบที่ประกาศว่า WCAG 2.2 AA เป็น pass/fail จึงมีหน้า
+แสดงตัวเองที่ตก 1.4.10 มาตลอด · และเอกสารเดาต้นเหตุผิดด้วย (เดาว่าเป็น `Table`)
+
+ต้นเหตุจริงมีสองชั้น:
+
+**① gallery `Group` เป็น `grid` ที่ไม่ประกาศคอลัมน์** ⇒ implicit track เป็น `auto`
+= `minmax(min-content, max-content)` · specimen ที่ max-content กว้าง (แถวของ
+`CategoryNav` ที่ `[&>li]:shrink-0`) ดัน track ไป **540px** แล้วล้นออกนอก container
+288px ทั้งที่ container กว้างถูกต้อง → `grid-cols-[minmax(0,1fr)]` · **556 → 443**
+
+**② ★★ บั๊กของ component ไม่ใช่ของ gallery** — `sr-only` ของ Tailwind คือ
+`position: absolute` · span `"54 รายการ"` ใน `CategoryNav` อยู่ในกล่องที่เลื่อนแนวนอน
+**แต่ไม่มีบรรพบุรุษที่ positioned** ⇒ containing block กลายเป็น viewport
+span หลุดไปอยู่ที่ **x=442** และดันความกว้างของ `html`
+⇒ **ทุกแอปที่ใช้ `CategoryNav` แบบ scroll จะได้หน้าที่เลื่อนแนวนอน = SC 1.4.10 แดง**
+
+ทั้งระบบมี scroll container **14 จุด** และตอนนั้น **ไม่มีจุดไหนเป็น `relative` เลย**
+เติม `relative` **10 จุด**: `CategoryNav` ×2 · `TabList` · `Compare` · `Token` ·
+`ImageGallery` · `DropdownMenu` · `Dialog` · `Typeahead` · `Selector` · **443 → 320**
+
+- **กฎใหม่ `lint:quality` ข้อ `scroll`** — `overflow-*-auto|scroll` ต้องมี `relative`
+  ในสตริงคลาสเดียวกัน (ตรวจบรรทัดเดียวกันเพื่อไม่ต้องวิเคราะห์ AST และอ่านง่ายกว่า)
+- **`tests/e2e/reflow-320.spec.ts`** — 320 และ 360px × fixture และ gallery
+  พร้อม guard ว่า viewport ถูกใช้จริง และ **ชี้ตัวการในข้อความ fail** ไม่ใช่บอกแค่ว่าล้น
+- พิสูจน์แดงได้ทั้งสองต้นเหตุ ได้ตัวเลขประวัติศาสตร์ตรงเป๊ะ (443 · 556) แล้วคืนค่า
+
+> ⚠️ **บล็อกชี้ตัวการเองก็เคยตาบอด** — ฉบับแรกเช็ค `offsetParent === null`
+> ซึ่งผิด: absolute ที่ไม่มี positioned ancestor ได้ `offsetParent === body`
+> ไม่ใช่ `null` ⇒ บล็อกไม่พิมพ์อะไรเลยตอนที่ควรพิมพ์ · ยืนยันด้วยการฉีดความผิด
+> แล้วแก้เป็น "containing block อยู่นอกกล่องที่เลื่อนหรือเปล่า"
+
 ### Changed — `check:bundle` วัด initial แยกจาก lazy · และ **ถอนคำแนะนำ `lazy()` ออก**
 
 เกตเดิม bundle ด้วย `--outfile` **ไม่มี `--splitting`** ⇒ esbuild ยัด dynamic import

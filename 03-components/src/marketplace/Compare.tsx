@@ -144,7 +144,7 @@ export function CompareBar({
         </p>
 
         {/* รายการที่เลือก — เลื่อนแนวนอนได้ · p-1 เผื่อวงแหวน focus */}
-        <ul className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto p-1 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+        <ul className="relative flex min-w-0 flex-1 items-center gap-2 overflow-x-auto p-1 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
           {items.map((it) => (
             <li
               key={it.id}
