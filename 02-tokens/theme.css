@@ -3,7 +3,11 @@
    ───────────────────────────────────────────────────────────────────────────
    นำเข้าไฟล์เดียวนี้ในแอป:
 
-       @import "@smego/tokens/theme.css";
+       @import "@smego/ui/theme.css";
+       @source "../node_modules/@smego/ui/dist";   /* ห้ามลืม — ไม่งั้น purge เกลี้ยง */
+
+   ⚠️ ชั้น 02 **ไม่ใช่แพ็กเกจแยก** — `@smego/tokens` ไม่มีอยู่จริงและ resolve
+      ไม่ได้ · ไฟล์นี้ถูกคัดลอกเข้า `dist/` ของ `@smego/ui` ตอน build
 
    Tailwind v4 เป็น CSS-first — ไม่มี `tailwind.config.ts`
    บล็อก `@theme` ใน semantic.css ทำหน้าที่เป็น config เอง
@@ -16,7 +20,7 @@
 
 /* @font-face · Anuphan self-host 4 subset · ต้องมาก่อน token ที่อ้างชื่อ family
    ⚠️ url() เป็น relative ต่อ src/fonts.css — build ที่ output ไปโฟลเดอร์อื่น
-      ต้อง `npm run copy:fonts` ตามไปด้วย (เกต check:fonts กันลืม) */
+      ต้อง `npm run copy:assets` ตามไปด้วย (เกต check:fonts กันลืม) */
 @import "./src/fonts.css";
 
 /* tier 1 — ค่าดิบ ชื่อบอกสี · :root ธรรมดา ไม่เกี่ยวกับ Tailwind */
@@ -52,38 +56,71 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    ⚠️ กฎที่ lint ต้องบังคับ — ไม่มีทางบังคับด้วย CSS
    ───────────────────────────────────────────────────────────────────────────
-   1  ห้าม `shadow-{xs,sm,md,lg,xl,2xl}` ใน component
+   ★★★ สถานะการบังคับ · วัดจริง 2026-07-30 (เดิมบล็อกนี้ไม่บอกสถานะเลย)
+
+   ก่อนวันนี้ บล็อกนี้ไล่ 11 ข้อโดยขึ้นหัวว่า "กฎที่ lint ต้องบังคับ" แต่วัดจริง
+   linter บังคับได้ **1 ข้อ** (ข้อ 1) ส่วนที่ linter บังคับจริงอีกชุด — สีดิบ ·
+   ramp 50/100/200 เป็นพื้น · `z-<number>` · `body.style.padding*` ·
+   logical properties · scroll container · ความสูงตายตัว · motion —
+   **ไม่อยู่ในลิสต์นี้เลย** · เป็นรูปแบบ §5 ของ CLAUDE.md: เอกสารอ้างการบังคับ
+   ที่ไม่มีอยู่ · ราคาของมันสูงขึ้นมากตอน publish `@smego/lint` ให้ทีมแอป
+   เพราะพวกเขาจะเชื่อว่าถูกคุ้มครองครบ
+
+   บังคับแล้ว ✅ 1 · 6 · 8 · 9 · 10 · 11   (พิสูจน์ว่าแดงได้ทุกข้อด้วยการฉีดความผิด)
+   ยังไม่บังคับ ⚠️ 2 · 3 · 7 — ต้องดูบริบท (element ไหน · มี focusable เป็นลูกไหม)
+      ถ้าเขียนแบบ regex ล้วนจะได้ false negative ที่หลอกกว่าไม่มีกฎ
+   ขัดกันเอง ❌ 5 — ดูหมายเหตุใต้ข้อ 5
+   ───────────────────────────────────────────────────────────────────────────
+   1  ✅ **บังคับแล้ว** (`lint:quality` id `shadow`)
+      ห้าม `shadow-{xs,sm,md,lg,xl,2xl}` ใน component
       ใช้ `shadow-(--elevation-raised)` ฯลฯ
       เพราะ shadow-* ติดไปในโหมดมืดด้วย และ component นั้นจะไม่มีกลไก
       แยกตัวเองจากพื้นหลังในโหมดมืดเลย
 
-   2  ห้าม `border-neutral-*` บน input/select/textarea/checkbox/radio
+   2  ⚠️ **ยังไม่บังคับ** — ต้องรู้ว่า element นั้นเป็น input หรือเปล่า
+      ห้าม `border-neutral-*` บน input/select/textarea/checkbox/radio
       ใช้ `border-edge-strong` — neutral-300 ได้ 1.56:1 ไม่ผ่าน SC 1.4.11
 
-   3  ห้าม `text-white` บนพื้นทองหรือพื้นเหลือง
+   3  ⚠️ **ยังไม่บังคับ** — ต้องรู้สีพื้นของ element นั้น
+      ห้าม `text-white` บนพื้นทองหรือพื้นเหลือง
       ใช้ `text-on-accent` — ตัวอักษรขาวได้ 2.37 และ 1.66 ✗
 
-   4  ห้าม spacing/radius นอกชุดที่อนุมัติ และห้าม arbitrary value
+   4  ⚠️ **ยังไม่บังคับ**
+      ห้าม spacing/radius นอกชุดที่อนุมัติ และห้าม arbitrary value
       space: 0 0.5 1 2 3 4 5 6 8 10 12 16 20 24 32
       radius: none xs sm md lg xl 2xl full
 
-   5  ห้าม `p-0.5` / `gap-0.5` — 2px ใช้ได้เฉพาะ outline-offset
-      และ text-underline-offset
+   5  ⚠️ **ข้อนี้ขัดกับข้อ 4 ของบล็อกเดียวกัน และยังไม่ถูกตัดสิน**
+      เดิมเขียนว่า "ห้าม `p-0.5` / `gap-0.5` — 2px ใช้ได้เฉพาะ outline-offset
+      และ text-underline-offset" แต่ **ข้อ 4 ระบุ `0.5` อยู่ในชุดที่อนุมัติ**
+      และโค้ดใช้จริง 8+ จุดโดยมีเหตุผลกำกับ: `EntityCard` `CategoryNav`
+      `SellerProfile` `BottomNav` (ระยะ label สองบรรทัด) · `Badge py-0.5` ·
+      `mt-0.5` (จัดไอคอนให้ตรงบรรทัดแรกเมื่อข้อความขึ้นสองบรรทัด)
+      จึง **ไม่เขียนเป็นกฎ lint** จนกว่าจะตัดสินว่าข้อ 4 หรือข้อ 5 ผิด
+      — การบังคับกฎที่ขัดกับตัวเองคือการแก้โค้ด 8 จุดตามกฎที่อาจผิด
 
-   6  ห้าม `import` จาก `lucide-react` โดยตรง
+   6  ✅ **บังคับแล้ว** (`lint:quality` id `icon`) ยกเว้น `icon/registry.ts`
+      ห้าม `import` จาก `lucide-react` โดยตรง
       ใช้ `<Icon name size />` — stroke ต้องผูกกับขนาด
 
-   7  ห้าม `overflow-hidden` บน element ที่มี focusable เป็นลูก
+   7  ⚠️ **ยังไม่บังคับ** — ต้องรู้ว่ามี focusable เป็นลูกหรือเปล่า
+      ห้าม `overflow-hidden` บน element ที่มี focusable เป็นลูก
       วงแหวน focus ล้น 4px จะถูกตัด = ไม่ผ่าน SC 2.4.7
 
-   8  ห้าม `italic` · `uppercase` · `capitalize` · `tracking-*`
+   8  ✅ **บังคับแล้ว** (`lint:quality` id `thaitype`) — ระบบไทยล้วน จึงห้ามทั้งระบบ
+      ห้าม `italic` · `uppercase` · `capitalize` · `tracking-*`
       บน element ที่มีข้อความไทย
 
-   9  ห้าม `!important` — ยกเว้น block `prefers-reduced-motion` ใน base.css
+   9  ✅ **บังคับแล้ว** (`lint:quality` id `important`) ยกเว้นไฟล์ `base.css`
+      ห้าม `!important` — ยกเว้น block `prefers-reduced-motion` ใน base.css
 
-   10 ห้าม `rounded-full` บนปุ่ม — เฉพาะ chip badge avatar dot
+   10 ✅ **บังคับแล้ว** (`lint:quality` id `capsule`) — จำกัดที่ `inputs/Button.tsx`
+      เพราะกฎนี้เป็นของ **ปุ่มข้อความ** เท่านั้น · chip · badge · avatar · dot ·
+      หัวจับ slider · วงกลมของ switch/radio กลมได้ตามธรรมชาติ (12 ไฟล์)
+      ห้าม `rounded-full` บนปุ่ม — เฉพาะ chip badge avatar dot
       ข้อความปุ่มไทยยาวกว่าอังกฤษ 20–40% และปุ่มแคปซูลพังที่ 360px
 
-   11 ห้ามอักขระเลขไทย U+0E50–U+0E59 ในข้อมูลที่เข้า component ตาราง/ราคา
+   11 ✅ **บังคับแล้ว** (`lint:quality` id `thainum`) — ทุกไฟล์ `.tsx`/`.ts`
+      ห้ามอักขระเลขไทย U+0E50–U+0E59 ในข้อมูลที่เข้า component ตาราง/ราคา
       กว้างต่างกันถึง 36.6% em
    ═══════════════════════════════════════════════════════════════════════════ */

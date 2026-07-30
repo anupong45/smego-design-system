@@ -196,6 +196,32 @@ const MOTION_GUARD = /data-motion=["']transform["']|motion-slide|motion-scale|mo
       และทำให้กฎบังคับได้จริงโดยไม่ต้องวิเคราะห์ AST */
 const SCROLL_BOX = /\boverflow(?:-[xy])?-(?:auto|scroll)\b/g;
 
+/* ═══ 5 กฎจาก `theme.css` ที่ประกาศว่า "lint ต้องบังคับ" แต่ไม่เคยถูกบังคับจริง ═══
+   วัดเมื่อ 2026-07-30: บล็อกนั้นไล่ 11 ข้อ · linter บังคับจริง **1 ข้อ**
+   (ข้อ 1 เงาดิบ) ส่วนที่ linter บังคับจริงอีกชุดกลับ **ไม่อยู่ในลิสต์ 11 ข้อ**
+   นั่นคือรูปแบบ §5 — เอกสารอ้างการบังคับที่ไม่มีอยู่ · และมันแพงขึ้นมาก
+   ตอน publish เป็น `@smego/lint` ให้ทีมแอป เพราะพวกเขาจะเชื่อว่าถูกคุ้มครอง 11 ข้อ
+
+   ⚠️ **ข้อ 5 (`p-0.5`/`gap-0.5`) ไม่ถูกเขียนที่นี่โดยเจตนา** — มันขัดกับข้อ 4
+   ของ `theme.css` เอง ซึ่งระบุ `0.5` อยู่ในชุด spacing ที่อนุมัติ และโค้ดใช้จริง
+   8+ จุดโดยมีเหตุผลกำกับ (จัดไอคอนให้ตรงบรรทัดแรก · ระยะ label สองบรรทัด)
+   การบังคับกฎที่ขัดกับตัวเองต้องแก้เอกสารก่อน ไม่ใช่แก้โค้ด 8 จุดตามกฎที่ผิด */
+
+/** ข้อ 6 — ไอคอนต้องผ่าน `<Icon name>` ไม่งั้น bundler ลาก Lucide ~1,600 ตัว */
+const LUCIDE_DIRECT = /from\s+['"]lucide-react['"]/g;
+
+/** ข้อ 8 — ห้ามบนข้อความไทย · ระบบนี้ไทยล้วน จึงห้ามทั้งระบบ */
+const THAI_HOSTILE_TYPE = /\b(?:italic|uppercase|capitalize|tracking-[\w.[\]/-]+)\b/g;
+
+/** ข้อ 9 — `!important` · ข้อยกเว้นเดียวคือบล็อก prefers-reduced-motion ใน base.css */
+const BANG_IMPORTANT = /!important/g;
+
+/** ข้อ 10 — ปุ่มข้อความไทยยาวกว่าอังกฤษ 20–40% · ปุ่มแคปซูลพังที่ 360px */
+const CAPSULE_BUTTON = /\brounded-full\b/g;
+
+/** ข้อ 11 — เลขไทย ๐–๙ กว้างต่างกันถึง 36.6% em ⇒ คอลัมน์ราคาเบี้ยว */
+const THAI_DIGIT = /[\u0E50-\u0E59]/g;
+
 const RULES = [
   {
     id: 'logical',
@@ -224,6 +250,61 @@ const RULES = [
     suggest: () =>
       'เติม `relative` ในสตริงคลาสเดียวกัน — ไม่งั้น `sr-only` (position: absolute) ' +
       'หลุดออกจากกล่องที่เลื่อน ไปดันความกว้างของ html ทั้งหน้าเลื่อนแนวนอน (SC 1.4.10)',
+    files: /\.tsx?$/,
+  },
+  {
+    id: 'icon',
+    label: 'ประสิทธิภาพ (Performance) — import lucide-react ตรง ๆ (theme.css ข้อ 6)',
+    severity: 'error',
+    pattern: LUCIDE_DIRECT,
+    exempt: /icon[/\\]registry\.ts$/,
+    suggest: () =>
+      'ใช้ `<Icon name size />` — import ตรงทำให้ bundler ลากไอคอน ~1,600 ตัวเข้ามา · ' +
+      'ทะเบียนไอคอนต้องเป็น static import map ที่ icon/registry.ts ที่เดียว',
+    files: /\.tsx?$/,
+  },
+  {
+    id: 'thaitype',
+    label: 'ตัวอักษร (Typography) — utility ที่ทำร้ายข้อความไทย (theme.css ข้อ 8)',
+    severity: 'error',
+    pattern: THAI_HOSTILE_TYPE,
+    suggest: (m) =>
+      m.startsWith('tracking')
+        ? 'ห้าม letter-spacing บนไทย — วรรณยุกต์และสระลอยจะหลุดตำแหน่ง'
+        : 'ไทยไม่มี italic/uppercase/capitalize — Anuphan ไม่มี italic face เลย ' +
+          '(ยืนยันจากไฟล์ฟอนต์) เบราว์เซอร์จะเอียงด้วยการ skew ซึ่งทำให้รูปอักษรผิด',
+    files: /\.tsx?$/,
+  },
+  {
+    id: 'important',
+    label: 'ลำดับความสำคัญ (Specificity) — !important (theme.css ข้อ 9)',
+    severity: 'error',
+    pattern: BANG_IMPORTANT,
+    exempt: /base\.css$/,
+    suggest: () =>
+      '!important ทำให้ layer ของ Tailwind ไร้ความหมายและแก้ตามไม่ได้ · ' +
+      'ข้อยกเว้นเดียวคือบล็อก prefers-reduced-motion ใน base.css (SC 2.3.3)',
+    files: /\.(tsx?|css)$/,
+  },
+  {
+    id: 'capsule',
+    label: 'ตอบสนอง (Responsive) — ปุ่มแคปซูล (theme.css ข้อ 10)',
+    severity: 'error',
+    pattern: CAPSULE_BUTTON,
+    only: /inputs[/\\]Button\.tsx$/,
+    suggest: () =>
+      'ข้อความปุ่มไทยยาวกว่าอังกฤษ 20–40% — ปุ่มแคปซูลพังที่ 360px · ' +
+      'ใช้ rounded-(--radius-control) · chip/badge/avatar/dot/หัวจับ slider กลมได้',
+    files: /\.tsx?$/,
+  },
+  {
+    id: 'thainum',
+    label: 'ตัวเลข (Numerals) — เลขไทยในข้อมูล (theme.css ข้อ 11)',
+    severity: 'error',
+    pattern: THAI_DIGIT,
+    suggest: () =>
+      'เลขไทย ๐–๙ กว้างต่างกันถึง 36.6% em ⇒ คอลัมน์ราคาและตารางเบี้ยว · ' +
+      'ใช้เลขอารบิกทุกที่ที่เป็นตัวเลข',
     files: /\.tsx?$/,
   },
   {
@@ -305,6 +386,11 @@ for (const scanDir of SCAN_DIRS) {
 
     for (const rule of RULES) {
       if (!rule.files.test(file)) continue;
+      /* ยกเว้น/จำกัดระดับไฟล์ — เทียบกับ path ที่เห็นจาก root ไม่ใช่ path
+         เต็มของเครื่อง เพื่อให้ผลเหมือนกันทุกเครื่อง */
+      const relForRule = relative(ROOT, file);
+      if (rule.exempt && rule.exempt.test(relForRule)) continue;
+      if (rule.only && !rule.only.test(relForRule)) continue;
       lines.forEach((line, i) => {
         if (rule.guard && rule.guard(line)) return;
         for (const match of line.matchAll(rule.pattern)) {
@@ -365,12 +451,17 @@ if (AS_JSON) {
 
 if (findings.length === 0) {
   console.log(
-    '✅ ผ่านทั้ง 5 ข้อ — logical properties · เงา · scroll container · ความสูง · การเคลื่อนไหว',
+    `✅ ผ่านทั้ง ${RULES.length + 1} ข้อ — logical properties · เงา · ` +
+      'scroll container · lucide · ตัวอักษรไทย · !important · ปุ่มแคปซูล · ' +
+      'เลขไทย · ความสูง · การเคลื่อนไหว',
   );
   process.exit(0);
 }
 
-for (const rule of ['logical', 'shadow', 'scroll', 'height', 'motion']) {
+/* ★★★ ลำดับการพิมพ์ต้องมาจาก RULES เอง ไม่ใช่ลิสต์ที่พิมพ์ไว้ซ้ำ —
+   ถ้าพิมพ์ซ้ำ กฎใหม่จะนับเข้า exit code แต่ไม่ถูกพิมพ์ = แดงแบบไม่บอกเหตุ
+   ซึ่งเป็นเกตตาบอดอีกชนิด · `motion` ไม่ได้อยู่ใน RULES จึงต่อท้ายด้วยมือ */
+for (const rule of [...RULES.map((r) => r.id), 'motion']) {
   const group = findings.filter((f) => f.rule === rule);
   if (group.length === 0) continue;
 
