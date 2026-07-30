@@ -24,8 +24,33 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = join(fileURLToPath(new URL('.', import.meta.url)), '..');
-const SCAN_DIRS = ['03-components/src'];
+/* ═══════════════════════════════════════════════════════════════════════════
+   ใช้ได้สองโหมด
+   ───────────────────────────────────────────────────────────────────────────
+   1 **ในรีโปนี้** — ไม่ส่ง argument · สแกน `03-components/src` เหมือนเดิมเป๊ะ
+   2 **ในรีโปแอป** — `npx smego-lint-classes src app` · สแกน path ที่ส่งมา
+     เทียบกับ cwd
+
+   ★★★ ทำไมต้องให้แอปรันได้
+
+   กฎ 11 ข้อใน `theme.css` (ห้ามสีดิบ · ห้าม `shadow-md` · ห้าม `rounded-full`
+   บนปุ่ม · scroll container ต้องมี `relative` ฯลฯ) **พังเหมือนกันไม่ว่าจะเขียน
+   ที่รีโปไหน** — hex ดิบในโค้ดหน้าเว็บทำให้โหมดมืดเสียเท่ากับ hex ในไลบรารี
+   แต่เกตพวกนี้เคยรันเฉพาะในรีโปนี้ ⇒ ทีมแอปคนละรีโปเขียนอะไรก็ได้
+
+   รีโปนี้มีหลักฐานว่า **กฎที่ไม่มีเกตบังคับจะกลายเป็นเท็จภายในสัปดาห์เดียว
+   และคนที่ทำให้เป็นเท็จมักคือคนที่เขียนกฎนั้น** (`lint-docs.mjs` หัวไฟล์)
+   การหวังว่าทีมที่ไม่เคยอ่าน CLAUDE.md จะจำกฎ 11 ข้อได้ คือการเดิมพันที่
+   รีโปนี้แพ้มาแล้วในทีมตัวเอง
+   ═══════════════════════════════════════════════════════════════════════════ */
+const ARGS = process.argv.slice(2).filter((a) => !a.startsWith('--'));
+
+/** ไม่มี argument = โหมดในรีโปนี้ · root คือรากของ repo ไม่ใช่ cwd
+    เพื่อให้เลขบรรทัดและ path ที่รายงานเหมือนเดิมทุกตัวอักษร */
+const ROOT = ARGS.length
+  ? process.cwd()
+  : join(fileURLToPath(new URL('.', import.meta.url)), '..');
+const SCAN_DIRS = ARGS.length ? ARGS : ['03-components/src'];
 
 /* palette เริ่มต้นของ Tailwind ที่ถูกลบไปแล้ว */
 const PALETTE = [
