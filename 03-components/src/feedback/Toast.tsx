@@ -176,7 +176,7 @@ export function ToastRegion({ className }: ToastRegionProps) {
               label={`${s.common.close}: ${toast.content.title}`}
               variant="ghost"
               size="md"
-              className="-me-1.5 -mt-1.5 shrink-0"
+              className="-me-2 -mt-2 shrink-0"
             />
           </RACToast>
         );

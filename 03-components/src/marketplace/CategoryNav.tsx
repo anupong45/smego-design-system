@@ -95,7 +95,7 @@ export function CategoryNav({
                    `aria-current="page"` ไม่ใช่ `aria-pressed` */
                 aria-current={isCurrent ? 'page' : undefined}
                 className={cn(
-                  'flex items-center gap-1.5',
+                  'flex items-center gap-1',
                   /* py-2 ทำให้เป้ากดสูง ≥40px ทั้งสอง layout */
                   'rounded-(--radius-control) px-3 py-2',
                   'transition-colors duration-fast ease-standard',

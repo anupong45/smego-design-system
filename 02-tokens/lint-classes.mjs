@@ -116,6 +116,37 @@ const RAW_Z_INDEX = /\bz-\d+\b/g;
  * `body.style.paddingBottom` → พังทันทีที่มีสองแถบ (last-writer-wins)
  * แต่ละแถบต้องเขียน **ตัวแปรของตัวเอง** แล้วให้ `calc()` รวม
  */
+/* ═══ ข้อ 4 ของ theme.css — spacing/radius ต้องอยู่ในสเกลที่อนุมัติ ═══
+   ★★★ คำตัดสิน 2026-07-30: **ข้อ 4 ถูก · ข้อ 5 ผิด**
+
+   เดิม `theme.css` ขัดกันเอง — ข้อ 4 ระบุ `0.5` อยู่ในชุดที่อนุมัติ ขณะที่ข้อ 5
+   ห้าม `p-0.5`/`gap-0.5` · เจ้าของระบบตัดสินว่า **ห้ามเฉพาะค่าที่อยู่นอกสเกล**
+   `0.5` ใช้ได้เพราะอยู่ในสเกล ⇒ ข้อ 5 ถูกถอน และข้อ 4 ถูกบังคับด้วยกฎนี้
+
+   วัดก่อนเขียน (2026-07-30) พบค่านอกสเกล **9 จุด**:
+     · `1.5` (6px) 7 จุด — `-me-1.5 -mt-1.5` ของปุ่มปิด 3 ที่ + `gap-1.5` 1 ที่
+       แก้แล้ว: ปุ่มปิด → `-me-2 -mt-2` (8px = `p-2` ของ IconButton md เป๊ะ
+       ⇒ ขอบไอคอนตรงกับขอบเนื้อหา · 6px เดิมเป็นค่าประมาณ) · gap → `gap-1`
+     · `env(safe-area-inset-bottom)` 2 จุด — **ยกเว้น** ดูด้านล่าง
+
+   ⚠️ ยกเว้น `env()` โดยเจตนา — safe-area ของ iOS เป็นค่าที่ **อุปกรณ์บอก**
+      ไม่ใช่ค่าที่นักออกแบบเลือก จึงไม่มีทางอยู่ในสเกลใด ๆ · การบังคับให้ใช้
+      ค่าคงที่แทนจะทำให้แถบล่างทับ home indicator บน iPhone รุ่นมีรอยบาก
+      (ข้อยกเว้นอื่นห้ามเพิ่มโดยไม่เขียนเหตุผลไว้ที่นี่) */
+const APPROVED_SPACE = new Set([
+  '0', '0.5', '1', '2', '3', '4', '5', '6', '8', '10', '12', '16', '20', '24', '32',
+  'px',   /* 1px hairline — ใช้กับเส้นคั่นและขอบ */
+]);
+
+/** utility ที่กินค่า spacing · `w-`/`h-` ไม่รวมเพราะเป็นขนาด ไม่ใช่ระยะห่าง */
+const SPACE_UTIL =
+  /(?<![\w-])(-?)(p|m|gap|space)(x|y|s|e|t|b|l|r|-x|-y)?-((?:\[[^\]]*\])|[0-9.]+|px)(?![\w-])/g;
+
+/** radius: คำในสเกล · `full`/`none` · หรือรูป token `(--radius-*)` */
+const RADIUS_UTIL =
+  /(?<![\w-])rounded(?:-(?:ss|se|es|ee|s|e|t|b|l|r|tl|tr|bl|br))?(?:-([\w.[\]()-]+))?(?![\w-])/g;
+const APPROVED_RADIUS = new Set(['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', 'full']);
+
 const FORBIDDEN_GLOBAL_WRITE =
   /(?:body|documentElement)\.style\.(?:paddingBottom|padding|scrollPaddingBottom)\s*=|setProperty\(\s*['"]--bottom-inset['"]/g;
 
@@ -241,6 +272,37 @@ for (const scanDir of SCAN_DIRS) {
         });
       }
 
+      for (const match of line.matchAll(SPACE_UTIL)) {
+        const value = match[4];
+        /* ค่าที่อุปกรณ์บอก ไม่ใช่ค่าที่เลือก — ดูเหตุผลที่หัว APPROVED_SPACE */
+        if (value.startsWith('[') && value.includes('env(')) continue;
+        if (APPROVED_SPACE.has(value)) continue;
+        findings.push({
+          file: relative(ROOT, file),
+          line: i + 1,
+          found: match[0],
+          suggest:
+            `ค่า \`${value}\` อยู่นอกสเกลที่อนุมัติ — ใช้ได้เฉพาะ ` +
+            `${[...APPROVED_SPACE].join(' ')} (theme.css ข้อ 4)`,
+        });
+      }
+
+      for (const match of line.matchAll(RADIUS_UTIL)) {
+        const value = match[1];
+        if (value === undefined) continue;          /* `rounded-ss` เฉย ๆ = ค่าปริยาย */
+        if (value.startsWith('(--radius-')) continue; /* รูป token ที่ระบบใช้จริง */
+        if (APPROVED_RADIUS.has(value)) continue;
+        findings.push({
+          file: relative(ROOT, file),
+          line: i + 1,
+          found: match[0],
+          suggest:
+            `radius \`${value}\` อยู่นอกสเกล — ใช้ ` +
+            `${[...APPROVED_RADIUS].join(' ')} หรือรูป token \`rounded-(--radius-*)\` ` +
+            '(theme.css ข้อ 4)',
+        });
+      }
+
       for (const match of line.matchAll(FORBIDDEN_GLOBAL_WRITE)) {
         findings.push({
           file: relative(ROOT, file),
@@ -256,11 +318,14 @@ for (const scanDir of SCAN_DIRS) {
 }
 
 if (findings.length === 0) {
-  console.log('✅ ไม่มี class ที่ใช้สีนอกระบบ');
+  console.log(
+  '✅ ผ่าน — สีนอกระบบ · สีดิบ · ramp เป็นพื้น · z-index ดิบ · ' +
+    'สเกล spacing/radius · การเขียนตัวแปรของแถบอื่น',
+);
   process.exit(0);
 }
 
-console.error(`\n❌ พบ class ที่ใช้สีนอกระบบ ${findings.length} จุด\n`);
+console.error(`\n❌ พบ class ที่ผิดกฎ ${findings.length} จุด\n`);
 console.error(
   '   สีเหล่านี้ถูกลบไปแล้วด้วย `--color-*: initial` ใน semantic.css',
 );

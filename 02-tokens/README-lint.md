@@ -31,7 +31,7 @@ npx smego-lint-quality src app
 
 | เกต | จับอะไร |
 |---|---|
-| `smego-lint-classes` | สี palette ของ Tailwind ที่ถูกลบด้วย `--color-*: initial` (`bg-red-500` `text-white` …) · สีดิบใน `[]` (`bg-[#0077C1]`) · ramp `50/100/200` เป็นพื้น (โหมดมืดได้ ~1.04:1) · `z-<number>` · `body.style.padding*` |
+| `smego-lint-classes` | สี palette ของ Tailwind ที่ถูกลบด้วย `--color-*: initial` (`bg-red-500` `text-white` …) · สีดิบใน `[]` (`bg-[#0077C1]`) · ramp `50/100/200` เป็นพื้น (โหมดมืดได้ ~1.04:1) · `z-<number>` · **สเกล spacing/radius** (`p-7` `gap-1.5` `p-[13px]` `rounded-3xl`) · `body.style.padding*` |
 | `smego-lint-quality` | logical properties (`ml-` → `ms-`) · เงาดิบ (`shadow-md`) · **scroll container ที่ไม่มี `relative`** · `import` จาก `lucide-react` · `italic`/`uppercase`/`capitalize`/`tracking-*` · `!important` · `rounded-full` บนปุ่มข้อความ · เลขไทย `๐–๙` · ความสูงตายตัว (warn) · motion ที่หลุดตัวกัน (warn) |
 
 ### **ยังไม่บังคับ** ⚠️ — ต้องตรวจด้วยตา
@@ -41,8 +41,18 @@ npx smego-lint-quality src app
 | `border-neutral-*` บน input/select/textarea/checkbox/radio | ต้องรู้ว่า element นั้นเป็น input หรือเปล่า — regex ล้วนแยกไม่ออก (`neutral-300` ได้ 1.56:1 ไม่ผ่าน SC 1.4.11) |
 | `text-white` บนพื้นทอง/เหลือง | ต้องรู้สีพื้นของ element นั้น (ขาวบนทองได้ 2.37 · บนเหลือง 1.66) |
 | `overflow-hidden` บน element ที่มี focusable เป็นลูก | ต้องรู้ว่ามี focusable เป็นลูกไหม — วงแหวน focus ล้น 4px จะถูกตัด (SC 2.4.7) |
-| spacing/radius นอกชุดที่อนุมัติ · arbitrary value | ยังไม่เขียน |
-| `p-0.5` / `gap-0.5` | **กฎนี้ขัดกับชุด spacing ที่อนุมัติของระบบเอง** ซึ่งระบุ `0.5` ว่าใช้ได้ · รอการตัดสิน |
+
+
+**สเกล spacing/radius บังคับแล้ว** (2026-07-30)
+
+space: `0 0.5 1 2 3 4 5 6 8 10 12 16 20 24 32 px`
+radius: `none xs sm md lg xl 2xl full` หรือรูป token `rounded-(--radius-*)`
+
+ข้อยกเว้นเดียวคือ `env()` — safe-area เป็นค่าที่ **อุปกรณ์บอก** ไม่ใช่ค่าที่เลือก
+จึงไม่มีทางอยู่ในสเกล · `pb-[env(safe-area-inset-bottom,0px)]` ผ่าน
+
+`0.5` **ใช้ได้** เพราะอยู่ในสเกล — กฎเก่าที่ห้าม `p-0.5`/`gap-0.5` ถูกถอนแล้ว
+เพราะขัดกับสเกลที่อนุมัติของระบบเอง
 
 การเขียนสามข้อแรกแบบ regex ล้วนจะได้ **false negative** ซึ่งหลอกกว่าไม่มีกฎ
 

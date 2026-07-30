@@ -158,7 +158,7 @@ export function CartLineItem({
           variant="ghost"
           size="md"
           onPress={onRemove}
-          className="-me-1.5 -mt-1.5 shrink-0"
+          className="-me-2 -mt-2 shrink-0"
         />
       </div>
 
